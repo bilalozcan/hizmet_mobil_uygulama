@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "302412169529",
+    "firebase_url": "https://hizmetuygulamasi.firebaseio.com",
+    "project_id": "hizmetuygulamasi",
+    "storage_bucket": "hizmetuygulamasi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302412169529:android:4e5aa71fe8f174f50228e8",
+        "android_client_info": {
+          "package_name": "com.library.hizmet_mobil_uygulama"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "302412169529-jgkvgpdskb3jo5cio1cf7an7g68berdd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsF8bWkSGGtecteqoQFFMJ055tEiQBLDg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "302412169529-jgkvgpdskb3jo5cio1cf7an7g68berdd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
