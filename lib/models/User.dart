@@ -1,12 +1,11 @@
 import 'dart:collection';
 //import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'file:///C:/Users/ornek/AndroidStudioProjects/hizmet_mobil_uygulama/lib/utils/ToastMessage.dart';
+import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
 
@@ -80,19 +79,27 @@ class HizmetUser{
           _context, MaterialPageRoute(builder: (context) => SignIn())).then((value) =>  debugPrint("aaa"+value.toString()));
     }
   }
-  userSignIn()async
+  userSignIn(BuildContext context)async
   {
     if(_firebaseAuth.currentUser==null) {
-      User _user = (await _firebaseAuth.signInWithEmailAndPassword(
-          email: this.email, password: this.password)).user;
-      if(_user.emailVerified) {
-        addToFirebaseFirestore();
-        Navigator.push(
-            _context, MaterialPageRoute(builder: (_context) => MainPage()));
+      try {
+        User _user = (await _firebaseAuth.signInWithEmailAndPassword(
+            email: this.email, password: this.password)).user;
+        if (_user == null)
+          debugPrint("Böyle bir kullanıcı sistemde yok ");
+        if (_user.emailVerified) {
+          addToFirebaseFirestore();
+          Navigator.push(
+              _context, MaterialPageRoute(builder: (_context) => MainPage()));
+        }
+        else if (!_user.emailVerified) {
+          _firebaseAuth.signOut();
+          debugPrint("mail onaylamayan kullanıcı");
+        }
       }
-      else {
-        _firebaseAuth.signOut();
-        debugPrint("mail onaylamayan kullanıcı");
+      catch(e){
+        if(e.toString()=="[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted." || e.toString()=="[firebase_auth/user-not-found] The password is invalid or the user does not have a password.")
+        return showToast(context,"E-posta adresi veya şifre yanlış. Lütfen tekrar deneyiniz",Colors.red);
       }
     }
   }

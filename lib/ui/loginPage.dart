@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   String _userName;
   String e_mail;
   String _password;
-  String _gender = "Erkek";
+  String _gender ;
   List<GlobalKey<FormState>> _formKeys = [];
 
   String get password => _password;
@@ -54,6 +54,8 @@ class _LoginPageState extends State<LoginPage> {
     _formKeys.add(new GlobalKey<FormState>());
     _formKeys.add(new GlobalKey<FormState>());
     _formKeys.add(new GlobalKey<FormState>());
+    //_gender="Erkek";
+    //_obscureText=true;
   }
 
   @override
@@ -114,7 +116,8 @@ class _LoginPageState extends State<LoginPage> {
                   surname: _surName,
                   email: e_mail,
                   password: _password,
-                  gender: _gender);
+                  gender: _gender,
+              username: this._userName);
               await _user.userLogIn();
             }
           },
@@ -194,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
       Step(
         state: _stepStateController(1),
         isActive: _activeStep == 1 ? true : false,
-        title: Text(_activeStep == 1 ? "Hesap Bilgileri" : "Hesap..."),
+        title: Text(_activeStep == 1 ? "Kullanıcı Bilgileri" : "Kullanı..."),
         content: Form(
           key: _formKeys[1],
           child: Center(
@@ -213,14 +216,15 @@ class _LoginPageState extends State<LoginPage> {
                 TextFormField(
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: true,
-                  decoration: InputDecoration(labelText: "Şifre"),
+                  decoration: InputDecoration(labelText: "Şifre"
+                  ,),
                   validator: (password) {
                     if (password.length < 6)
                       return "Şifrenizin 6 karakterden daha büyük olması gerekmektedir.";
                     if (!password.contains(RegExp("[0-9]")) ||
                         !password.contains(RegExp("[a-z]")) ||
                         !password.contains(RegExp("[A-Z]")))
-                      return "Şifre en az bir sayı ve bir numara içermelidir";
+                      return "Şifreniz en az bir sayı,bir büyük harf ve bir küçük harf içermelidir";
                     return null;
                   },
                   onChanged: (password) {
@@ -234,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
                 TextFormField(
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: true,
-                  decoration: InputDecoration(labelText: "Şifre tekrarı"),
+                  decoration: InputDecoration(labelText: "Şifreyi Onayla"),
                   validator: (rePassword) {
                     if (rePassword != this.password) {
                       debugPrint(password);
@@ -252,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
       Step(
         state: _stepStateController(2),
         isActive: _activeStep == 2 ? true : false,
-        title: Text(_activeStep == 2 ? "Kişisel Bilgiler" : "Kisisel..."),
+        title: Text(_activeStep == 2 ? "Diğer Bilgiler" : "Diğer..."),
         content: Column(
           children: [
             Form(
@@ -260,7 +264,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: [
                   DropdownButtonFormField(
-                    decoration: InputDecoration(labelText: "Cinsiyet"),
+                    decoration: InputDecoration(labelText: "Cinsiyet",hintText: "Cinsiyet Seçimi"),
                     elevation: 16,
                     value: _gender,
                     onChanged: (value) {
