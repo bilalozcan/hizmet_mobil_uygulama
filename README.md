@@ -1,6 +1,6 @@
 # hizmet_mobil_uygulama
 
-Hizmet Mobil Uygulama.
+Hizmet Mobil Uygulaması
 
 ## Getting Started
 
