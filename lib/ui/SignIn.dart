@@ -26,25 +26,24 @@ class _SignInState extends State<SignIn> {
                 /* onSaved ve validator metodları eklenecek*/
                 TextFormField(
                   decoration: InputDecoration(
-                      labelText: "email", border: OutlineInputBorder()),
+                      labelText: "E-posta adresi", border: OutlineInputBorder()),
                 ),
                 TextFormField(
                   decoration: InputDecoration(
-                      labelText: "sifre", border: OutlineInputBorder()),
+                      labelText: "Şifre", border: OutlineInputBorder()),
                 ),
                 RaisedButton(
-                  child: Text("Giris"),
+                  child: Text("Giriş yap"),
                   onPressed: () {
                     /*onSaved ve validator methodları yazıldıktan sonra dinamik bir yapıya geçiş yapılacak */
                     HizmetUser user = HizmetUser(
                         context: context,
                         firebaseAuth: firebaseAuth,
-                        firstname: "Fatih",
+                        name: "Fatih",
                         surname: "Uzer",
                         email: "fatihdursunuzer@gmail.com",
                         password: "**********",
-                        gender: "Erkek",
-                        username: "Deadman");
+                        gender: "Erkek");
                     user.userSignIn(context);
                   },
                 )
