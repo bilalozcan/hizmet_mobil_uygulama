@@ -104,9 +104,9 @@ class _LoginPageState extends State<LoginPage> {
           },
           currentStep: _activeStep,
           onStepContinue: () async {
-            if (_activeStep <= _stepList.length - 1)
+            if (_activeStep < _stepList.length - 1)
               continueButton(_activeStep);
-            if(_activeStep==_stepList.length-1) {
+            else if(_activeStep==_stepList.length-1) {
               debugPrint(
                   "İsim:$_firstName   Soyisim:$_surName  Sifre:$_password  Cinsiyet:$_gender ");
               _user = HizmetUser(
@@ -325,7 +325,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKeys[activeStep].currentState.validate()) {
       setState(() {
         _formKeys[activeStep].currentState.save();
-        if(activeStep!=_stepList.length-1) {
+        if(activeStep <_stepList.length-1) {
           debugPrint(_activeStep.toString());
           activeStep++;
           _activeStep = activeStep;

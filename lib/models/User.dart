@@ -70,7 +70,7 @@ class HizmetUser{
   }
   userLogIn()async
   {
-    UserCredential _credential=await _firebaseAuth.createUserWithEmailAndPassword(email: this.email, password: this.password);
+    UserCredential _credential=await _firebaseAuth.createUserWithEmailAndPassword(email: this.email, password: this.password).catchError((onError)=>showToast(_context,"Bu e mail adresi zaten alınmış durumda lütfen başka bir mail adresi ile tekrar deneyiniz",Colors.red));
     User currentUser=_credential.user;
     await currentUser.sendEmailVerification();
     if(_firebaseAuth.currentUser !=null) {
@@ -82,9 +82,8 @@ class HizmetUser{
   userSignIn(BuildContext context)async
   {
     if(_firebaseAuth.currentUser==null) {
-      try {
         User _user = (await _firebaseAuth.signInWithEmailAndPassword(
-            email: this.email, password: this.password)).user;
+            email: this.email, password: this.password).catchError((onError){ if(onError.toString()=="[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted." || onError.toString()=="[firebase_auth/user-not-found] The password is invalid or the user does not have a password.") showToast(_context, "E-posta adresi veya şifre yanlış. Lütfen tekrar deneyiniz", Colors.red);})).user;
         if (_user == null)
           debugPrint("Böyle bir kullanıcı sistemde yok ");
         if (_user.emailVerified) {
@@ -94,13 +93,8 @@ class HizmetUser{
         }
         else if (!_user.emailVerified) {
           _firebaseAuth.signOut();
-          debugPrint("mail onaylamayan kullanıcı");
+          showToast(_context,"E-posta adresi veya şifre yanlış. Lütfen tekrar deneyiniz. Hesap bilgilerinden eminseniz lütfen doğrulama mailini onayladığınızdan emin olun",Colors.red);
         }
-      }
-      catch(e){
-        if(e.toString()=="[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted." || e.toString()=="[firebase_auth/user-not-found] The password is invalid or the user does not have a password.")
-        return showToast(context,"E-posta adresi veya şifre yanlış. Lütfen tekrar deneyiniz",Colors.red);
-      }
     }
   }
 
