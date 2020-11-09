@@ -13,12 +13,11 @@ import '../ui/SignIn.dart';
 
 class HizmetUser{
   FirebaseAuth _firebaseAuth;
-  String _firstname;
+  String _name;
   String _surname;
   String _email;
   String _password;
   String _gender;
-  String _username;
   BuildContext _context;
 
   String get password => _password;
@@ -27,10 +26,10 @@ class HizmetUser{
     _password = value;
   }
 
-  String get firstname => _firstname;
+  String get name => _name;
 
-  set firstname(String value) {
-    _firstname = value;
+  set name(String value) {
+    _name = value;
   }
 
   String get surname => _surname;
@@ -50,21 +49,14 @@ class HizmetUser{
   set email(String value) {
     _email = value;
   }
-  String get username => _username;
-
-  set username(String value)
-  {
-    _username=value;
-  }
-  HizmetUser({@required BuildContext context,@required firebaseAuth,@required String firstname,@required String surname,@required String email,@required String password,@required String gender,@required String username})
+  HizmetUser({@required BuildContext context,@required firebaseAuth,@required String name,@required String surname,@required String email,@required String password,@required String gender})
   {
     this._firebaseAuth=firebaseAuth;
-    this._firstname=firstname;
+    this._name=name;
     this._surname=surname;
     this._email=email;
     this._password=password;
     this._gender=gender;
-    this._username=username;
     this._context=context;
     debugPrint(this._email);
   }
@@ -102,11 +94,10 @@ class HizmetUser{
   addToFirebaseFirestore() async
   {
     HashMap<String, dynamic> userMap = HashMap<String, dynamic>();
-    userMap["firstname"] = _firstname;
+    userMap["name"] = _name;
     userMap["surname"] = _surname;
     userMap["gender"] = _gender;
     userMap["email"] = _email;
-    userMap["username"]=_username;
-    await firebaseFirestore.collection("hizmetAlanUsers").doc(this.username).set(userMap);
+    await firebaseFirestore.collection("hizmetAlanUsers").doc(this.email).set(userMap).catchError((onError)=>showToast(this._context, "Kullanıcı,veritabanına kaydedilirken bir sorunla karşılaşıldı", Colors.red));
   }
 }

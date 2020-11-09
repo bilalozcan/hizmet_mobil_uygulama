@@ -21,41 +21,37 @@ class _LoginPageState extends State<LoginPage> {
   HizmetUser _user;
   List<Step> _stepList;
   int _activeStep = 0;
-  String _firstName;
-  String _surName;
-  String _userName;
-  String e_mail;
+  String _name;
+  String _surname;
+  String _email;
   String _password;
   String _gender ;
   List<GlobalKey<FormState>> _formKeys = [];
 
   String get password => _password;
 
-  set password(String value) {
-    _password = value;
+  set password(String newPassword) {
+    this._password = newPassword;
   }
 
-  String get firstName => _firstName;
+  String get name => _name;
 
-  set firstName(String value) {
-    _firstName = value;
+  set name(String newName) {
+    this._name = newName;
   }
 
-  String get userName => _userName;
-
-  set userName(String value) {
-    _userName = value;
+  String get email =>_email;
+  set email(String newEmail)
+  {
+    this._email=newEmail;
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _formKeys.add(new GlobalKey<FormState>());
     _formKeys.add(new GlobalKey<FormState>());
     _formKeys.add(new GlobalKey<FormState>());
-    //_gender="Erkek";
-    //_obscureText=true;
   }
 
   @override
@@ -108,16 +104,15 @@ class _LoginPageState extends State<LoginPage> {
               continueButton(_activeStep);
             else if(_activeStep==_stepList.length-1) {
               debugPrint(
-                  "İsim:$_firstName   Soyisim:$_surName  Sifre:$_password  Cinsiyet:$_gender ");
+                  "İsim:$_name   Soyisim:$_surname  Sifre:$_password  Cinsiyet:$_gender ");
               _user = HizmetUser(
                   context: context,
                   firebaseAuth: widget._firebaseAuth,
-                  firstname: _firstName,
-                  surname: _surName,
-                  email: e_mail,
+                  name: _name,
+                  surname: _surname,
+                  email: _email,
                   password: _password,
-                  gender: _gender,
-              username: this._userName);
+                  gender: _gender);
               await _user.userLogIn();
             }
           },
@@ -153,38 +148,38 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   TextFormField(
                     decoration: InputDecoration(labelText: "İsim"),
-                    validator: (firstName) {
+                    validator: (name) {
                       String error = "";
-                      if (firstName == "") {
+                      if (name == "") {
                         error = "İsim kısmı boş geçilemez";
                         return error;
                       }
-                      if (firstName.contains(RegExp("[0-9]"))) {
+                      if (name.contains(RegExp("[0-9]"))) {
                         error = "Lutfen gecerli bir isim giriniz";
                         return error;
                       }
                       return null;
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    onSaved: (firstName) {
-                      this._firstName = firstName;
+                    onSaved: (name) {
+                      this._name = name;
                     },
                   ),
                   TextFormField(
                     decoration: InputDecoration(labelText: "Soy isim"),
-                    validator: (surName) {
+                    validator: (surname) {
                       String error = "";
-                      if (surName == "") return "Soy isim kısmı boş geçilemez";
-                      if (surName.contains(RegExp("[0-9]"))) {
+                      if (surname == "") return "Soy isim kısmı boş geçilemez";
+                      if (surname.contains(RegExp("[0-9]"))) {
                         error += "Lutfen gecerli bir soy isim giriniz";
                         return error;
                       }
                       return null;
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    onSaved: (surName) {
+                    onSaved: (surname) {
                       setState(() {
-                        this._surName = surName;
+                        this._surname = surname;
                       });
                     },
                   ),
@@ -207,9 +202,9 @@ class _LoginPageState extends State<LoginPage> {
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(labelText: "E-Mail"),
-                  onSaved: (e_mail) {
+                  onSaved: (email) {
                     setState(() {
-                      this.e_mail = e_mail;
+                      this._email = email;
                     });
                   },
                 ),
@@ -293,24 +288,6 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ).toList(),
                   ),
-                  TextFormField(
-                    keyboardType: TextInputType.name,
-                    decoration: InputDecoration(labelText: "Kullanıcı Adı"),
-                    onSaved: (userName) {
-                      setState(() {
-                        this.userName = userName;
-                      });
-                    },
-                    //autovalidateMode: AutovalidateMode.onUserInteraction,
-                    /*validator: (userName){
-                      if (firebaseFirestore
-                              .collection("hizmetAlanUsers")
-                              .doc("dd") !=null
-                          )
-                        return "Bu kullanıcı adı daha önce alınmış durumda, \n Lütfen başka bir kullanıcı adı alınız";
-                      return null;
-                    },*/
-                  )
                 ],
               ),
             ),
