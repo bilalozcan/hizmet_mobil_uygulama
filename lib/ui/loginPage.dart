@@ -138,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
         isActive: _activeStep == 0 ? true : false,
         state: _stepStateController(0),
         title: Text(
-          _activeStep == 0 ? "Kişisel Bilgiler" : "Kisi",
+          _activeStep == 0 ? "Kişisel Bilgiler" : "Kisi...",
         ),
         content: Column(
           children: [

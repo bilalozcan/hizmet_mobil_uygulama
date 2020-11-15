@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/main.dart';
+
 /*Tüm firebase verilerini uygulama açılırken almak doğru olmaz */
 class MainPage extends StatefulWidget {
   @override
@@ -9,6 +10,20 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("AnaSayfa"),),body: Container(child: Text(firebaseAuth.currentUser.email),),);
+    return WillPopScope(
+      onWillPop: ()async{
+        firebaseAuth.signOut();
+        Navigator.pop(context);
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("AnaSayfa"),
+        ),
+        body: Container(
+          child: Text(firebaseAuth.currentUser.email),
+        ),
+      ),
+    );
   }
 }
