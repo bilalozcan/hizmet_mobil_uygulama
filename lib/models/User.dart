@@ -102,6 +102,7 @@ class HizmetUser {
       await currentUser.sendEmailVerification();
       if (_firebaseAuth.currentUser != null) {
         _firebaseAuth.signOut();
+        showToast(_context,"Doğrulama E-postası $email adresine gönderilmiştir. Lütfen kontrol ediniz",Colors.green);
         Navigator.push(
                 _context, MaterialPageRoute(builder: (context) => SignIn()))
             .then((value) => debugPrint("aaa" + value.toString()));
@@ -114,16 +115,15 @@ class HizmetUser {
       User _user = (await _firebaseAuth
               .signInWithEmailAndPassword(
                   email: this.email, password: this.password)
-              .catchError((onError) {
-        /*onError.toString() ==
+              .catchError((onError) { /*if(
+        onError.toString() ==
                 "[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted." ||
             onError.toString() ==
-                "[firebase_auth/user-not-found] The password is invalid or the user does not have a password.")
+                "[firebase_auth/user-not-found] The password is invalid or the user does not have a password.")*/
           showToast(
               _context,
-              "E-posta adresi veya şifre yanlış. Lütfen tekrar deneyiniz",
-              Colors.red);*/
-        showToast(_context, onError.toString(), Colors.red);
+              "E-posta adresi veya şifre hatalı. Lütfen tekrar deneyiniz",
+              Colors.red);
       }))
           .user;
       if (_user == null) debugPrint("Böyle bir kullanıcı sistemde yok ");
@@ -143,7 +143,8 @@ class HizmetUser {
 
   /* Kullanıcı auth ve e mail işlemlerini tamamladıktan sonra fireBase'e eklenir */
   addToFirebaseFirestore(bool flag) async {
-    var doc = firebaseFirestore.collection("hizmetAlanUsers").doc(this.email);
+    //var doc = firebaseFirestore.collection("hizmetAlanUsers").doc(this.email);
+    var doc=collection.doc(this.email);
     if(flag==false) {
       userMap["name"] = _name;
       userMap["surname"] = _surname;

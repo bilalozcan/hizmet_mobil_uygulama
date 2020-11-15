@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:hizmet_mobil_uygulama/models/User.dart';
+import 'package:hizmet_mobil_uygulama/ui/resetPassword.dart';
+
+import 'loginPage.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -20,21 +24,16 @@ class _SignInState extends State<SignIn> {
         title: Text("Giris"),
       ),
       body: Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
-        height: MediaQuery
-            .of(context)
-            .size
-            .height,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         color: Colors.greenAccent,
         child: Center(
           child: Form(
             key: formKey,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                /* onSaved ve validator metodları eklenecek*/
+                Text("HİZMET", style: TextStyle(fontSize: 24)),
                 TextFormField(
                   decoration: InputDecoration(
                       labelText: "E-posta adresi",
@@ -45,15 +44,12 @@ class _SignInState extends State<SignIn> {
                     });
                   },
                 ),
+                SizedBox(height: 25),
                 TextFormField(
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: "Şifre",
                     border: OutlineInputBorder(),
-                    suffix: IconButton(
-                      icon: Icon(Icons.remove_red_eye_rounded),
-                      onPressed: () {},
-                    ),
                   ),
                   onSaved: (password) {
                     setState(() {
@@ -61,9 +57,34 @@ class _SignInState extends State<SignIn> {
                     });
                   },
                 ),
-                RaisedButton(
-                  child: Text("Giriş yap"),
+                CupertinoButton(
+                  child: Text(
+                    "Giriş yap",
+                  ),
                   onPressed: enterButton,
+                ),
+                InkWell(
+                  child: Text(
+                    "Şifreni mi Unuttun?",
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ResetPassword(),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 30),
+                CupertinoButton(
+                  color: Colors.white,
+                  child: Text("Yeni Hizmet Alan Hesabı Oluştur",
+                      style: TextStyle(color: Colors.green)),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage(firebaseAuth: firebaseAuth,)),
+                  ),
                 )
               ],
             ),
@@ -80,8 +101,11 @@ class _SignInState extends State<SignIn> {
         debugPrint(this._email);
         debugPrint(this._password);
       });
-    HizmetUser user=HizmetUser.SignIn(context: context, firebaseAuth: firebaseAuth, email: this._email, password: this._password);
+    HizmetUser user = HizmetUser.SignIn(
+        context: context,
+        firebaseAuth: firebaseAuth,
+        email: this._email,
+        password: this._password);
     user.userSignIn(context);
-
   }
 }
