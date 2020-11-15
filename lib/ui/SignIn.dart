@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:hizmet_mobil_uygulama/models/User.dart';
 import 'package:hizmet_mobil_uygulama/ui/resetPassword.dart';
@@ -33,7 +33,7 @@ class _SignInState extends State<SignIn> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("HİZMET", style: TextStyle(fontSize: 24)),
+                Text("HİZMET", style:GoogleFonts.swankyAndMooMoo(fontSize: 48)),
                 TextFormField(
                   decoration: InputDecoration(
                       labelText: "E-posta adresi",
