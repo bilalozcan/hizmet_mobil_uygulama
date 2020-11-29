@@ -13,6 +13,7 @@ tahmin ediyorum
 FirebaseFirestore firebaseFirestore=FirebaseFirestore.instance;
 FirebaseAuth firebaseAuth=FirebaseAuth.instance;
 var collection=firebaseFirestore.collection("hizmetAlanUsers");
+var collectionHizmetVeren=firebaseFirestore.collection("hizmetVerenUsers");
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
