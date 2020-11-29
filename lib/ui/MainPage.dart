@@ -11,17 +11,25 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: ()async{
+      onWillPop: () async {
         firebaseAuth.signOut();
         Navigator.pop(context);
         return true;
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text("AnaSayfa"),
+          title: Text("Ana Sayfa"),
         ),
-        body: Container(
-          child: Text(firebaseAuth.currentUser.email),
+        body: Column(
+          children: [
+            Container(
+              child: Text("Hoşgeldiniz Burası Ana Sayfa"),
+            ),
+            Container(
+              child: Text(firebaseAuth.currentUser.email),
+            ),
+            Text("Web Sürüm Eklendi!!!"),
+          ],
         ),
       ),
     );
