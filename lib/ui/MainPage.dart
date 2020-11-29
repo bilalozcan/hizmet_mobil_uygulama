@@ -28,6 +28,7 @@ class _MainPageState extends State<MainPage> {
             Container(
               child: Text(firebaseAuth.currentUser.email),
             ),
+            Text("Web Sürüm Eklendi!!!"),
           ],
         ),
       ),
