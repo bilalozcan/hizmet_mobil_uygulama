@@ -2,6 +2,7 @@ import 'dart:collection';
 
 //import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,6 +23,13 @@ class HizmetUser {
   String _hizmetVerenSehir;
   BuildContext _context;
   HashMap<String, dynamic> userMap = HashMap<String, dynamic>();
+  DateTime _dateOfBirth;
+
+  DateTime get dateOfBirth => _dateOfBirth;
+
+  set dateOfBirth(DateTime dateOfBirth) {
+    _dateOfBirth = dateOfBirth;
+  }
 
   String get hizmetVerenSehir => _hizmetVerenSehir;
 
@@ -69,7 +77,8 @@ class HizmetUser {
       @required String surname,
       @required String email,
       @required String password,
-      @required String gender}) {
+      @required String gender,
+      @required DateTime dateOfBirth}) {
     this._firebaseAuth = firebaseAuth;
     this._name = name;
     this._surname = surname;
@@ -77,8 +86,9 @@ class HizmetUser {
     this._password = password;
     this._gender = gender;
     this._context = context;
+    this._dateOfBirth=dateOfBirth;
   }
-  HizmetUser.HizmetVeren({@required BuildContext context,
+  /*HizmetUser.HizmetVeren({@required BuildContext context,
       @required firebaseAuth,
       @required String name,
       @required String surname,
@@ -95,7 +105,7 @@ class HizmetUser {
   this._context = context;
   this._hizmetVerenSehir=hizmetVerenSehir;
 
-  }
+  }*/
 
   HizmetUser.SignIn({
     @required BuildContext context,
@@ -119,7 +129,7 @@ class HizmetUser {
               email: this.email, password: this.password)
           .catchError((onError) => showToast(
               _context,
-              "Bu e mail adresi zaten alınmış durumda lütfen başka bir mail adresi ile tekrar deneyiniz",
+              "E-posta düzeni hatalı ya da bu E-posta adresi daha önceden alınmış durumda.\n  Lütfen yeni bir e-posta adresi giriniz",
               Colors.red));
       User currentUser = _credential.user;
       if(this._hizmetVerenSehir==null)

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:hizmet_mobil_uygulama/models/User.dart';
-import 'package:hizmet_mobil_uygulama/ui/loginPageHizmetVeren.dart';
+//import 'package:hizmet_mobil_uygulama/ui/loginPageHizmetVeren.dart';
 import 'package:hizmet_mobil_uygulama/ui/resetPassword.dart';
 
 import 'loginPage.dart';
@@ -85,7 +85,7 @@ class _SignInState extends State<SignIn> {
                       style: TextStyle(color: Colors.green)),
                   onPressed: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPageHizmetVeren(firebaseAuth: firebaseAuth)),
+                    MaterialPageRoute(builder: (context) => LoginPage(firebaseAuth: firebaseAuth)),
                   ),
                 )
               ],
