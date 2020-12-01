@@ -5,8 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
@@ -132,10 +130,7 @@ class HizmetUser {
               "E-posta düzeni hatalı ya da bu E-posta adresi daha önceden alınmış durumda.\n  Lütfen yeni bir e-posta adresi giriniz",
               Colors.red));
       User currentUser = _credential.user;
-      if(this._hizmetVerenSehir==null)
       addToFirebaseFirestore(false);
-      else
-        addHizmetVerenToFirebaseFirestore(false);
       await currentUser.sendEmailVerification();
       if (_firebaseAuth.currentUser != null) {
         _firebaseAuth.signOut();
@@ -165,10 +160,7 @@ class HizmetUser {
           .user;
       if (_user == null) debugPrint("Böyle bir kullanıcı sistemde yok ");
       if (_user.emailVerified) {
-        if(this._hizmetVerenSehir==null)
         addToFirebaseFirestore(true);
-        else
-          addHizmetVerenToFirebaseFirestore(true);
         Navigator.push(
             _context, MaterialPageRoute(builder: (_context) => MainPage()));
       } else if (!_user.emailVerified) {
@@ -182,27 +174,30 @@ class HizmetUser {
   }
 
   /* Kullanıcı auth ve e mail işlemlerini tamamladıktan sonra fireBase'e eklenir */
-  addToFirebaseFirestore(bool flag) async {
+  addToFirebaseFirestore(bool flag) {
     var doc=collection.doc(this.email);
-    if(flag==false) {
-      userMap["name"] = _name;
-      userMap["surname"] = _surname;
-      userMap["gender"] = _gender;
-      userMap["email"] = _email;
-      userMap["flag"] = flag;
-      await doc.set(userMap).catchError((onError) => showToast(
+    doc.get().then((value)async {
+      if (value.data()==null)
+        {
+          debugPrint(this.email);
+          if(flag==false) {
+            userMap["name"] = _name;
+            userMap["surname"] = _surname;
+            userMap["gender"] = _gender;
+            userMap["email"] = _email;
+            userMap["flag"] = flag;
+          }
+        }
+      else if(value.data()!=null && flag==true)
+      {
+        userMap["flag"]=flag;
+      }
+      await doc.set(userMap,SetOptions(merge: true)).catchError((onError) => showToast(
           this._context,
           "Kullanıcı,veritabanına kaydedilirken bir sorunla karşılaşıldı",
           Colors.red));
-    }
-    else if(flag==true)
-      {
-        userMap["flag"]=flag;
-        await doc.set(userMap,SetOptions(merge: true)).catchError((onError) => showToast(
-            this._context,
-            "Kullanıcı,veritabanına kaydedilirken bir sorunla karşılaşıldı",
-            Colors.red));
-      }/*Kullanıcı her giriş yaptığında veri tabanına kaydediyor bunu engelle */
+    });
+
   }
   addHizmetVerenToFirebaseFirestore(bool flag) async
   {
