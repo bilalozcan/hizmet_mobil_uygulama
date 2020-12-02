@@ -1,6 +1,8 @@
 import 'dart:collection';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hizmet_mobil_uygulama/CarouselSlider.dart';
 import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hizmet_mobil_uygulama/models/User.dart';
@@ -13,11 +15,13 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  bool showUpdateNotes;
   Map<String,Object> currentUser;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    showUpdateNotes=true;
   }
   @override
   Widget build(BuildContext context) {
@@ -27,17 +31,20 @@ class _MainPageState extends State<MainPage> {
         Navigator.pop(context);
         return true;
       },
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text("HİZMET", style:GoogleFonts.swankyAndMooMoo(fontSize: 48)),
-        ),
-        body:Profile(),
+      child: Material(
+        child:CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"]),
         ),
       );
   }
-  Profile()
-  {
-    return Container(child:ListTile(title:Text(""),),);
+  updateNotes() {
+  return Column(
+    children: [
+      IconButton(icon:Icon(Icons.close),onPressed: () {setState(() {
+        showUpdateNotes=false;
+      });},),
+      Dialog(child:CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"])),
+    ],
+  );
   }
+/*Dialog(child: CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"]),),*/
 }
