@@ -56,20 +56,20 @@ class _CarouselSliderState extends State<CarouselSlider> {
                     ),
                     height:(MediaQuery.of(context).size.height)/2,
                   ),
-                  Positioned(
+                  /*Positioned(
                     top: ((MediaQuery.of(context).size.height)/2)-32,
                     child: Dots(
                         numberOfDots: widget._photoPaths.length,
                         selectedPhotoIndex: _photosIndex),
                     left: (MediaQuery.of(context).size.width / 2) - 32,
-                  ),
+                  ),*/
                   /*Positioned(left:(MediaQuery.of(context).size.width)-128,child: IconButton(icon: Icon(Icons.close),onPressed:(){
                     Navigator.of(context).pop();
                   },),)*/
                 ],
               ),
             ),
-            Container(height:338,child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [Text("Hizmet Uygulamasi",style: TextStyle(fontSize:24),)],),),
+            Container(height:200,child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [Text("Hizmet Uygulamasi",style: TextStyle(fontSize:24),)],),),
 
             Container(
               color: Colors.blue[900],

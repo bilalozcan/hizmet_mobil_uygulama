@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hizmet_mobil_uygulama/CarouselSlider.dart';
+import 'file:///C:/Users/ornek/AndroidStudioProjects/hizmet_mobil_uygulama/lib/models/CarouselSlider.dart';
 import 'package:hizmet_mobil_uygulama/ui/SignIn.dart';
 import 'package:hizmet_mobil_uygulama/ui/loginPage.dart';
 import 'package:firebase_core/firebase_core.dart';
