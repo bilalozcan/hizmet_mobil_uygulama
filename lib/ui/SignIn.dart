@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:hizmet_mobil_uygulama/models/User.dart';
@@ -20,8 +21,8 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
+        centerTitle: true,
         title: Text("Giris"),
       ),
       body: Container(
@@ -29,65 +30,70 @@ class _SignInState extends State<SignIn> {
         height: MediaQuery.of(context).size.height,
         color: Colors.greenAccent,
         child: Center(
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("HİZMET", style:GoogleFonts.swankyAndMooMoo(fontSize: 48)),
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText: "E-posta adresi",
-                      border: OutlineInputBorder()),
-                  onSaved: (email) {
-                    setState(() {
-                      this._email = email;
-                    });
-                  },
-                ),
-                SizedBox(height: 25),
-                TextFormField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: "Şifre",
-                    border: OutlineInputBorder(),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("HİZMET", style:GoogleFonts.swankyAndMooMoo(fontSize: 48)),
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                        labelText: "E-mail",
+                        labelStyle: TextStyle(color: Colors.blue[700]),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)),)),
+                    onSaved: (email) {
+                      setState(() {
+                        this._email = email;
+                      });
+                    },
                   ),
-                  onSaved: (password) {
-                    setState(() {
-                      this._password = password;
-                    });
-                  },
-                ),
-                CupertinoButton(
-                  child: Text(
-                    "Giriş yap",
+                  SizedBox(height: 25),
+                  TextFormField(
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: "Şifre",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                    ),
+                    onSaved: (password) {
+                      setState(() {
+                        this._password = password;
+                      });
+                    },
                   ),
-                  onPressed: enterButton,
-                ),
-                InkWell(
-                  child: Text(
-                    "Şifreni mi Unuttun?",
-                    style: TextStyle(color: Colors.blue),
+                  CupertinoButton(
+                    child: Text(
+                      "Giriş yap",
+                    ),
+                    onPressed: enterButton,
                   ),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ResetPassword(),
+                  InkWell(
+                    child: Text(
+                      "Şifreni mi Unuttun?",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ResetPassword(),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 30),
-                CupertinoButton(
-                  color: Colors.white,
-                  child: Text("Yeni Hizmet Alan Hesabı Oluştur",
-                      style: TextStyle(color: Colors.green)),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage(firebaseAuth: firebaseAuth)),
-                  ),
-                )
-              ],
+                  SizedBox(height: 30),
+                  CupertinoButton(
+                    color: Colors.white,
+                    child: Text("Yeni Hizmet Hesabı Oluştur",
+                        style: TextStyle(color: Colors.green)),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage(firebaseAuth: firebaseAuth)),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
