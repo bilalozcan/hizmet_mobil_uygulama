@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hizmet_mobil_uygulama/CarouselSlider.dart';
 import 'package:hizmet_mobil_uygulama/ui/SignIn.dart';
 import 'package:hizmet_mobil_uygulama/ui/loginPage.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -36,6 +37,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home:SignIn(),theme: ThemeData(primarySwatch: Colors.green),debugShowCheckedModeBanner: false,);
+    return MaterialApp(home:CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg",]),theme: ThemeData(primarySwatch: Colors.green),debugShowCheckedModeBanner: false,);
   }
 }
