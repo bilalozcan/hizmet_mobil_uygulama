@@ -41,15 +41,9 @@ class _CarouselSliderState extends State<CarouselSlider> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("HİZMET"),
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
+   return Container(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Center(
               child: Stack(
@@ -58,24 +52,29 @@ class _CarouselSliderState extends State<CarouselSlider> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage(widget._photoPaths[_photosIndex]),
-                          fit: BoxFit.fill),
+                          fit: BoxFit.cover),
                     ),
-                    height: 400.0,
+                    height:(MediaQuery.of(context).size.height)/2,
                   ),
                   Positioned(
-                    top: 375,
+                    top: ((MediaQuery.of(context).size.height)/2)-32,
                     child: Dots(
                         numberOfDots: widget._photoPaths.length,
                         selectedPhotoIndex: _photosIndex),
                     left: (MediaQuery.of(context).size.width / 2) - 32,
-                  )
+                  ),
+                  /*Positioned(left:(MediaQuery.of(context).size.width)-128,child: IconButton(icon: Icon(Icons.close),onPressed:(){
+                    Navigator.of(context).pop();
+                  },),)*/
                 ],
               ),
             ),
+            Container(height:338,child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [Text("Hizmet Uygulamasi",style: TextStyle(fontSize:24),)],),),
+
             Container(
               color: Colors.blue[900],
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   CupertinoButton(
                     child: Text(
@@ -84,6 +83,8 @@ class _CarouselSliderState extends State<CarouselSlider> {
                     ),
                     onPressed: _prevImage,
                   ),
+                  Dots(numberOfDots: widget._photoPaths.length,
+                      selectedPhotoIndex: _photosIndex),
                   CupertinoButton(
                     child: Text(
                       "İleri",
@@ -91,13 +92,13 @@ class _CarouselSliderState extends State<CarouselSlider> {
                     ),
                     onPressed: _nextImage,
                   ),
+
                 ],
               ),
             )
           ],
         ),
-      ),
-    );
+      );
   }
 }
 
