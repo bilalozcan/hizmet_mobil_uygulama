@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   String _password;
   String _gender;
   bool _accept;
+  bool _obscureText;
 
   List<GlobalKey<FormState>> _formKeys = [];
 
@@ -55,6 +56,7 @@ class _LoginPageState extends State<LoginPage> {
     _formKeys.add(new GlobalKey<FormState>());
     _formKeys.add(new GlobalKey<FormState>());
     _accept = false;
+    _obscureText=true;
   }
 
   @override
@@ -209,8 +211,21 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 5),
                 TextFormField(
                   keyboardType: TextInputType.visiblePassword,
-                  obscureText: true,
+                  obscureText: _obscureText,
                   decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.remove_red_eye,
+                        color: _obscureText == true
+                            ? Colors.black
+                            : Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                    ),
                     labelText: "Şifre",
                     border: OutlineInputBorder(),
                     errorBorder: OutlineInputBorder(
@@ -236,8 +251,21 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 5),
                 TextFormField(
                   keyboardType: TextInputType.visiblePassword,
-                  obscureText: true,
+                  obscureText: _obscureText,
                   decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.remove_red_eye,
+                        color: _obscureText == true
+                            ? Colors.black
+                            : Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                    ),
                     labelText: "Şifreyi Onayla",
                     border: OutlineInputBorder(),
                     errorBorder: OutlineInputBorder(

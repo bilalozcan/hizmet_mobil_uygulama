@@ -6,7 +6,7 @@ import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:hizmet_mobil_uygulama/models/User.dart';
 import 'package:hizmet_mobil_uygulama/ui/resetPassword.dart';
 
-import 'loginPage.dart';
+import 'SignUp.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -16,7 +16,16 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   String _email;
   String _password;
-  var formKey = GlobalKey<FormState>();
+  bool _obscureText;
+  var formKey;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _obscureText = true;
+    formKey = GlobalKey<FormState>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +46,16 @@ class _SignInState extends State<SignIn> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("HİZMET", style:GoogleFonts.swankyAndMooMoo(fontSize: 48)),
+                  Text("HİZMET",
+                      style: GoogleFonts.swankyAndMooMoo(fontSize: 48)),
                   TextFormField(
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                         labelText: "E-mail",
                         labelStyle: TextStyle(color: Colors.blue[700]),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)),)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        )),
                     onSaved: (email) {
                       setState(() {
                         this._email = email;
@@ -52,10 +64,24 @@ class _SignInState extends State<SignIn> {
                   ),
                   SizedBox(height: 25),
                   TextFormField(
-                    obscureText: true,
+                    obscureText: _obscureText,
                     decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          Icons.remove_red_eye,
+                          color: _obscureText == true
+                              ? Colors.black
+                              : Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                      ),
                       labelText: "Şifre",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
                     onSaved: (password) {
                       setState(() {
@@ -77,8 +103,7 @@ class _SignInState extends State<SignIn> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ResetPassword(),
+                        builder: (context) => ResetPassword(),
                       ),
                     ),
                   ),
@@ -89,7 +114,9 @@ class _SignInState extends State<SignIn> {
                         style: TextStyle(color: Colors.green)),
                     onPressed: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginPage(firebaseAuth: firebaseAuth)),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              LoginPage(firebaseAuth: firebaseAuth)),
                     ),
                   )
                 ],
