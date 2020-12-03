@@ -49,64 +49,66 @@ class _CarouselSliderState extends State<CarouselSlider> {
 
   @override
   Widget build(BuildContext context) {
-   return Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Center(
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(widget._photoPaths[_photosIndex]),
-                          fit: BoxFit.cover),
+   return Material(
+     child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Center(
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(widget._photoPaths[_photosIndex]),
+                            fit: BoxFit.cover),
+                      ),
+                      height:(MediaQuery.of(context).size.height)/2,
                     ),
-                    height:(MediaQuery.of(context).size.height)/2,
-                  ),
-                  /*Positioned(
-                    top: ((MediaQuery.of(context).size.height)/2)-32,
-                    child: Dots(
-                        numberOfDots: widget._photoPaths.length,
+                    /*Positioned(
+                      top: ((MediaQuery.of(context).size.height)/2)-32,
+                      child: Dots(
+                          numberOfDots: widget._photoPaths.length,
+                          selectedPhotoIndex: _photosIndex),
+                      left: (MediaQuery.of(context).size.width / 2) - 32,
+                    ),*/
+                    /*Positioned(left:(MediaQuery.of(context).size.width)-128,child: IconButton(icon: Icon(Icons.close),onPressed:(){
+                      Navigator.of(context).pop();
+                    },),)*/
+                  ],
+                ),
+              ),
+              Container(height:200,child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [Text("Hizmet Uygulamasi",style: TextStyle(fontSize:24),)],),),
+
+              Container(
+                color: Colors.blue[900],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    CupertinoButton(
+                      child: Text(
+                        "Geri",
+                        style: TextStyle(color: Colors.green),
+                      ),
+                      onPressed: _prevImage,
+                    ),
+                    Dots(numberOfDots: widget._photoPaths.length,
                         selectedPhotoIndex: _photosIndex),
-                    left: (MediaQuery.of(context).size.width / 2) - 32,
-                  ),*/
-                  /*Positioned(left:(MediaQuery.of(context).size.width)-128,child: IconButton(icon: Icon(Icons.close),onPressed:(){
-                    Navigator.of(context).pop();
-                  },),)*/
-                ],
-              ),
-            ),
-            Container(height:200,child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [Text("Hizmet Uygulamasi",style: TextStyle(fontSize:24),)],),),
-
-            Container(
-              color: Colors.blue[900],
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  CupertinoButton(
-                    child: Text(
-                      "Geri",
-                      style: TextStyle(color: Colors.green),
+                    CupertinoButton(
+                      child: Text(
+                        _photosIndex==widget._photoPaths.length-1?"BAŞLAYALIM":"İLERİ",
+                        style: TextStyle(color: Colors.green),
+                      ),
+                      onPressed: _nextImage,
                     ),
-                    onPressed: _prevImage,
-                  ),
-                  Dots(numberOfDots: widget._photoPaths.length,
-                      selectedPhotoIndex: _photosIndex),
-                  CupertinoButton(
-                    child: Text(
-                      _photosIndex==widget._photoPaths.length-1?"BAŞLAYALIM":"İLERİ",
-                      style: TextStyle(color: Colors.green),
-                    ),
-                    onPressed: _nextImage,
-                  ),
 
-                ],
-              ),
-            )
-          ],
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
-      );
+   );
   }
 }
 

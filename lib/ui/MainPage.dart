@@ -28,7 +28,11 @@ class _MainPageState extends State<MainPage> {
   activeUser()async
   {
     SharedPreferences value=await SharedPreferences.getInstance();
-    value.setInt("${firebaseAuth.currentUser.email}",1);
+    if(firebaseAuth.currentUser.email!=null) {
+      setState(() {
+        value.setInt("${firebaseAuth.currentUser.email}", 1);
+      });
+    }
   }
 
   exit()
