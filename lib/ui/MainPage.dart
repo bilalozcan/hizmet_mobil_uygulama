@@ -36,11 +36,7 @@ class _MainPageState extends State<MainPage> {
         appBar: AppBar(
           title: Text("HİZMET"),
         ),
-        body: CarouselSlider(photoPaths: [
-          "assets/carouselPhotos/photo1.jpg",
-          "assets/carouselPhotos/photo2.jpg",
-          "assets/carouselPhotos/photo3.jpg"
-        ]),
+        body: Text("Giris Sayfasi"),
       ),
     );
   }
