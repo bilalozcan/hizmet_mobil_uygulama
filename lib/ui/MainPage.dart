@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hizmet_mobil_uygulama/models/CarouselSlider.dart';
 import 'package:hizmet_mobil_uygulama/models/User.dart';
 import 'package:hizmet_mobil_uygulama/utils/DialogMessage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /*Tüm firebase verilerini uygulama açılırken almak doğru olmaz */
 class MainPage extends StatefulWidget {
@@ -15,14 +16,24 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  bool showUpdateNotes;
   Map<String, Object> currentUser;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    showUpdateNotes = true;
+    activeUser();
+  }
+
+  activeUser()async
+  {
+    SharedPreferences value=await SharedPreferences.getInstance();
+    value.setInt("${firebaseAuth.currentUser.email}",1);
+  }
+
+  exit()
+  {
+    dialogMessageForExit(context);
   }
 
   @override
@@ -33,32 +44,20 @@ class _MainPageState extends State<MainPage> {
         return true;
       },
       child: Scaffold(
+        drawer: Drawer(child:DrawerHeader(child:ListView.builder(itemCount: 10,itemBuilder: (context,index)
+          {
+            if(index%2==0)
+              return Divider();
+            return
+                Row(mainAxisAlignment:MainAxisAlignment.center,children: [InkWell(onTap: (){
+                  dialogMessageForExit(context);
+                },child:Text("ÇIKIŞ YAP"))],);
+          },))),
         appBar: AppBar(
           title: Text("HİZMET"),
         ),
-        body: Text("Giris Sayfasi"),
+        body: Text("${firebaseAuth.currentUser.email}"),
       ),
-    );
-  }
-
-  updateNotes() {
-    return Column(
-      children: [
-        IconButton(
-          icon: Icon(Icons.close),
-          onPressed: () {
-            setState(() {
-              showUpdateNotes = false;
-            });
-          },
-        ),
-        Dialog(
-            child: CarouselSlider(photoPaths: [
-          "assets/carouselPhotos/photo1.jpg",
-          "assets/carouselPhotos/photo2.jpg",
-          "assets/carouselPhotos/photo3.jpg"
-        ])),
-      ],
     );
   }
 /*Dialog(child: CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"]),),*/
