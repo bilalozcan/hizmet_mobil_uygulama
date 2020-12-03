@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hizmet_mobil_uygulama/models/CarouselSlider.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
@@ -136,8 +137,11 @@ class HizmetUser {
       if (_user == null) debugPrint("Böyle bir kullanıcı sistemde yok ");
       if (_user.emailVerified) {
         addToFirebaseFirestore(true);
+       /* Navigator.push(
+            _context, MaterialPageRoute(builder: (_context) => MainPage()));*/
         Navigator.push(
-            _context, MaterialPageRoute(builder: (_context) => MainPage()));
+            _context, MaterialPageRoute(builder: (_context) => CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"])));
+
       } else if (!_user.emailVerified) {
         _firebaseAuth.signOut();
         showToast(

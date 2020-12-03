@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
 
 class CarouselSlider extends StatefulWidget {
   List<String> _photoPaths;
@@ -22,8 +23,10 @@ class _CarouselSliderState extends State<CarouselSlider> {
 
   void _nextImage() {
     setState(() {
-      _photosIndex =
-          (_photosIndex == widget._photoPaths.length - 1 ? 0 : _photosIndex + 1);
+      if(_photosIndex==widget._photoPaths.length-1)
+        Navigator.push(context,MaterialPageRoute(builder:(context)=>MainPage()));
+      else
+        _photosIndex++;
     });
   }
 
@@ -87,7 +90,7 @@ class _CarouselSliderState extends State<CarouselSlider> {
                       selectedPhotoIndex: _photosIndex),
                   CupertinoButton(
                     child: Text(
-                      "İleri",
+                      _photosIndex==widget._photoPaths.length-1?"BAŞLAYALIM":"İLERİ",
                       style: TextStyle(color: Colors.green),
                     ),
                     onPressed: _nextImage,
