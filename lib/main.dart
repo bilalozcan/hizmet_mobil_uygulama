@@ -54,13 +54,16 @@ class _MyAppState extends State<MyApp> {
   active() async {
     SharedPreferences value = await SharedPreferences.getInstance();
     if (firebaseAuth.currentUser.email != null) {
-      _isActive = value.getInt("${firebaseAuth.currentUser.email}");
-      debugPrint("isActive?" + _isActive.toString());
+      setState(() {
+        _isActive = value.getInt("${firebaseAuth.currentUser.email}");
+        debugPrint("isActiveee"+_isActive.toString());
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("isActiveee"+_isActive.toString());
     return MaterialApp(
       home: _isActive == 1 ? MainPage() : SignIn(),
       theme: ThemeData(primarySwatch: Colors.green),
