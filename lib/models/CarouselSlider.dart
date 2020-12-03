@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CarouselSlider extends StatefulWidget {
+  String _email;
   List<String> _photoPaths;
-  CarouselSlider({@required List<String> photoPaths})
+  CarouselSlider({@required List<String> photoPaths,@required String email})
   {
     this._photoPaths=photoPaths;
+    this._email=email;
   }
   @override
   _CarouselSliderState createState() => _CarouselSliderState();
@@ -34,12 +37,14 @@ class _CarouselSliderState extends State<CarouselSlider> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget._photoPaths = [
-      "assets/carouselPhotos/photo1.jpg",
-      "assets/carouselPhotos/photo2.jpg",
-      "assets/carouselPhotos/photo3.jpg",
-    ];
     _photosIndex = 0;
+    firstSignInWithEmail();
+  }
+
+  firstSignInWithEmail ()async
+  {
+    SharedPreferences value=await SharedPreferences.getInstance();
+    value.setInt("${widget._email}",1);
   }
 
   @override
