@@ -2,9 +2,9 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/ornek/AndroidStudioProjects/hizmet_mobil_uygulama/lib/models/CarouselSlider.dart';
 import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hizmet_mobil_uygulama/models/CarouselSlider.dart';
 import 'package:hizmet_mobil_uygulama/models/User.dart';
 import 'package:hizmet_mobil_uygulama/utils/DialogMessage.dart';
 
