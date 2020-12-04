@@ -20,7 +20,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   HizmetUser _user;
   List<Step> _stepList;
-  int _activeStep = 0;
+  int _activeStep;
+
   String _name;
   String _surname;
   String _email;
@@ -56,7 +57,8 @@ class _LoginPageState extends State<LoginPage> {
     _formKeys.add(new GlobalKey<FormState>());
     _formKeys.add(new GlobalKey<FormState>());
     _accept = false;
-    _obscureText=true;
+    _obscureText = true;
+    _activeStep = 0;
   }
 
   @override
@@ -111,10 +113,7 @@ class _LoginPageState extends State<LoginPage> {
         },
         onStepCancel: () {
           setState(() {
-            if (_activeStep != 0)
-              _activeStep--;
-            else
-              debugPrint("ilk asamadaki cancel tiklandi");
+            if (_activeStep != 0) _activeStep--;
           });
         },
         type: StepperType.horizontal,
@@ -141,18 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     decoration: InputDecoration(
                         labelText: "İsim", border: OutlineInputBorder()),
-                    validator: (name) {
-                      String error = "";
-                      if (name == "") {
-                        error = "İsim kısmı boş geçilemez";
-                        return error;
-                      }
-                      if (name.contains(RegExp("[0-9]"))) {
-                        error = "Lutfen gecerli bir isim giriniz";
-                        return error;
-                      }
-                      return null;
-                    },
+                    validator: _nameValidator,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     onSaved: (name) {
                       this._name = name;
@@ -162,15 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     decoration: InputDecoration(
                         labelText: "Soy isim", border: OutlineInputBorder()),
-                    validator: (surname) {
-                      String error = "";
-                      if (surname == "") return "Soy isim kısmı boş geçilemez";
-                      if (surname.contains(RegExp("[0-9]"))) {
-                        error += "Lutfen gecerli bir soy isim giriniz";
-                        return error;
-                      }
-                      return null;
-                    },
+                    validator: _nameValidator,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     onSaved: (surname) {
                       setState(() {
@@ -213,38 +193,17 @@ class _LoginPageState extends State<LoginPage> {
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: _obscureText,
                   decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        Icons.remove_red_eye,
-                        color: _obscureText == true
-                            ? Colors.black
-                            : Colors.white,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
-                      },
-                    ),
+                    suffixIcon: _showPassword(),
                     labelText: "Şifre",
                     border: OutlineInputBorder(),
                     errorBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.red)),
                   ),
-                  validator: (password) {
-                    if (password.length < 6)
-                      return "Şifrenizin 6 karakterden daha büyük olması gerekmektedir.";
-                    if (!password.contains(RegExp("[0-9]")) ||
-                        !password.contains(RegExp("[a-z]")) ||
-                        !password.contains(RegExp("[A-Z]")))
-                      return "Şifreniz en az bir sayı,bir büyük harf ve bir küçük harf içermelidir";
-                    return null;
-                  },
+                  validator: _passwordValidator,
                   onChanged: (password) {
                     setState(() {
                       this.password = password;
                     });
-                    debugPrint(this.password);
                   },
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
@@ -253,31 +212,13 @@ class _LoginPageState extends State<LoginPage> {
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: _obscureText,
                   decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        Icons.remove_red_eye,
-                        color: _obscureText == true
-                            ? Colors.black
-                            : Colors.white,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
-                      },
-                    ),
-                    labelText: "Şifreyi Onayla",
+                    suffixIcon: _showPassword(),
+                    labelText: "Şifreyi Tekrarla",
                     border: OutlineInputBorder(),
                     errorBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.red)),
                   ),
-                  validator: (rePassword) {
-                    if (rePassword != this.password) {
-                      debugPrint(password);
-                      return "İki şifre birbiriyle eşleşmiyor";
-                    }
-                    return null;
-                  },
+                  validator: _repeatPasswordValidator,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
               ],
@@ -425,5 +366,46 @@ class _LoginPageState extends State<LoginPage> {
       return StepState.complete;
     else
       return StepState.error;
+  }
+
+  String _nameValidator(String name) {
+    if (name == "") {
+      return "İsim kısmı boş geçilemez";
+    }
+    if (name.contains(RegExp("[0-9]"))) {
+      return "Lutfen gecerli bir isim giriniz";
+    }
+    return null;
+  }
+
+  String _passwordValidator(String password) {
+    if (password.length < 6)
+      return "Şifrenizin 6 karakterden daha büyük olması gerekmektedir.";
+    if (!password.contains(RegExp("[0-9]")) ||
+        !password.contains(RegExp("[a-z]")) ||
+        !password.contains(RegExp("[A-Z]")))
+      return "Şifreniz en az bir sayı,bir büyük harf ve bir küçük harf içermelidir";
+    return null;
+  }
+
+  String _repeatPasswordValidator(String repeatPassword) {
+    if (repeatPassword != this.password) {
+      return "İki şifre birbiriyle eşleşmiyor";
+    }
+    return null;
+  }
+
+  Widget _showPassword() {
+    return IconButton(
+      icon: Icon(
+        Icons.remove_red_eye,
+        color: _obscureText == true ? Colors.black : Colors.white,
+      ),
+      onPressed: () {
+        setState(() {
+          _obscureText = !_obscureText;
+        });
+      },
+    );
   }
 }

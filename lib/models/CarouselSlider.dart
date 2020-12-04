@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Dots.dart';
 
 class CarouselSlider extends StatefulWidget {
   String _email;
@@ -26,10 +27,13 @@ class _CarouselSliderState extends State<CarouselSlider> {
 
   void _nextImage() {
     setState(() {
-      if(_photosIndex==widget._photoPaths.length-1)
-        Navigator.push(context,MaterialPageRoute(builder:(context)=>MainPage()));
-      else
+      if(_photosIndex==widget._photoPaths.length-1) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MainPage()));
+      }
+      else {
         _photosIndex++;
+      }
     });
   }
 
@@ -44,7 +48,10 @@ class _CarouselSliderState extends State<CarouselSlider> {
   firstSignInWithEmail ()async
   {
     SharedPreferences value=await SharedPreferences.getInstance();
-    value.setInt("${widget._email}",1);
+    setState(() {
+      value.setInt("${widget._email}",1);
+    });
+
   }
 
   @override
@@ -63,7 +70,7 @@ class _CarouselSliderState extends State<CarouselSlider> {
                             image: AssetImage(widget._photoPaths[_photosIndex]),
                             fit: BoxFit.cover),
                       ),
-                      height:(MediaQuery.of(context).size.height)/2,
+                      height:((MediaQuery.of(context).size.height)/2)-11,
                     ),
                     /*Positioned(
                       top: ((MediaQuery.of(context).size.height)/2)-32,
@@ -78,7 +85,7 @@ class _CarouselSliderState extends State<CarouselSlider> {
                   ],
                 ),
               ),
-              Container(height:200,child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [Text("Hizmet Uygulamasi",style: TextStyle(fontSize:24),)],),),
+              Container(height:300,child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [Text("Hizmet Uygulamasi",style: TextStyle(fontSize:24),)],),),
 
               Container(
                 color: Colors.blue[900],
@@ -112,57 +119,3 @@ class _CarouselSliderState extends State<CarouselSlider> {
   }
 }
 
-class Dots extends StatelessWidget {
-  int numberOfDots;
-  int selectedPhotoIndex;
-
-  Dots({this.numberOfDots, this.selectedPhotoIndex});
-
-  Widget _activeDot() {
-    return Container(
-      child: Padding(
-        padding: EdgeInsets.only(left: 3.0, right: 3.0),
-        child: Container(
-          height: 10.0,
-          width: 10.0,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5.0),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey, spreadRadius: 0.0, blurRadius: 2.0)
-              ]),
-        ),
-      ),
-    );
-  }
-
-  Widget _inactiveDot() {
-    return new Container(
-        child: new Padding(
-      padding: const EdgeInsets.only(left: 3.0, right: 3.0),
-      child: Container(
-        height: 8.0,
-        width: 8.0,
-        decoration: BoxDecoration(
-            color: Colors.grey, borderRadius: BorderRadius.circular(4.0)),
-      ),
-    ));
-  }
-
-  List<Widget> _buildDots() {
-    List<Widget> dots = List<Widget>();
-    for (int i = 0; i < numberOfDots; ++i) {
-      dots.add(i == selectedPhotoIndex ? _activeDot() : _inactiveDot());
-    }
-    return dots;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: _buildDots(),
-    );
-  }
-}

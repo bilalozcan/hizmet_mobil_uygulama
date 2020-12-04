@@ -4,11 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 uygulamanın alt tarafında çıkan Toast Message lar.
  */
 
-toastMessage(String message)async
-{
- return await Fluttertoast.showToast(msg: message,toastLength: Toast.LENGTH_LONG,backgroundColor: Colors.red,textColor: Colors.white,fontSize: 16);
-}
-
 void showToast(BuildContext context,String message,Color color) {
  final scaffoldMessenger = ScaffoldMessenger.of(context);
  scaffoldMessenger.showSnackBar(
