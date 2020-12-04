@@ -120,8 +120,7 @@ class HizmetUser {
             "Doğrulama E-postası $email adresine gönderilmiştir. Lütfen kontrol ediniz",
             Colors.green);
         Navigator.push(
-                _context, MaterialPageRoute(builder: (context) => SignIn()))
-            .then((value) => debugPrint("aaa" + value.toString()));
+                _context, MaterialPageRoute(builder: (context) => SignIn()));
       }
     }
   }

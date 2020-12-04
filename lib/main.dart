@@ -7,6 +7,7 @@ import 'package:hizmet_mobil_uygulama/ui/SignUp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'ui/ErrorPage.dart';
 import 'ui/MainPage.dart';
 
 /*Bu değişkenlerin mainden başlayıp diğer sınıflara parametre olarak gitmesi yerine her yerden erişeblir
@@ -16,7 +17,6 @@ tahmin ediyorum
 FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 var collection = firebaseFirestore.collection("hizmetAlanUsers");
-var collectionHizmetVeren = firebaseFirestore.collection("hizmetVerenUsers");
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,6 +71,9 @@ class _MyAppState extends State<MyApp> {
       routes: {'/MainPage': (context) => MainPage(),
       '/SignIn':(context)=>SignIn(),
       '/LoginPage':(context)=>LoginPage()},
+      onUnknownRoute: (Settings){
+        return MaterialPageRoute(builder: (context)=>ErrorPage());
+      },
     );
   }
 }

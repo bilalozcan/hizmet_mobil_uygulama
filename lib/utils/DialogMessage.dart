@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 dialogMessageForExit(BuildContext context) {
   showDialog(
       context: context,
-      builder: (contextt) {
+      builder: (context) {
         return AlertDialog(
           title: Text("Uygulamadan Çıkış Yapmak İstediğinize Emin Misiniz?"),
           actions: [
