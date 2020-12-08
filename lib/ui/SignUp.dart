@@ -22,23 +22,23 @@ class _LoginPageState extends State<LoginPage> {
   List<Step> _stepList;
   int _activeStep;
 
-  String _name;
-  String _surname;
-  String _email;
-  String _password;
+  TextEditingController _name = TextEditingController();
+  TextEditingController _surname = TextEditingController();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
   String _gender;
   bool _accept;
   bool _obscureText;
 
   List<GlobalKey<FormState>> _formKeys = [];
 
-  String get password => _password;
+  /*String get password => _password.text;
 
   set password(String newPassword) {
     this._password = newPassword;
   }
 
-  String get name => _name;
+  String get name => _name.text;
 
   set name(String newName) {
     this._name = newName;
@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
 
   set email(String newEmail) {
     this._email = newEmail;
-  }
+  }*/
 
   @override
   void initState() {
@@ -108,11 +108,12 @@ class _LoginPageState extends State<LoginPage> {
           );
         },
         currentStep: _activeStep,
-        onStepContinue: () async {
-          continueButton(_activeStep);
+        onStepContinue: ()  {
+           continueButton(_activeStep);
         },
         onStepCancel: () {
           setState(() {
+            _password.text = "";
             if (_activeStep != 0) _activeStep--;
           });
         },
@@ -138,25 +139,21 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: [
                   TextFormField(
+                    controller: _name,
                     decoration: InputDecoration(
                         labelText: "İsim", border: OutlineInputBorder()),
                     validator: _nameValidator,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    onSaved: (name) {
-                      this._name = name;
-                    },
+
                   ),
                   SizedBox(height: 5),
                   TextFormField(
+                  controller: _surname,
                     decoration: InputDecoration(
                         labelText: "Soy isim", border: OutlineInputBorder()),
                     validator: _nameValidator,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    onSaved: (surname) {
-                      setState(() {
-                        this._surname = surname;
-                      });
-                    },
+
                   ),
                 ],
               ),
@@ -175,6 +172,7 @@ class _LoginPageState extends State<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextFormField(
+                  controller: _email,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: "E-Mail",
@@ -182,14 +180,11 @@ class _LoginPageState extends State<LoginPage> {
                     errorBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.red)),
                   ),
-                  onSaved: (email) {
-                    setState(() {
-                      this._email = email;
-                    });
-                  },
+
                 ),
                 SizedBox(height: 5),
                 TextFormField(
+                  controller: _password,
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: _obscureText,
                   decoration: InputDecoration(
@@ -200,11 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderSide: BorderSide(color: Colors.red)),
                   ),
                   validator: _passwordValidator,
-                  onChanged: (password) {
-                    setState(() {
-                      this.password = password;
-                    });
-                  },
+
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
                 SizedBox(height: 5),
@@ -329,32 +320,32 @@ class _LoginPageState extends State<LoginPage> {
     return steps;
   }
 
-  void continueButton(int activeStep) {
+  void continueButton(int activeStep) async{
     if (_formKeys[activeStep].currentState.validate()) {
-      setState(() async {
-        if (activeStep < _stepList.length - 1) {
+      if (activeStep < _stepList.length - 1) {
+        _formKeys[activeStep].currentState.save();
+        debugPrint(_activeStep.toString());
+        activeStep++;
+        _activeStep = activeStep;
+      } else {
+        if (_accept == true) {
           _formKeys[activeStep].currentState.save();
-          debugPrint(_activeStep.toString());
-          activeStep++;
-          _activeStep = activeStep;
-        } else {
-          if (_accept == true) {
-            _formKeys[activeStep].currentState.save();
-            _user = HizmetUser(
-                context: context,
-                firebaseAuth: widget._firebaseAuth,
-                name: _name,
-                surname: _surname,
-                email: _email,
-                password: _password,
-                gender: _gender);
-            await _user.userLogIn();
-          } else
-            showToast(
-                context,
-                "Kullanım koşullarını kabul etmediğiniz için üyelik işlemine devam edemiyoruz.",
-                Colors.red);
-        }
+          _user = HizmetUser(
+              context: context,
+              firebaseAuth: widget._firebaseAuth,
+              name: _name.text,
+              surname: _surname.text,
+              email: _email.text,
+              password: _password.text,
+              gender: _gender);
+          await _user.userLogIn();
+        } else
+          showToast(
+              context,
+              "Kullanım koşullarını kabul etmediğiniz için üyelik işlemine devam edemiyoruz.",
+              Colors.red);
+      }
+      setState(() {
       });
     }
   }
@@ -389,7 +380,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   String _repeatPasswordValidator(String repeatPassword) {
-    if (repeatPassword != this.password) {
+    if (repeatPassword != this._password.text) {
       return "İki şifre birbiriyle eşleşmiyor";
     }
     return null;
