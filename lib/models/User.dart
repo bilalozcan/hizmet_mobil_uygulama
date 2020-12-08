@@ -143,11 +143,11 @@ class HizmetUser {
         _firstTime=value.getInt("${this._email}");
         debugPrint("_firstTime sayisi  $_firstTime");
         if(_firstTime!=null) {
-          Navigator.push(
+          Navigator.pushReplacement(
               _context, MaterialPageRoute(builder: (_context) => MainPage()));
         }
         else {
-          Navigator.push(
+          Navigator.pushReplacement(
               _context, MaterialPageRoute(builder: (_context) =>
               CarouselSlider(photoPaths: [
                 "assets/carouselPhotos/photo1.jpg",

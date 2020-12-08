@@ -8,14 +8,14 @@ dialogMessageForExit(BuildContext context) {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Uygulamadan Çıkış Yapmak İstediğinize Emin Misiniz?"),
+          title: Text("Hesaptan Çıkış Yapmak İstediğinize Emin Misiniz?"),
           actions: [
             CupertinoButton(
               child: Text("EVET"),
               onPressed: () async{
                 firebaseAuth.signOut();
                 SharedPreferences value=await SharedPreferences.getInstance();
-                value.setInt("${firebaseAuth.currentUser.email}",0);
+                value.setInt("login",0);
                 Navigator.of(context).pushNamedAndRemoveUntil("/SignIn", (route) => false);
               },
             ),

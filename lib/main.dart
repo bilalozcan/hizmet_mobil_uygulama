@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/ornek/AndroidStudioProjects/hizmet_mobil_uygulama/lib/models/CarouselSlider.dart';
+import 'package:hizmet_mobil_uygulama/models/CarouselSlider.dart';
+import 'package:hizmet_mobil_uygulama/ui/LoadingPage.dart';
 import 'package:hizmet_mobil_uygulama/ui/SignIn.dart';
 import 'package:hizmet_mobil_uygulama/ui/SignUp.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -42,37 +43,35 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _isActive;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    active();
   }
 
-  active() async {
-    SharedPreferences value = await SharedPreferences.getInstance();
-    if (firebaseAuth.currentUser.email != null) {
-      setState(() {
-        _isActive = value.getInt("${firebaseAuth.currentUser.email}");
-        debugPrint("isActiveee"+_isActive.toString());
-      });
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("isActiveee"+_isActive.toString());
     return MaterialApp(
-      home: _isActive == 1 ? MainPage() : SignIn(),
-      theme: ThemeData(primarySwatch: Colors.green),
+      home: LoadingPage(),
+      //_isActive == 1 ? MainPage() : SignIn(),
+      theme: ThemeData(
+          backgroundColor: Colors.green,
+          primaryColor: Colors.green,
+          primarySwatch: Colors.green,
+          accentColor: Colors.white,
+          canvasColor: Colors.greenAccent,
+        indicatorColor: Colors.red,
+      ),
       debugShowCheckedModeBanner: false,
-      routes: {'/MainPage': (context) => MainPage(),
-      '/SignIn':(context)=>SignIn(),
-      '/LoginPage':(context)=>LoginPage()},
-      onUnknownRoute: (Settings){
-        return MaterialPageRoute(builder: (context)=>ErrorPage());
+      routes: {
+        '/MainPage': (context) => MainPage(),
+        '/SignIn': (context) => SignIn(),
+        '/LoginPage': (context) => LoginPage()
+      },
+      onUnknownRoute: (Settings) {
+        return MaterialPageRoute(builder: (context) => ErrorPage());
       },
     );
   }

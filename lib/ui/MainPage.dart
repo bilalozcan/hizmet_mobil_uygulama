@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,52 +24,67 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _currentNavigationBarIndex=0;
+    _currentNavigationBarIndex = 0;
     activeUser();
   }
 
-  activeUser()async
-  {
-    SharedPreferences value=await SharedPreferences.getInstance();
-    if(firebaseAuth.currentUser.email!=null) {
+  activeUser() async {
+    SharedPreferences value = await SharedPreferences.getInstance();
+    if (firebaseAuth.currentUser.email != null) {
       setState(() {
-        value.setInt("${firebaseAuth.currentUser.email}", 1);
+        value.setInt("login", 1);
       });
     }
-  }
-
-  exit()
-  {
-    dialogMessageForExit(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        dialogMessageForExit(context);
-        return true;
+        exit(0);
       },
       child: Scaffold(
-        drawer: Drawer(child:Column(children: [DrawerHeader(child: Text("${firebaseAuth.currentUser.email}"),),ListTile(title:Text("Deneme") ,)],)),
-        bottomNavigationBar: BottomNavigationBar(onTap:(currentIndex){
-          setState(() {
-            _currentNavigationBarIndex=currentIndex;
-          });
-        },
-          currentIndex: _currentNavigationBarIndex,items: [BottomNavigationBarItem(icon:Icon(Icons.account_circle),label: "Profil"),BottomNavigationBarItem(icon:Icon(Icons.library_add_check_sharp),label: "İlanlarım"),BottomNavigationBarItem(icon:Icon(Icons.list_alt_sharp),label:"Kategoriler")],),
+        drawer: Drawer(
+            child: Column(
+          children: [
+            DrawerHeader(
+              child: Text("${firebaseAuth.currentUser.email}"),
+            ),
+            ListTile(
+              title: Text("Çıkış Yap", style: TextStyle(color: Colors.red),),
+              onTap: ()async{
+                dialogMessageForExit(context);
+              },
+            )
+          ],
+        )),
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (currentIndex) {
+            setState(() {
+              _currentNavigationBarIndex = currentIndex;
+            });
+          },
+          currentIndex: _currentNavigationBarIndex,
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle), label: "Profil"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.library_add_check_sharp), label: "İlanlarım"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.list_alt_sharp), label: "Kategoriler")
+          ],
+        ),
         appBar: AppBar(
           title: Text("HİZMET"),
           centerTitle: true,
         ),
-        body:Pages(_currentNavigationBarIndex),
+        body: Pages(_currentNavigationBarIndex),
       ),
     );
   }
 
   Pages(int currentNavigationBarIndex) {
-    switch(_currentNavigationBarIndex)
-    {
+    switch (_currentNavigationBarIndex) {
       case 0:
         return Text("Profil Sayfası");
       case 1:

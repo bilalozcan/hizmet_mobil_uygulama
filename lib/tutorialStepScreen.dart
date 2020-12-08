@@ -9,10 +9,12 @@ class tutorialStepScreen extends StatefulWidget {
 class _tutorialStepScreenState extends State<tutorialStepScreen> {
   @override
   Widget build(BuildContext context) {
-    return Material(child: CarouselSlider(photoPaths: [
-      "assets/carouselPhotos/photo1.jpg",
-      "assets/carouselPhotos/photo2.jpg",
-      "assets/carouselPhotos/photo3.jpg"
-    ]),);
+    return Material(
+      child: CarouselSlider(photoPaths: [
+        "assets/carouselPhotos/photo1.jpg",
+        "assets/carouselPhotos/photo2.jpg",
+        "assets/carouselPhotos/photo3.jpg"
+      ]),
+    );
   }
 }

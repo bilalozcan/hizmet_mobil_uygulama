@@ -49,7 +49,7 @@ class _CarouselSliderState extends State<CarouselSlider> {
   {
     SharedPreferences value=await SharedPreferences.getInstance();
     setState(() {
-      value.setInt("${widget._email}",1);
+      value.setInt("login",1);
     });
 
   }
@@ -70,7 +70,7 @@ class _CarouselSliderState extends State<CarouselSlider> {
                             image: AssetImage(widget._photoPaths[_photosIndex]),
                             fit: BoxFit.cover),
                       ),
-                      height:((MediaQuery.of(context).size.height)/2)-11,
+
                     ),
                     /*Positioned(
                       top: ((MediaQuery.of(context).size.height)/2)-32,
@@ -85,7 +85,7 @@ class _CarouselSliderState extends State<CarouselSlider> {
                   ],
                 ),
               ),
-              Container(height:300,child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [Text("Hizmet Uygulamasi",style: TextStyle(fontSize:24),)],),),
+              Container(child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [Text("Hizmet Uygulamasi",style: TextStyle(fontSize:24),)],),),
 
               Container(
                 color: Colors.blue[900],
