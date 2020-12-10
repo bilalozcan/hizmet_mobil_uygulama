@@ -9,6 +9,7 @@ import 'package:hizmet_mobil_uygulama/models/CarouselSlider.dart';
 import 'package:hizmet_mobil_uygulama/models/User.dart';
 import 'package:hizmet_mobil_uygulama/utils/DialogMessage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'ProfilePage.dart';
 
 /*Tüm firebase verilerini uygulama açılırken almak doğru olmaz */
 class MainPage extends StatefulWidget {
@@ -44,20 +45,6 @@ class _MainPageState extends State<MainPage> {
         exit(0);
       },
       child: Scaffold(
-        drawer: Drawer(
-            child: Column(
-          children: [
-            DrawerHeader(
-              child: Text("${firebaseAuth.currentUser.email}"),
-            ),
-            ListTile(
-              title: Text("Çıkış Yap", style: TextStyle(color: Colors.red),),
-              onTap: ()async{
-                dialogMessageForExit(context);
-              },
-            )
-          ],
-        )),
         bottomNavigationBar: BottomNavigationBar(
           onTap: (currentIndex) {
             setState(() {
@@ -67,16 +54,46 @@ class _MainPageState extends State<MainPage> {
           currentIndex: _currentNavigationBarIndex,
           items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle), label: "Profil"),
+                icon: Icon(Icons.account_circle), label: "Anasayfa"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.library_add_check_sharp), label: "İlanlarım"),
+                icon: Icon(Icons.library_add_check_sharp,size: 55), label: "Hizmet Ver"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.list_alt_sharp), label: "Kategoriler")
+                icon: Icon(Icons.library_add_check_sharp,size: 55), label: "Hizmetlerim"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.list_alt_sharp), label: "Sohbet")
           ],
         ),
         appBar: AppBar(
-          title: Text("HİZMET"),
-          centerTitle: true,
+          actions: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.account_circle),
+                    iconSize: 48,
+                    color: Colors.black,
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
+                    },
+                  ),
+                  Text(
+                    "HİZMET",
+                    style: GoogleFonts.hammersmithOne(fontSize: 35)
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.search),
+                    iconSize: 48,
+                    color: Colors.black,
+                    onPressed: (){
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
         body: Pages(_currentNavigationBarIndex),
       ),
@@ -86,7 +103,45 @@ class _MainPageState extends State<MainPage> {
   Pages(int currentNavigationBarIndex) {
     switch (_currentNavigationBarIndex) {
       case 0:
-        return Text("Profil Sayfası");
+        return ListView(
+          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              "İlanlar Sayfası",
+              style: TextStyle(fontSize: 25, color: Colors.black),
+            ),
+            SizedBox(
+              height: 300,
+            ),
+            Text(
+              "İlanlar Sayfası",
+              style: TextStyle(fontSize: 25, color: Colors.black),
+            ),
+            SizedBox(
+              height: 300,
+            ),
+            Text(
+              "İlanlar Sayfası",
+              style: TextStyle(fontSize: 25, color: Colors.black),
+            ),
+            SizedBox(
+              height: 300,
+            ),
+            Text(
+              "İlanlar Sayfası",
+              style: TextStyle(fontSize: 25, color: Colors.black),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              "İlanlar Sayfası",
+              style: TextStyle(fontSize: 25, color: Colors.black),
+            ),
+          ],
+        );
+
       case 1:
         return Text("İlanlar Sayfası");
       case 2:
