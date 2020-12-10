@@ -7,17 +7,19 @@ import 'Dots.dart';
 class CarouselSlider extends StatefulWidget {
   String _email;
   List<String> _photoPaths;
-  CarouselSlider({@required List<String> photoPaths,@required String email})
-  {
-    this._photoPaths=photoPaths;
-    this._email=email;
+
+  CarouselSlider({@required List<String> photoPaths, @required String email}) {
+    this._photoPaths = photoPaths;
+    this._email = email;
   }
+
   @override
   _CarouselSliderState createState() => _CarouselSliderState();
 }
 
 class _CarouselSliderState extends State<CarouselSlider> {
   int _photosIndex;
+
   void _prevImage() {
     setState(() {
       _photosIndex =
@@ -27,11 +29,10 @@ class _CarouselSliderState extends State<CarouselSlider> {
 
   void _nextImage() {
     setState(() {
-      if(_photosIndex==widget._photoPaths.length-1) {
+      if (_photosIndex == widget._photoPaths.length - 1) {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MainPage()));
-      }
-      else {
+      } else {
         _photosIndex++;
       }
     });
@@ -45,77 +46,55 @@ class _CarouselSliderState extends State<CarouselSlider> {
     firstSignInWithEmail();
   }
 
-  firstSignInWithEmail ()async
-  {
-    SharedPreferences value=await SharedPreferences.getInstance();
+  firstSignInWithEmail() async {
+    SharedPreferences value = await SharedPreferences.getInstance();
     setState(() {
-      value.setInt("login",1);
+      value.setInt("login", 1);
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
-   return Material(
-     child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(widget._photoPaths[_photosIndex]),
-                            fit: BoxFit.cover),
-                      ),
-
-                    ),
-                    /*Positioned(
-                      top: ((MediaQuery.of(context).size.height)/2)-32,
-                      child: Dots(
-                          numberOfDots: widget._photoPaths.length,
-                          selectedPhotoIndex: _photosIndex),
-                      left: (MediaQuery.of(context).size.width / 2) - 32,
-                    ),*/
-                    /*Positioned(left:(MediaQuery.of(context).size.width)-128,child: IconButton(icon: Icon(Icons.close),onPressed:(){
-                      Navigator.of(context).pop();
-                    },),)*/
-                  ],
-                ),
-              ),
-              Container(child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [Text("Hizmet Uygulamasi",style: TextStyle(fontSize:24),)],),),
-
-              Container(
-                color: Colors.blue[900],
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    CupertinoButton(
-                      child: Text(
-                        "Geri",
-                        style: TextStyle(color: Colors.green),
-                      ),
-                      onPressed: _prevImage,
-                    ),
-                    Dots(numberOfDots: widget._photoPaths.length,
-                        selectedPhotoIndex: _photosIndex),
-                    CupertinoButton(
-                      child: Text(
-                        _photosIndex==widget._photoPaths.length-1?"BAŞLAYALIM":"İLERİ",
-                        style: TextStyle(color: Colors.green),
-                      ),
-                      onPressed: _nextImage,
-                    ),
-
-                  ],
-                ),
-              )
-            ],
-          ),
+    return Material(
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/carouselPhotos/photo1.jpg"),
+              fit: BoxFit.fill),
         ),
-   );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+              color: Colors.blue[900],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  CupertinoButton(
+                    child: Text(
+                      "Geri",
+                      style: TextStyle(color: Colors.green),
+                    ),
+                    onPressed: _prevImage,
+                  ),
+                  Dots(
+                      numberOfDots: widget._photoPaths.length,
+                      selectedPhotoIndex: _photosIndex),
+                  CupertinoButton(
+                    child: Text(
+                      _photosIndex == widget._photoPaths.length - 1
+                          ? "BAŞLAYALIM"
+                          : "İLERİ",
+                      style: TextStyle(color: Colors.green),
+                    ),
+                    onPressed: _nextImage,
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
-
