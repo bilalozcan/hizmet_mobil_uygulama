@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,40 +11,40 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-
-              ],
-            ),
-          ),
-        ],
-      ),
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            backgroundColor: Colors.green,
-            toolbarHeight: MediaQuery.of(context).size.height/3,
-            automaticallyImplyLeading: false,
-            actions: [
-                 Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black12,
-                      ),
-                    ),
-                  ],
-                ),
-            ],
+            actions: [IconButton(icon: Icon(Icons.settings), onPressed: (){},)],
+            expandedHeight: MediaQuery.of(context).size.height / 4,
             floating: true,
+            pinned: true,
+            snap: false,
+            flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
+              title: Padding(
+                padding: EdgeInsets.only(left: MediaQuery.of(context).size.height / 12, top: MediaQuery.of(context).size.height / 25),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Icon(Icons.account_circle_outlined, size: 54),
+                      SizedBox(width: 25,),
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              "İsim Soyisim",
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            Text(
+                              "DERECE",
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+              ),
+            ),
           ),
           SliverList(
             delegate: SliverChildListDelegate(
@@ -54,6 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
   List<Widget> Pages() {
     return [
       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,

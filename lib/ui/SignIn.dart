@@ -43,7 +43,6 @@ class _SignInState extends State<SignIn> {
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: Colors.greenAccent,
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
