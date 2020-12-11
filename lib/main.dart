@@ -49,20 +49,24 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: LoadingPage(),
       //_isActive == 1 ? MainPage() : SignIn(),
       theme: ThemeData(
-          backgroundColor: Colors.green,
-          primaryColor: Colors.green,
-          primarySwatch: Colors.green,
-          accentColor: Colors.white,
-          canvasColor: Colors.greenAccent,
-        indicatorColor: Colors.red,
+        primaryColor: Colors.white,
+        accentColor: Colors.white,
+        canvasColor: Colors.white,
+        appBarTheme: AppBarTheme(
+            actionsIconTheme: IconThemeData(
+              color: Color.fromRGBO(34, 63, 71, 1),
+            )),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: Colors.white,
+          selectedItemColor: Color.fromRGBO(30, 146, 179, 1),
+          unselectedItemColor: Color.fromRGBO(34, 63, 71, 1),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       routes: {
