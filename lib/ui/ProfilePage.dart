@@ -155,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
   getPersonData() /*Farklı bir klasörde olabilir */
   {
-    collection.doc("${firebaseAuth.currentUser.email}").get().then((value) {
+    collection.doc("${firebaseAuth.currentUser.uid}").get().then((value) {
       setState(() {
         name=value.data()["name"];
       });
