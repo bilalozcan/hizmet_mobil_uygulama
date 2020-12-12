@@ -75,6 +75,7 @@ class HizmetUser {
       @required String email,
       @required String password,
       @required String gender,
+        @required String uid,
       @required DateTime dateOfBirth}) {
     this._firebaseAuth = firebaseAuth;
     this._name = name;
@@ -167,7 +168,7 @@ class HizmetUser {
 
   /* Kullanıcı auth ve e mail işlemlerini tamamladıktan sonra fireBase'e eklenir */
   addToFirebaseFirestore(bool flag) {
-    var doc = collection.doc(this.email);
+    var doc = collection.doc(firebaseAuth.currentUser.uid);
     doc.get().then((value) async {
       if (value.data() == null) {
         debugPrint(this.email);
@@ -177,6 +178,7 @@ class HizmetUser {
           userMap["gender"] = _gender;
           userMap["email"] = _email;
           userMap["flag"] = flag;
+          userMap["uid"]=firebaseAuth.currentUser.uid;
         }
       } else if (value.data() != null && flag == true) {
         userMap["flag"] = flag;
