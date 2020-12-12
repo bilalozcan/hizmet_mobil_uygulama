@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_star_rating/flutter_star_rating.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hizmet_mobil_uygulama/models/Person.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -60,38 +62,63 @@ class _ProfilePageState extends State<ProfilePage> {
     return [
       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       //crossAxisAlignment: CrossAxisAlignment.end,
+      kisiBilgisiContainer("Mehmet","Arsay",4.0,Icons.account_circle),
       Text(
-        "İlanlar Sayfası",
+        "Yorum",
         style: TextStyle(fontSize: 25, color: Colors.black),
       ),
       SizedBox(
         height: 300,
       ),
+      kisiBilgisiContainer("Fatih Dursun","Üzer",3.0,Icons.person),
       Text(
-        "İlanlar Sayfası",
+        "Yorum",
         style: TextStyle(fontSize: 25, color: Colors.black),
       ),
       SizedBox(
         height: 300,
       ),
+      kisiBilgisiContainer("Bilal","Özcan",5.0,Icons.account_circle),
       Text(
-        "İlanlar Sayfası",
+        "Yorum",
         style: TextStyle(fontSize: 25, color: Colors.black),
       ),
       SizedBox(
         height: 300,
-      ),
-      Text(
-        "İlanlar Sayfası",
-        style: TextStyle(fontSize: 25, color: Colors.black),
-      ),
-      SizedBox(
-        height: 30,
-      ),
-      Text(
-        "İlanlar Sayfası",
-        style: TextStyle(fontSize: 25, color: Colors.black),
       ),
     ];
+  }
+  Widget kisiBilgisiContainer(String name,String surname,double derece,var icon) {
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Icon(icon, size: 30),
+          SizedBox(
+            width: 25,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                name + " " + surname,
+                style: TextStyle(fontSize: 12),
+              ),
+              Center(
+                  child: StarRating(
+                      rating: derece,
+                      spaceBetween: 5.0,
+                      starConfig: StarConfig(
+                        fillColor: Colors.deepOrange,
+                        size: 10,
+                        // other props
+                      )
+                  )
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

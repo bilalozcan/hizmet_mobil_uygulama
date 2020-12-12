@@ -165,12 +165,12 @@ class _MainPageState extends State<MainPage> {
         "İlanlar Sayfası",
         style: TextStyle(fontSize: 25, color: Colors.black),
       ),
-      SizedBox(
-        height: 300,
-      ),
       Text(
         "İlanlar Sayfası",
         style: TextStyle(fontSize: 25, color: Colors.black),
+      ),
+      SizedBox(
+        height: 300,
       ),
       SizedBox(
         height: 300,
