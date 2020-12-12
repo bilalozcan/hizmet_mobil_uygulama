@@ -21,11 +21,16 @@ class _MainPageState extends State<MainPage> {
   Map<String, Object> currentUser;
   int _currentNavigationBarIndex;
 
+  String _value;
+
+  bool _pressed;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _currentNavigationBarIndex = 0;
+    _pressed=false;
     activeUser();
   }
 
@@ -129,6 +134,7 @@ class _MainPageState extends State<MainPage> {
                               icon: Icon(Icons.search,color: Colors.black,),
                               onPressed: () {
                                 setState(() {
+                                  _pressed=true;
                                 });
                               },
                             ),
@@ -136,6 +142,7 @@ class _MainPageState extends State<MainPage> {
                           ),
                           onChanged: (value) {
                             setState(() {
+                              _value=value;
                             });
                           },
                         ),
@@ -148,7 +155,7 @@ class _MainPageState extends State<MainPage> {
             ),
             SliverList(
               delegate: SliverChildListDelegate(
-                Pages(),
+               Search(_value)
               ),
             ),
           ],
@@ -157,10 +164,15 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  List<Widget> Pages() {
-    return [
-      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //crossAxisAlignment: CrossAxisAlignment.end,
+  List<Widget> Search(String value) {
+    if(value!=null || value!="")
+    return List.filled(500, Text(value));
+    else
+      return Pages();
+  }
+  List<Widget> Pages()
+  {
+     return [
       Text(
         "İlanlar Sayfası",
         style: TextStyle(fontSize: 25, color: Colors.black),
