@@ -1,0 +1,113 @@
+{
+  "Ders": [
+    {
+      "Temel Dersler": [
+        "Matematik",
+        "Fizik",
+        "Kimya",
+        "Biyoloji"
+      ]
+    },
+    {
+      "Müzik Dersleri": [
+        "Gitar",
+        "Piyano",
+        "Saz",
+        "Bağlama",
+        "Keman"
+      ]
+    },
+    {
+      "Spor Dersleri": [
+        "Yüzme",
+        "Yoga",
+        "Pilates"
+      ]
+    },
+    {
+      "Diğer": [
+        "Direksiyon",
+        "Resim"
+      ]
+    }
+  ],
+  "Temizlik": [
+    {
+      "Temizlik": [
+        "Ev Temizliği",
+        "Apartman Temizliği",
+        "Halı Yıkama",
+        "İnşaat Temizliği",
+        "Koltuk Yıkama",
+        "İlaçlama",
+        "Petek Temizliği",
+        "Oto Kuaför",
+        "Dezenfektan"
+      ]
+    }
+  ],
+  "Tamir & Tadilat": [
+    {
+      "Tadilat": [
+        "Boya Badana",
+        "Fayans Döşeme",
+        "Parke Döşeme",
+        "Cam Balkon",
+        "Mantolama",
+        "Asansör Bakım"
+      ]
+    },
+    {
+      "Tamir": [
+        "Klima Montaj",
+        "Güvenlik",
+        "Su Tesisatı Tamiri",
+        "Mobilya Montaj",
+        "Elektrik Tesisatı Tamiri"
+      ]
+    }
+  ],
+  "Nakliyat": [
+    {
+      "Nakliyat": [
+        "Evden Eve Bakliyat (Şehir İçi)",
+        "Evden Eve Bakliyat (Şehirler Arası)",
+        "Eşya Taşıma",
+        "Asansörlü Nakliyat"
+      ]
+    }
+  ],
+  "Sağlık & Bakım": [
+    {
+      "Sağlık": [
+        "Psikolog",
+        "Diyetisyen",
+        "Fizyoterapist",
+        "Diyetisyen"
+      ]
+    },
+    {
+      "Bakım": [
+        "Epilasyon",
+        "Masaj"
+      ]
+    }
+  ],
+  "Kurumsal": [
+    {
+      "Yazılım": [
+        "Mobil Uygulama Geliştirme",
+        "Web Geliştirme",
+        "Oyun Geliştirme"
+      ]
+    },
+    {
+      "Tasarım": [
+        "Grafik Tasarımı",
+        "Logo Tasarımı",
+        "Video Montaj & Kurgu",
+        "Fotoğraf Montaj"
+      ]
+    }
+  ]
+}
