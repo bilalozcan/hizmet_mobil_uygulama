@@ -121,24 +121,24 @@ class _MainPageState extends State<MainPage> {
                         },
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 5,horizontal: 60),
-                        decoration: BoxDecoration(
-                          color: Colors.black12,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(10.0)), //kenarları yuvarlaklaştırır
+                        width: MediaQuery.of(context).size.width/1.2,
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            border:OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
+                            prefixIcon: IconButton(
+                              icon: Icon(Icons.search,color: Colors.black,),
+                              onPressed: () {
+                                setState(() {
+                                });
+                              },
+                            ),
+                            hintText: "Hizmet Ara",
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                            });
+                          },
                         ),
-                        child: Text("Hizmet ara",
-                            style: GoogleFonts.roboto(
-                              fontSize: 20,
-                              color: Color.fromRGBO(30, 146, 179, 0.7),
-                            )),
-                      ),
-
-
-                      IconButton(
-                        icon: Icon(Icons.search),
-                        iconSize: 35,
-                        onPressed: () {},
                       ),
                     ],
                   ),
