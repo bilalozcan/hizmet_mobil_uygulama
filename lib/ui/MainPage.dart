@@ -7,6 +7,7 @@ import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hizmet_mobil_uygulama/models/CarouselSlider.dart';
 import 'package:hizmet_mobil_uygulama/models/User.dart';
+import 'package:hizmet_mobil_uygulama/ui/HizmetVerPage.dart';
 import 'package:hizmet_mobil_uygulama/utils/DialogMessage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'ProfilePage.dart';
@@ -56,6 +57,8 @@ class _MainPageState extends State<MainPage> {
             setState(() {
               _currentNavigationBarIndex = currentIndex;
             });
+            if(_currentNavigationBarIndex == 1)
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HizmetVerPage()));
           },
           currentIndex: _currentNavigationBarIndex,
           items: [
@@ -155,7 +158,7 @@ class _MainPageState extends State<MainPage> {
             ),
             SliverList(
               delegate: SliverChildListDelegate(
-               Search(_value)
+               Search("asd")
               ),
             ),
           ],
@@ -166,7 +169,7 @@ class _MainPageState extends State<MainPage> {
 
   List<Widget> Search(String value) {
     if(value!=null || value!="")
-    return List.filled(500, Text(value));
+    return List.filled(50, Text(value));
     else
       return Pages();
   }
