@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hizmet_mobil_uygulama/models/CarouselSlider.dart';
+import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/models/User.dart';
 import 'package:hizmet_mobil_uygulama/ui/HizmetVerPage.dart';
 import 'package:hizmet_mobil_uygulama/utils/DialogMessage.dart';
@@ -21,6 +23,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   Map<String, Object> currentUser;
   int _currentNavigationBarIndex;
+  Category _category;
 
   String _value;
 
@@ -33,6 +36,7 @@ class _MainPageState extends State<MainPage> {
     _currentNavigationBarIndex = 0;
     _pressed=false;
     activeUser();
+    connectJson();
   }
 
   activeUser() async {
@@ -58,7 +62,7 @@ class _MainPageState extends State<MainPage> {
               _currentNavigationBarIndex = currentIndex;
             });
             if(_currentNavigationBarIndex == 1)
-              Navigator.push(context, MaterialPageRoute(builder: (context) => HizmetVerPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HizmetVerPage(_category)));
           },
           currentIndex: _currentNavigationBarIndex,
           items: [
@@ -165,6 +169,15 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
     );
+  }
+  void connectJson() {
+    DefaultAssetBundle.of(context)
+        .loadString("assets/Category.json")
+        .then((gelenJson) {
+      LinkedHashMap<String, dynamic> map = json.decode(gelenJson.toString());
+      _category = Category.fromJson(map);
+      debugPrint("Veri Geldi AQ");
+    }).catchError((onError) => print(onError));
   }
 
   List<Widget> Search(String value) {
