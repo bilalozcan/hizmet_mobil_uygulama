@@ -58,6 +58,7 @@ flutter:
      - assets/carouselPhotos/photo1.jpg
      - assets/carouselPhotos/photo2.jpg
      - assets/carouselPhotos/photo3.jpg
+     - assets/Category.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
