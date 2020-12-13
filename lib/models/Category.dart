@@ -13,10 +13,22 @@ class Category {
   factory Category.fromJson(LinkedHashMap<String, dynamic> parsedJson) {
     return Category(categories: parsedJson);
   }
+  List<DropdownMenuItem<String>> CategoryDropdownMenuItemList(){
+    List<DropdownMenuItem<String>> _categoryDropDownMenuItemList = List<DropdownMenuItem<String>>();
+    for (String key in categoryList) {
+      _categoryDropDownMenuItemList.add(DropdownMenuItem<String>(
+        child: Text(key),
+        value: key,
+      ));
+    }
+    return _categoryDropDownMenuItemList;
+  }
 
   SubCategory getSubCategory(String key) {
+    debugPrint("getSubCategory: " + key);
     return SubCategory.fromJson(categories[key]);
   }
+
 }
 
 class SubCategory {
@@ -35,16 +47,22 @@ class SubCategory {
   Data getData(String key) {
     return Data(datas: subCategories[key]);
   }
+  List<DropdownMenuItem<String>> SubCategoryDropdownMenuItemList(String key){
+    List<DropdownMenuItem<String>> _subCategoryDropDownMenuItemList = List<DropdownMenuItem<String>>();
+    for (String key in subCategoryList) {
+      _subCategoryDropDownMenuItemList.add(DropdownMenuItem<String>(
+        child: Text(key),
+        value: key,
+      ));
+    }
+    return _subCategoryDropDownMenuItemList;
+  }
 }
 
 class Data {
   List<dynamic> datas;
 
   Data({@required this.datas});
-
-  factory Data.fromJson(List<dynamic> parsedJson) {
-    return Data(datas: parsedJson);
-  }
 
   List<String> getData() {
     return datas;
