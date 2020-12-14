@@ -11,9 +11,9 @@ class LoadingPage extends StatelessWidget {
     //Provider<UserModel>(create: (_)=> UserModel());
     if (_userModel.state == ViewState.Idle) {
       if (_userModel.user == null) {
-        return Container();
+        return SignInPage();
       } else {
-        return Container();
+        return MainPage();
       }
     } else {
       return Scaffold(
