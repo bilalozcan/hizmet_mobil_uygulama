@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_star_rating/flutter_star_rating.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hizmet_mobil_uygulama/main.dart';
+import 'package:hizmet_mobil_uygulama/mainFdu.dart';
 import 'package:hizmet_mobil_uygulama/models/Person.dart';
 
 class ProfilePage extends StatefulWidget {

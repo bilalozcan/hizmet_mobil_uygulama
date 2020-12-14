@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hizmet_mobil_uygulama/main.dart';
+import 'package:hizmet_mobil_uygulama/mainFdu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 dialogMessageForExit(BuildContext context) {

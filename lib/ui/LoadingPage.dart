@@ -1,57 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hizmet_mobil_uygulama/main.dart';
 import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hizmet_mobil_uygulama/ui/SignInPage.dart';
+import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
+import 'package:provider/provider.dart';
 
-class LoadingPage extends StatefulWidget {
-  @override
-  _LoadingPageState createState() => _LoadingPageState();
-}
-
-class _LoadingPageState extends State<LoadingPage> {
-  int _isActive = null;
-
-  active() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if (firebaseAuth.currentUser != null) {
-      _isActive = sharedPreferences.getInt("login");
-      debugPrint("active() isActiveee" + _isActive.toString());
-    } else{
-      Navigator.pushReplacementNamed(context, "/SignIn");
-    }
-    if(_isActive != null){
-      if(_isActive == 1)
-        Navigator.pushReplacementNamed(context, "/MainPage");
-      else if(_isActive == 0)
-        Navigator.pushReplacementNamed(context, "/SignIn");
-    }
-  }
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    active();
-  }
+class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(),
-      child: Scaffold(
+    final _userModel = Provider.of<UserModel>(context, listen: true);  // "listen" default olarak "true " kabul edildigi icin bunu yazmaya da bilisiniz
+    //Provider<UserModel>(create: (_)=> UserModel());
+    if (_userModel.state == ViewState.Idle) {
+      if (_userModel.user == null) {
+        return Container();
+      } else {
+        return Container();
+      }
+    } else {
+      return Scaffold(
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Hizmet App",
-                style: GoogleFonts.balooTamma(fontSize: 48),
-              ),
-              CircularProgressIndicator(),
-            ],
-          ),
+          child: CircularProgressIndicator(),
         ),
-      ),
-    );
+      );
+    }
   }
 }
