@@ -70,7 +70,7 @@ class _HizmetVerPageState extends State<HizmetVerPage> {
                 _subCategoryDropDownMenuItemList = _category.getSubCategory(gelen).SubCategoryDropdownMenuItemList(gelen);
                 setState(() {
                   CategoryCurrentValue;
-                  _subCategoryDropDownMenuItemList;
+                  SubCategoryCurrentValue=_subCategoryDropDownMenuItemList.elementAt(0).value;
                 });
               },
             ),
