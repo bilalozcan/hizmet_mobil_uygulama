@@ -7,8 +7,7 @@ import 'package:provider/provider.dart';
 class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final _userModel = Provider.of<UserModel>(context, listen: true);  // "listen" default olarak "true " kabul edildigi icin bunu yazmaya da bilisiniz
-    //Provider<UserModel>(create: (_)=> UserModel());
+    final _userModel = Provider.of<UserModel>(context, listen: true);
     if (_userModel.state == ViewState.Idle) {
       if (_userModel.user == null) {
         return SignInPage();

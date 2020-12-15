@@ -1,143 +1,129 @@
-import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hizmet_mobil_uygulama/common_widget/SocialLoginButton.dart';
-import 'package:hizmet_mobil_uygulama/mainFdu.dart';
-import 'package:hizmet_mobil_uygulama/models/User.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
-import 'package:hizmet_mobil_uygulama/ui/resetPassword.dart';
+import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
+import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 
-import 'SignUp.dart';
-
-class EmailveSifreLoginPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  _EmailveSifreLoginPageState createState() => _EmailveSifreLoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _EmailveSifreLoginPageState extends State<EmailveSifreLoginPage> {
-  String _email, _sifre;
-  String _butonText, _linkText;
-
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
+  bool _obscureText = true;
 
-  void _formSubmit() async {
+  void login() async {
     _formKey.currentState.save();
-    //debugPrint("email :" + _email + " şifre:" + _sifre);
-
-    final _userModel = Provider.of<UserModel>(context);
-
-      try {
-        User_ _girisYapanUser =
-        await _userModel.signInWithEmailandPassword(_email, _sifre);
-        //if (_girisYapanUser != null)
-        //print("Oturum açan user id:" + _girisYapanUser.userID.toString());
-      } on PlatformException catch (e) {
-        /*PlatformDuyarliAlertDialog(
-          baslik: "Oturum Açma HATA",
-          icerik: Hatalar.goster(e.code),
-          anaButonYazisi: 'Tamam',
-        ).goster(context);*/
-      }
-
-      /*try {
-        User_ _olusturulanUser =
-        await _userModel.createUserWithEmailandPassword(_email, _sifre);
-        /* if (_olusturulanUser != null)
-          print("Oturum açan user id:" + _olusturulanUser.userID.toString());*/
-      } on PlatformException catch (e) {
-        /*PlatformDuyarliAlertDialog(
-          baslik: "Kullanıcı Oluşturma HATA",
-          icerik: Hatalar.goster(e.code),
-          anaButonYazisi: 'Tamam',
-        ).goster(context);*/
-      }*/
+    final _userModel = Provider.of<UserModel>(context, listen: false);
+    try {
+      User_ _girisYapanUser = await _userModel.signInWithEmailandPassword(
+          _email.text, _password.text);
+    } on PlatformException catch (e) {
+      showToast(context, "Oturum Açma Hatası. ${e.code}", Colors.red.shade700);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final _userModel = Provider.of<UserModel>(context);
+    final _userModel = Provider.of<UserModel>(context, listen: true);
     if (_userModel.user != null) {
       Future.delayed(Duration(milliseconds: 1), () {
-        Navigator.of(context).popUntil(ModalRoute.withName("/"));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage()),
+        );
       });
     }
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("Giriş"),
+        title: Text("Login"),
+        centerTitle: true,
       ),
-      body: _userModel.state == ViewState.Idle
-          ? SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
               key: _formKey,
               child: Column(
-                children: <Widget>[
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "HİZMET",
+                    style: GoogleFonts.swankyAndMooMoo(fontSize: 48),
+                  ),
                   TextFormField(
-                    //initialValue: "emre@emre.com",
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      errorText: _userModel.emailHataMesaji != null
-                          ? _userModel.emailHataMesaji
-                          : null,
-                      prefixIcon: Icon(Icons.mail),
-                      hintText: 'Email',
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                    ),
-                    onSaved: (String girilenEmail) {
-                      _email = girilenEmail;
-                    },
+                        labelText: "E-mail",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        )),
+                    controller: _email,
+                    //Validator
                   ),
-                  SizedBox(
-                    height: 8,
-                  ),
+                  SizedBox(height: 25),
                   TextFormField(
-                    //initialValue: "password",
-                    obscureText: true,
+                    obscureText: _obscureText,
                     decoration: InputDecoration(
-                      errorText: _userModel.sifreHataMesaji != null
-                          ? _userModel.sifreHataMesaji
-                          : null,
-                      prefixIcon: Icon(Icons.lock),
-                      hintText: 'Sifre',
-                      labelText: 'Sifre',
-                      border: OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureText == true
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                      ),
+                      labelText: "Şifre",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
-                    onSaved: (String girilenSifre) {
-                      _sifre = girilenSifre;
-                    },
+                    controller: _password,
                   ),
-                  SizedBox(
-                    height: 8,
+                  CupertinoButton(
+                    child: Text(
+                      "Giriş yap",
+                    ),
+                    onPressed: () => login(), //enterButton,
                   ),
-                  SocialLoginButton(
-                    butonText: "Giriş",
-                    butonColor: Colors.deepOrange,
-                    radius: 10,
-                    onPressed: () => _formSubmit(),
+                  InkWell(
+                    child: Text(
+                      "Şifreni mi Unuttun?",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    onTap: () {},
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-
+                  SizedBox(height: 30),
+                  CupertinoButton(
+                    color: Colors.white,
+                    child: Text("Yeni Hizmet Hesabı Oluştur",
+                        style: TextStyle(color: Colors.green)),
+                    onPressed: () {},
+                  )
                 ],
-              )),
+              ),
+            ),
+          ),
         ),
-      )
-          : Center(
-        child: CircularProgressIndicator(),
       ),
     );
   }
 }
+
 /*class SignIn extends StatefulWidget {
   @override
   _SignInState createState() => _SignInState();
@@ -279,4 +265,3 @@ class _SignInState extends State<SignIn> {
   }
 }
 */
-

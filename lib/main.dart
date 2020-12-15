@@ -32,6 +32,11 @@ class HizmetApp extends StatelessWidget {
               selectedItemColor: Color.fromRGBO(30, 146, 179, 1),
               unselectedItemColor: Color.fromRGBO(34, 63, 71, 1),
             ),
+            inputDecorationTheme: InputDecorationTheme(
+              helperStyle: TextStyle(color: Colors.red),
+              labelStyle: TextStyle(color: Colors.red),
+              focusColor: Colors.black,
+            )
           ),
           home: LoadingPage()),
     );
