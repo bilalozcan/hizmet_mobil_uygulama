@@ -53,7 +53,7 @@ class _SignInPageState extends State<SignInPage> {
               butonText: "Gmail ile Giriş Yap",
               textColor: Colors.black87,
               butonColor: Colors.white,
-              butonIcon: Image.asset("images/google-logo.png"),
+              //butonIcon: Image.asset("images/google-logo.png"),
               onPressed: () => _googleIleGiris(context),
             ),
             SocialLoginButton(
