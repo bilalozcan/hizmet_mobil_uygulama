@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/CarouselSlider.dart';
 import 'package:hizmet_mobil_uygulama/ui/LoadingPage.dart';
-import 'package:hizmet_mobil_uygulama/ui/SignIn.dart';
+import 'package:hizmet_mobil_uygulama/ui/EmailveSifreLoginPage.dart';
 import 'package:hizmet_mobil_uygulama/ui/SignUp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       routes: {
         '/MainPage': (context) => MainPage(),
-        '/SignIn': (context) => SignIn(),
+        //'/SignIn': (context) => SignIn(),
         '/LoginPage': (context) => LoginPage()
       },
       onUnknownRoute: (Settings) {

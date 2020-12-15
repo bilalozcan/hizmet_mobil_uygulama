@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/common_widget/SocialLoginButton.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
-import 'package:hizmet_mobil_uygulama/ui/SignIn.dart';
+import 'package:hizmet_mobil_uygulama/ui/EmailveSifreLoginPage.dart';
+import 'package:hizmet_mobil_uygulama/ui/EmailveSifreSignPage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,15 @@ class _SignInPageState extends State<SignInPage> {
     Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (context) => SignIn(),
+        builder: (context) =>EmailveSifreLoginPage() ,
+      ),
+    );
+  }
+  void _emailVeSifreKayit(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) =>EmailveSifreSignPage() ,
       ),
     );
   }
@@ -64,6 +73,16 @@ class _SignInPageState extends State<SignInPage> {
                 size: 32,
               ),
               butonText: "Email ve Şifre ile Giriş yap",
+            ),
+            SocialLoginButton(
+              onPressed: () => _emailVeSifreKayit(context),
+              butonColor: Colors.deepOrange,
+              butonIcon: Icon(
+                Icons.email,
+                color: Colors.white,
+                size: 32,
+              ),
+              butonText: "Hesabın Yok mu? Hemen Kayıt ol",
             ),
           ],
         ),

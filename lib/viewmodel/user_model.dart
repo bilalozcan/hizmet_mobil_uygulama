@@ -15,6 +15,10 @@ class UserModel with ChangeNotifier implements AuthBase {
 
   ViewState get state => _state;
 
+  get sifreHataMesaji => null;
+
+  get emailHataMesaji => null;
+
   set state(ViewState value) {
     _state = value;
     notifyListeners();
