@@ -12,7 +12,7 @@ import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-import '../ui/EmailveSifreLoginPage.dart';
+import '../ui/LoginPage.dart';
 
 class HizmetUser {
   FirebaseAuth _firebaseAuth;
@@ -121,7 +121,7 @@ class HizmetUser {
             "Doğrulama E-postası $email adresine gönderilmiştir. Lütfen kontrol ediniz",
             Colors.green);
         Navigator.push(
-                _context, MaterialPageRoute(builder: (context) => EmailveSifreLoginPage()));
+                _context, MaterialPageRoute(builder: (context) => LoginPage()));
       }
     }
   }

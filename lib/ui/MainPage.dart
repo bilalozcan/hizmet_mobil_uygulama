@@ -176,7 +176,6 @@ class _MainPageState extends State<MainPage> {
         .then((gelenJson) {
       LinkedHashMap<String, dynamic> map = json.decode(gelenJson.toString());
       _category = Category.fromJson(map);
-      debugPrint("Veri Geldi AQ");
     }).catchError((onError) => print(onError));
   }
 

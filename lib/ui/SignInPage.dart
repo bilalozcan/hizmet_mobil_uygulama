@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/common_widget/SocialLoginButton.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
-import 'package:hizmet_mobil_uygulama/ui/EmailveSifreLoginPage.dart';
+import 'package:hizmet_mobil_uygulama/ui/LoginPage.dart';
 import 'package:hizmet_mobil_uygulama/ui/EmailveSifreSignPage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +22,7 @@ class _SignInPageState extends State<SignInPage> {
     Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (context) =>EmailveSifreLoginPage() ,
+        builder: (context) =>LoginPage() ,
       ),
     );
   }
