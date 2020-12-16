@@ -18,8 +18,8 @@ class FirebaseStorageService implements StorageBase {
     var uploadTask = _storageReference.putFile(fileToUpload);
 
     //var url = await (await uploadTask.onComplete).ref.getDownloadURL();
-    var url=await(await uploadTask).ref.getDownloadURL();
-
+    //var url=await(await uploadTask).ref.getDownloadURL();
+    var url = await (await uploadTask).ref.getDownloadURL();
     return url;
   }
 }

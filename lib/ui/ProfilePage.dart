@@ -20,7 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
   int degree;
   DateTime datetime;
   String _profilePhoto;
-  PickedFile _profilFoto;
+  PickedFile _profilFoto  ;
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
     email = _userModel.user.email;
     degree = _userModel.user.degree;
     datetime = _userModel.user.dateOfBirth;
-    _profilePhoto = _userModel.user.profileURL;
+      _profilePhoto =_userModel.user.profileURL;
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -141,6 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
+
   }
 
   Widget kisiBilgisiContainer(
@@ -158,7 +159,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: CircleAvatar(
                     radius: 75,
                     backgroundColor: Colors.white,
-                    backgroundImage: NetworkImage(profilePhoto),
+                    backgroundImage: _profilFoto == null
+                    ? NetworkImage(_profilePhoto)
+                    : FileImage(File(_profilFoto.path)),
                   ),
                 ),
                 SizedBox(
@@ -258,8 +261,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _profilFotoGuncelle(BuildContext context) async {
-    final _userModel = Provider.of<UserModel>(context, listen: false);
-    if (_profilFoto != null) {
+    final _userModel = Provider.of<UserModel>(context,listen: false);
+    if (_profilFoto  != null) {
       var url = await _userModel.uploadFile(
           _userModel.user.userID, "profil_foto", File(_profilFoto.path));
 

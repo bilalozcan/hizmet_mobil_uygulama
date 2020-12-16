@@ -324,7 +324,7 @@ class _SignUpState extends State<SignUp> {
               {
                 _userModel.signOut();
               }
-            Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LoginPage()));
+            Navigator.push(context, MaterialPageRoute(builder:(context)=>LoginPage()));
           } on PlatformException catch (e) {
             showToast(context,"Kullanıcı Oluşturmada bir hatayla karşılaşıldı",Colors.red.shade700);
           }
