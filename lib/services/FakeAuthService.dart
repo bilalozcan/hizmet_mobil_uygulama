@@ -26,7 +26,7 @@ class FakeAuthService implements AuthBase {
 
   @override
   Future<User_> createUserWithEmailandPassword(
-      String email, String password) async {
+      String email, String password,String name, String surname,String username) async {
     return await Future.delayed(
         Duration(seconds: 2),
         () => User_(
