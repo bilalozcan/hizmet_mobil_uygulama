@@ -107,8 +107,14 @@ class UserModel with ChangeNotifier implements AuthBase {
 
   @override
   Future<String> uploadFile(String userID, String fileType, File profilePhoto) async{
-    var downloadLink =
-    await _userRepository.uploadFile(userID, fileType, profilePhoto);
-    return downloadLink;
+    try{
+      state = ViewState.Busy;
+      var downloadLink =
+      await _userRepository.uploadFile(userID, fileType, profilePhoto);
+      return downloadLink;
+    }finally{
+      state = ViewState.Idle;
+    }
+
   }
 }

@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
     final _userModel = Provider.of<UserModel>(context, listen: true);
     if (_userModel.user != null) {
       Future.delayed(Duration(milliseconds: 1), () {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => MainPage()),
         );
