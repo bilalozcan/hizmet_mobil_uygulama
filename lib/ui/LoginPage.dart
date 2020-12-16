@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hizmet_mobil_uygulama/locator.dart';
+import 'package:hizmet_mobil_uygulama/mainFdu.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
+import 'package:hizmet_mobil_uygulama/repository/UserRepository.dart';
 import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
@@ -25,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       User_ _girisYapanUser = await _userModel.signInWithEmailandPassword(
           _email.text, _password.text);
+
     } on PlatformException catch (e) {
       showToast(context, "Oturum Açma Hatası. ${e.code}", Colors.red.shade700);
     }

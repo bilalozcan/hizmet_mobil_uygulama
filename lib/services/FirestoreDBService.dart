@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/services/DatabaseBase.dart';
 
@@ -6,10 +7,11 @@ class FirestoreDBService implements DatabaseBase{
   final FirebaseFirestore _firebaseDB = FirebaseFirestore.instance;
   @override
   Future<bool> saveUser(User_ user) async{
+    debugPrint(user.toMap().toString());
     DocumentSnapshot _readUser =
         await _firebaseDB.doc("users/${user.userID}").get();
 
-    if (_readUser.data == null) {
+    if (_readUser.data() == null) {
       await _firebaseDB
           .collection("users")
           .doc(user.userID)

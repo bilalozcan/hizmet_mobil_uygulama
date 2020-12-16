@@ -79,12 +79,11 @@ class UserModel with ChangeNotifier implements AuthBase {
 
   @override
   Future<User_> createUserWithEmailandPassword(
-      String email, String password) async {
+      String email, String password,String name,String surname,String username) async {
     try {
       state = ViewState.Busy;
       _user =
-          await _userRepository.createUserWithEmailandPassword(email, password);
-
+          await _userRepository.createUserWithEmailandPassword(email, password,name,surname,username);
       return _user;
     } finally {
       state = ViewState.Idle;

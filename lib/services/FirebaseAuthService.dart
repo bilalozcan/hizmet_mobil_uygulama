@@ -28,6 +28,20 @@ class FirebaseAuthService implements AuthBase {
     }
   }
 
+  User_ _userFromFirebasee(
+      User user, String name, String surname, String username) {
+    if (user == null)
+      return null;
+    else {
+      return User_.all(
+          userID: user.uid,
+          email: user.email,
+          username: username,
+          name: name,
+          surname: surname);
+    }
+  }
+
   @override
   Future<bool> signOut() async {
     try {
@@ -68,11 +82,12 @@ class FirebaseAuthService implements AuthBase {
   }
 
   @override
-  Future<User_> createUserWithEmailandPassword(
-      String email, String password) async {
+  Future<User_> createUserWithEmailandPassword(String email, String password,
+      String name, String surname, String username) async {
     UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
-    return _userFromFirebase(result.user);
+   // return _userFromFirebase(result.user);
+    return _userFromFirebasee(result.user, name, surname, username);
   }
 
   @override

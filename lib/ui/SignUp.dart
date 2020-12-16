@@ -1,24 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hizmet_mobil_uygulama/models/User_.dart';
+import 'package:hizmet_mobil_uygulama/ui/LoginPage.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
+import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
+import 'package:provider/provider.dart';
 
 import '../models/User.dart';
 
 //Hizmet alacak kisiye ait kayıt ekranı
-class LoginPage extends StatefulWidget {
-  FirebaseAuth _firebaseAuth;
-
-  LoginPage({@required firebaseAuth}) {
-    this._firebaseAuth = firebaseAuth;
-  }
+class SignUp extends StatefulWidget {
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignUpState createState() => _SignUpState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  HizmetUser _user;
+class _SignUpState extends State<SignUp> {
   List<Step> _stepList;
   int _activeStep;
 
@@ -31,24 +30,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscureText;
 
   List<GlobalKey<FormState>> _formKeys = [];
-
-  /*String get password => _password.text;
-
-  set password(String newPassword) {
-    this._password = newPassword;
-  }
-
-  String get name => _name.text;
-
-  set name(String newName) {
-    this._name = newName;
-  }
-
-  String get email => _email;
-
-  set email(String newEmail) {
-    this._email = newEmail;
-  }*/
 
   @override
   void initState() {
@@ -329,16 +310,24 @@ class _LoginPageState extends State<LoginPage> {
         _activeStep = activeStep;
       } else {
         if (_accept == true) {
+          final _userModel = Provider.of<UserModel>(context,listen: false);
           _formKeys[activeStep].currentState.save();
-          _user = HizmetUser(
-              context: context,
-              firebaseAuth: widget._firebaseAuth,
-              name: _name.text,
-              surname: _surname.text,
-              email: _email.text,
-              password: _password.text,
-              gender: _gender);
-          await _user.userLogIn();
+          try {
+            User_ _olusturulanUser =
+            await _userModel.createUserWithEmailandPassword(_email.text, _password.text,_name.text,_surname.text,"DENEME");
+            /*if(_userModel.currentUser()!=null) {
+              debugPrint("bos degil");
+              _userModel.signOut();
+            }*/
+            if(_userModel.user!=null)
+              {
+                _userModel.signOut();
+              }
+            Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LoginPage()));
+          } on PlatformException catch (e) {
+            showToast(context,"Kullanıcı Oluşturmada bir hatayla karşılaşıldı",Colors.red.shade700);
+          }
+
         } else
           showToast(
               context,

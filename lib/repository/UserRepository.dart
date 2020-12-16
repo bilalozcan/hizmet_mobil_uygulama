@@ -1,4 +1,5 @@
 
+import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/locator.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/services/AuthBase.dart';
@@ -58,13 +59,14 @@ class UserRepository implements AuthBase {
 
   @override
   Future<User_> createUserWithEmailandPassword(
-      String email, String password) async {
+      String email, String password,String name, String surname,String username) async {
     if (appMode == AppMode.DEBUG) {
       return await _fakeAuthenticationService.createUserWithEmailandPassword(
-          email, password);
+          email, password,name,surname,username);
     } else {
       User_ _user = await _firebaseAuthService.createUserWithEmailandPassword(
-          email, password);
+          email, password,name,surname,username);
+
       bool _sonuc = await _firestoreDBService.saveUser(_user);
       if (_sonuc) {
         return await _firestoreDBService.readUser(_user.userID);

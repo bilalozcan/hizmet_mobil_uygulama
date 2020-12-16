@@ -52,7 +52,7 @@ class User_ {
           'https://emrealtunbilek.com/wp-content/uploads/2016/10/apple-icon-72x72.png',
       'createdAt': _createdAt ?? FieldValue.serverTimestamp(),
       'updatedAt': _updatedAt ?? FieldValue.serverTimestamp(),
-      'dateOfBirth': _dateOfBirth,
+      'dateOfBirth': _dateOfBirth ?? FieldValue.serverTimestamp(), //Doğum tarihini kullanıcıdan almadığımız için bu şekilde
       'degree': _degree ?? 0,
     };
   }
