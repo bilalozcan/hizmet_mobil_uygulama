@@ -1,4 +1,6 @@
 
+import 'dart:collection';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +17,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _currentNavigationBarIndex;
   Category _category;
-
   String _value;
-
   bool _pressed;
 
   @override
@@ -25,6 +25,7 @@ class _MainPageState extends State<MainPage> {
     super.initState();
     _currentNavigationBarIndex = 0;
     _pressed = false;
+    connectJson();
   }
 
   @override
@@ -123,14 +124,14 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  /*void connectJson() {
+  void connectJson() {
     DefaultAssetBundle.of(context)
         .loadString("assets/Category.json")
         .then((gelenJson) {
       LinkedHashMap<String, dynamic> map = json.decode(gelenJson.toString());
       _category = Category.fromJson(map);
     }).catchError((onError) => print(onError));
-  }*/
+  }
 
   List<Widget> Search(String value) {
     if (value != null || value != "")
