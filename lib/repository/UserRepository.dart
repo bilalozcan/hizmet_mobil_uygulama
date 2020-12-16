@@ -1,10 +1,14 @@
 
+import 'dart:io';
+
 import 'package:hizmet_mobil_uygulama/locator.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/services/AuthBase.dart';
 import 'package:hizmet_mobil_uygulama/services/FakeAuthService.dart';
 import 'package:hizmet_mobil_uygulama/services/FirebaseAuthService.dart';
+import 'package:hizmet_mobil_uygulama/services/FirebaseStorageService.dart';
 import 'package:hizmet_mobil_uygulama/services/FirestoreDBService.dart';
+import 'package:image_picker_platform_interface/src/types/picked_file/unsupported.dart';
 
 enum AppMode { DEBUG, RELEASE }
 
@@ -12,7 +16,7 @@ class UserRepository implements AuthBase {
   FirebaseAuthService _firebaseAuthService = locator<FirebaseAuthService>();
   FakeAuthService _fakeAuthenticationService = locator<FakeAuthService>();
   FirestoreDBService _firestoreDBService = locator<FirestoreDBService>();
-
+  FirebaseStorageService _firebaseStorageService=locator<FirebaseStorageService>();
   AppMode appMode = AppMode.RELEASE;
 
   @override
@@ -85,6 +89,18 @@ class UserRepository implements AuthBase {
           email, password);
 
       return await _firestoreDBService.readUser(_user.userID);
+    }
+  }
+
+  @override
+  Future<String> uploadFile(String userID, String fileType, File profilePhoto) async{
+    if (appMode == AppMode.DEBUG) {
+      return  "dosya_indirme_linki";
+    } else {
+      var profilFotoURL = await _firebaseStorageService.uploadFile(
+          userID, fileType, profilePhoto);
+      await _firestoreDBService.updateProfilePhoto(userID, profilFotoURL);
+      return profilFotoURL;
     }
   }
 }

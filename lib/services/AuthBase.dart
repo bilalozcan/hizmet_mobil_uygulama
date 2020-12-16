@@ -3,6 +3,7 @@
 
 
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
+import 'package:image_picker/image_picker.dart';
 
 abstract class AuthBase {
   Future<User_> currentUser();
