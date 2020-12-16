@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
+import 'package:hizmet_mobil_uygulama/ui/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Dots.dart';
 
 class CarouselSlider extends StatefulWidget {
-  String _email;
+  //String _email;
   List<String> _photoPaths;
 
-  CarouselSlider({@required List<String> photoPaths, @required String email}) {
+  CarouselSlider({@required List<String> photoPaths}) {
     this._photoPaths = photoPaths;
-    this._email = email;
+    //this._email = email;
   }
 
   @override

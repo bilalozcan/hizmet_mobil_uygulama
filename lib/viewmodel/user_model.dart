@@ -4,7 +4,7 @@ import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/repository/UserRepository.dart';
 import 'package:hizmet_mobil_uygulama/services/AuthBase.dart';
 
-enum ViewState { Idle, Busy }
+enum ViewState { Idle, Busy }//busy meşgul / ıdle bos
 
 class UserModel with ChangeNotifier implements AuthBase {
   ViewState _state = ViewState.Idle;

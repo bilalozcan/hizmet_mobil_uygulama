@@ -8,7 +8,7 @@ import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 
-import '../models/User.dart';
+import '../OldVersion/User.dart';
 
 //Hizmet alacak kisiye ait kayıt ekranı
 class SignUp extends StatefulWidget {
@@ -263,6 +263,7 @@ class _SignUpState extends State<SignUp> {
                                       child: Material(
                                           color: Colors.grey[300],
                                           child: CupertinoButton(
+                                            onPressed: (){} ,
                                             child: Text("Geri Dön",
                                                 style: TextStyle(
                                                     color: Colors.black)),

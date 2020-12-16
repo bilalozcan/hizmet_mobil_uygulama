@@ -1,5 +1,4 @@
 
-import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/locator.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/services/AuthBase.dart';
