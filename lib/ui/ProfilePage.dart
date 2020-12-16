@@ -4,7 +4,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_star_rating/flutter_star_rating.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -17,6 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
   int degree;
   DateTime datetime;
   String _profilePhoto;
+  PickedFile _profilFoto;
 
   @override
   void initState() {
@@ -63,10 +67,42 @@ class _ProfilePageState extends State<ProfilePage> {
                     Container(
                       height: 50,
                       width: 50,
-                      child: CircleAvatar(
-                        radius: 75,
-                        backgroundColor: Colors.white,
-                        backgroundImage:NetworkImage(_profilePhoto),
+                      child: InkWell(
+                        onLongPress: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  height: 160,
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        leading:
+                                            Icon(Icons.camera_alt_outlined),
+                                        title: Text("Kameradan Çek"),
+                                        onTap: () {
+                                          _kameradanFotoCek();
+                                        },
+                                      ),
+                                      ListTile(
+                                        leading: Icon(Icons.image_outlined),
+                                        title: Text("Galeriden Seç"),
+                                        onTap: () {
+                                          _galeridenResimSec();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              });
+                        },
+                        child: CircleAvatar(
+                          radius: 75,
+                          backgroundColor: Colors.white,
+                          backgroundImage: _profilFoto == null
+                              ? NetworkImage(_userModel.user.profileURL)
+                              : FileImage(File(_profilFoto.path)),
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -122,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: CircleAvatar(
                     radius: 75,
                     backgroundColor: Colors.white,
-                    backgroundImage:NetworkImage(profilePhoto),
+                    backgroundImage: NetworkImage(profilePhoto),
                   ),
                 ),
                 SizedBox(
@@ -158,6 +194,7 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
+
   List<Widget> Pages() {
     return [
       kisiBilgisiContainer(name, surname, degree.toDouble(), _profilePhoto),
@@ -196,5 +233,40 @@ class _ProfilePageState extends State<ProfilePage> {
         style: TextStyle(fontSize: 25, color: Colors.black),
       ),
     ];
+  }
+
+  void _kameradanFotoCek() async {
+    var _yeniResim =
+        await ImagePicker.platform.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _profilFoto = _yeniResim;
+      _profilFotoGuncelle(context);
+      Navigator.of(context).pop();
+    });
+  }
+
+  void _galeridenResimSec() async {
+    var _yeniResim =
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _profilFoto = _yeniResim;
+      _profilFotoGuncelle(context);
+      Navigator.of(context).pop();
+    });
+  }
+
+  void _profilFotoGuncelle(BuildContext context) async {
+    final _userModel = Provider.of<UserModel>(context, listen: false);
+    if (_profilFoto != null) {
+      var url = await _userModel.uploadFile(
+          _userModel.user.userID, "profil_foto", File(_profilFoto.path));
+
+      if (url != null) {
+        showToast(
+            context, "Profil fotoğrafınız başarıyla güncellendi", Colors.green);
+      }
+    }
   }
 }

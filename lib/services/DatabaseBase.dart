@@ -6,7 +6,7 @@ abstract class DatabaseBase {
   Future<bool> saveUser(User_ user);
   Future<User_> readUser(String userID);
   //Future<bool> updateUserName(String userID, String yeniUserName);
-  //Future<bool> updateProfilFoto(String userID, String profilFotoURL);
+  Future<bool> updateProfilePhoto(String userID, String profilePhotoUrl);
   /*Future<List<User_>> getUserwithPagination(
       User_ enSonGetirilenUser, int getirilecekElemanSayisi);
   Future<List<Konusma>> getAllConversations(String userID);

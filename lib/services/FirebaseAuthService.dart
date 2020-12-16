@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/services/AuthBase.dart';
+import 'package:image_picker_platform_interface/src/types/picked_file/unsupported.dart';
 
 class FirebaseAuthService implements AuthBase {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -97,4 +98,6 @@ class FirebaseAuthService implements AuthBase {
         email: email, password: password);
     return _userFromFirebase(result.user);
   }
+
+
 }

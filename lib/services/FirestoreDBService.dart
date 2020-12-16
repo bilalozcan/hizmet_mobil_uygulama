@@ -33,6 +33,15 @@ class FirestoreDBService implements DatabaseBase{
     return _okunanUserNesnesi;
   }
 
+  @override
+  Future<bool> updateProfilePhoto(String userID, String profilePhotoUrl) async{
+    await _firebaseDB
+        .collection("users")
+        .doc(userID)
+        .update({'profileURL': profilePhotoUrl});
+    return true;
+  }
+
 
 
   /*@override

@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/locator.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/repository/UserRepository.dart';
 import 'package:hizmet_mobil_uygulama/services/AuthBase.dart';
+import 'package:image_picker_platform_interface/src/types/picked_file/unsupported.dart';
 
 enum ViewState { Idle, Busy }//busy meşgul / ıdle bos
 
@@ -100,5 +103,12 @@ class UserModel with ChangeNotifier implements AuthBase {
     } finally {
       state = ViewState.Idle;
     }
+  }
+
+  @override
+  Future<String> uploadFile(String userID, String fileType, File profilePhoto) async{
+    var downloadLink =
+    await _userRepository.uploadFile(userID, fileType, profilePhoto);
+    return downloadLink;
   }
 }
