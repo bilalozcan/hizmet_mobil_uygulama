@@ -13,7 +13,7 @@ dialogMessageForExit(BuildContext context) {
             CupertinoButton(
               child: Text("EVET"),
               onPressed: () async{
-                firebaseAuth.signOut();
+                //firebaseAuth.signOut();
                 SharedPreferences value=await SharedPreferences.getInstance();
                 value.setInt("login",0);
                 Navigator.of(context).pushNamedAndRemoveUntil("/SignIn", (route) => false);

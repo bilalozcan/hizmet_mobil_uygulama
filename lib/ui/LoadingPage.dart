@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hizmet_mobil_uygulama/ui/HomePage.dart';
 import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
-import 'package:hizmet_mobil_uygulama/ui/SignInPage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 

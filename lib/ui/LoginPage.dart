@@ -6,7 +6,7 @@ import 'package:hizmet_mobil_uygulama/locator.dart';
 import 'package:hizmet_mobil_uygulama/mainFdu.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/repository/UserRepository.dart';
-import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
+import 'package:hizmet_mobil_uygulama/ui/HomePage.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';

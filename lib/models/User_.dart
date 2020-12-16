@@ -14,6 +14,12 @@ class User_ {
   int _firstTime = 0;
   int _degree;
 
+  String get email => _email;
+
+  set email(String value) {
+    _email = value;
+  }
+
   String get userID => _userID;
 
   set userID(String value) {
@@ -28,7 +34,7 @@ class User_ {
     this._email = email;
   }
 
-  User_.all(
+  User_.Info(
       {@required userID,
       @required email,
       @required username,
@@ -49,7 +55,7 @@ class User_ {
       'name': _name,
       'surname': _surname,
       'profileURL': _profileURL ??
-          'https://emrealtunbilek.com/wp-content/uploads/2016/10/apple-icon-72x72.png',
+          'https://firebasestorage.googleapis.com/v0/b/hizmetuygulamasi.appspot.com/o/default_profile.png?alt=media&token=0000745a-9b5e-4b84-8efe-fa6c83206b1b',
       'createdAt': _createdAt ?? FieldValue.serverTimestamp(),
       'updatedAt': _updatedAt ?? FieldValue.serverTimestamp(),
       'dateOfBirth': _dateOfBirth ?? FieldValue.serverTimestamp(), //Doğum tarihini kullanıcıdan almadığımız için bu şekilde
@@ -72,5 +78,59 @@ class User_ {
   @override
   String toString() {
     return 'User{userID: $_userID, email: $_email, username: $_username, name: $_name, surname: $_surname, profileURL: $_profileURL, createdAt: $_createdAt, updatedAt: $_updatedAt, dateOfBirth: $_dateOfBirth, degree: $_degree}';
+  }
+
+  String get username => _username;
+
+  set username(String value) {
+    _username = value;
+  }
+
+  String get name => _name;
+
+  set name(String value) {
+    _name = value;
+  }
+
+  String get surname => _surname;
+
+  set surname(String value) {
+    _surname = value;
+  }
+
+  String get profileURL => _profileURL;
+
+  set profileURL(String value) {
+    _profileURL = value;
+  }
+
+  DateTime get createdAt => _createdAt;
+
+  set createdAt(DateTime value) {
+    _createdAt = value;
+  }
+
+  DateTime get updatedAt => _updatedAt;
+
+  set updatedAt(DateTime value) {
+    _updatedAt = value;
+  }
+
+  DateTime get dateOfBirth => _dateOfBirth;
+
+  set dateOfBirth(DateTime value) {
+    _dateOfBirth = value;
+  }
+
+  int get firstTime => _firstTime;
+
+  set firstTime(int value) {
+    _firstTime = value;
+  }
+
+  int get degree => _degree;
+
+  set degree(int value) {
+    _degree = value;
   }
 }

@@ -28,12 +28,12 @@ class FirebaseAuthService implements AuthBase {
     }
   }
 
-  User_ _userFromFirebasee(
+  User_ _userFromFirebaseInfo(
       User user, String name, String surname, String username) {
     if (user == null)
       return null;
     else {
-      return User_.all(
+      return User_.Info(
           userID: user.uid,
           email: user.email,
           username: username,
@@ -87,7 +87,7 @@ class FirebaseAuthService implements AuthBase {
     UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
    // return _userFromFirebase(result.user);
-    return _userFromFirebasee(result.user, name, surname, username);
+    return _userFromFirebaseInfo(result.user, name, surname, username);
   }
 
   @override

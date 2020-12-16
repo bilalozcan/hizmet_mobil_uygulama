@@ -1,3 +1,4 @@
+/*
 import 'dart:collection';
 
 //import 'dart:html';
@@ -8,12 +9,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hizmet_mobil_uygulama/models/CarouselSlider.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/mainFdu.dart';
-import 'package:hizmet_mobil_uygulama/ui/MainPage.dart';
+import 'package:hizmet_mobil_uygulama/ui/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../ui/LoginPage.dart';
-
+*/
+/*
 class HizmetUser {
   FirebaseAuth _firebaseAuth;
   String _name;
@@ -213,4 +215,4 @@ class HizmetUser {
               Colors.red));
     }
   }*/
-}
+}*/

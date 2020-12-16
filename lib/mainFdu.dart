@@ -1,15 +1,12 @@
+/*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hizmet_mobil_uygulama/models/CarouselSlider.dart';
 import 'package:hizmet_mobil_uygulama/ui/LoadingPage.dart';
-import 'package:hizmet_mobil_uygulama/ui/LoginPage.dart';
-import 'package:hizmet_mobil_uygulama/ui/SignUp.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ui/ErrorPage.dart';
-import 'ui/MainPage.dart';
+import 'ui/HomePage.dart';
 
 /*Bu değişkenlerin mainden başlayıp diğer sınıflara parametre olarak gitmesi yerine her yerden erişeblir
 olması adına global olması daha iyi olur gibi. Kullanıcı bir anda birden fazla kez bu değişkenlere istek atamayacağı için çakışma durumunun olmayacağını
@@ -80,3 +77,4 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+*/
