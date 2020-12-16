@@ -81,14 +81,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                             Icon(Icons.camera_alt_outlined),
                                         title: Text("Kameradan Çek"),
                                         onTap: () {
-                                          _kameradanFotoCek();
+                                          _kameradanFotoCek(context);
                                         },
                                       ),
                                       ListTile(
                                         leading: Icon(Icons.image_outlined),
                                         title: Text("Galeriden Seç"),
                                         onTap: () {
-                                          _galeridenResimSec();
+                                          _galeridenResimSec(context);
                                         },
                                       ),
                                     ],
@@ -238,7 +238,7 @@ class _ProfilePageState extends State<ProfilePage> {
     ];
   }
 
-  void _kameradanFotoCek() async {
+  void _kameradanFotoCek(BuildContext context) async {
     var _yeniResim =
         await ImagePicker.platform.pickImage(source: ImageSource.camera);
 
@@ -249,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  void _galeridenResimSec() async {
+  void _galeridenResimSec(BuildContext context) async {
     var _yeniResim =
         await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
@@ -261,7 +261,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _profilFotoGuncelle(BuildContext context) async {
-    final _userModel = Provider.of<UserModel>(context,listen: false);
+    final _userModel = Provider.of<UserModel>(context, listen: true);
     if (_profilFoto  != null) {
       var url = await _userModel.uploadFile(
           _userModel.user.userID, "profil_foto", File(_profilFoto.path));
