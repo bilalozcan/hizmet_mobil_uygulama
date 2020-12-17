@@ -33,8 +33,9 @@ class _HomePageState extends State<HomePage> {
     _currentNavigationBarIndex = 0;
     _pressed = false;
     _hizmetler = List<Hizmet>();
-    _hizmetler.add(Hizmet.Info("dsafsadfsafs", "fdsafsdfsa", "_category", "_subCategory", "_publisher", "_detail", "_address", 100.0));
+    //_hizmetler.add(Hizmet.Info("dsafsadfsafs", "fdsafsdfsa", "_category", "_subCategory", "_publisher", "_detail", "_address", 100.0));
     connectJson();
+    readFilterHizmet();
   }
 
   @override
@@ -48,15 +49,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.ac_unit_outlined),
-          onPressed: () async {
-            HizmetModel _hizmetModel =
-                Provider.of<HizmetModel>(context, listen: false);
-            _hizmetler = await _hizmetModel.readFilterHizmet(
-                category: "Kurumsal", subCategory: "Mobil Uygulama");
-
-            setState(() {
-              _hizmetler;
-            });
+          onPressed: ()  {
           },
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -145,14 +138,16 @@ class _HomePageState extends State<HomePage> {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
-                return Card(
-                  child: ListTile(
-                    title: Text(_hizmetler[index].title),
-                    subtitle: Text(_hizmetler[index].detail),
-                    leading: Text(_hizmetler[index].hizmetID),
-                  ),
-                );
-              }),
+                    return Card(
+                      child: ListTile(
+                        title: Text(_hizmetler[index].title),
+                        subtitle: Text(_hizmetler[index].detail),
+                        leading: Text(_hizmetler[index].hizmetID),
+                      ),
+                    );
+                  //else return CircularProgressIndicator(backgroundColor: Colors.red,);
+
+              },childCount: _hizmetler.length),
               /*SliverChildListDelegate(ListView.builder(
                 itemBuilder: (context, index) {
                   return Card(
@@ -172,6 +167,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+   readFilterHizmet(String category,String subCategory)async
+  {
+    HizmetModel _hizmetModel =
+    Provider.of<HizmetModel>(context, listen: false);
+    _hizmetler = await _hizmetModel.readFilterHizmet(
+        category: category, subCategory: subCategory);
+    debugPrint(_hizmetler.toString());
+
+  }
   void connectJson() {
     DefaultAssetBundle.of(context)
         .loadString("assets/Category.json")

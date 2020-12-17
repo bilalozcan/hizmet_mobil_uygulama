@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/locator.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/services/FirebaseStorageService.dart';
@@ -43,6 +44,7 @@ class HizmetRepository implements HizmetBase {
       return null;
     }else {
       var hizmetList = await _firestoreDBService.readFilterHizmet(category: category, subCategory: subCategory);
+      debugPrint("hizmetList"+hizmetList.toString());
       return hizmetList;
     }
   }
