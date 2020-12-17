@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/services/DatabaseBase.dart';
 
@@ -41,6 +42,26 @@ class FirestoreDBService implements DatabaseBase{
         .update({'profileURL': profilePhotoUrl});
     return true;
   }
+
+  @override
+  Future<bool> createHizmet(Hizmet hizmet) async{
+    DocumentSnapshot _readHizmet = await _firebaseDB.doc("hizmetler/${hizmet.category}/${hizmet.subCategory}/${hizmet.hizmetID}").get();
+    if(_readHizmet.data() == null) {
+      await _firebaseDB.collection("hizmetler").doc("${hizmet.category}/${hizmet.subCategory}/${hizmet.hizmetID}").set(hizmet.toMap());
+      return true;
+    } else {
+      return true;
+    }
+  }
+
+  @override
+  Future<Hizmet> readHizmet(String hizmetID) async{
+    DocumentSnapshot _readUser = await _firebaseDB.collection("hizmetler").doc(hizmetID).get();
+    Map<String, dynamic> _readHizmeInfoMap = _readUser.data();
+    Hizmet _okunanHizmetNesnesi = Hizmet.fromMap(_readHizmeInfoMap);
+    return _okunanHizmetNesnesi;
+  }
+
 
 
 
