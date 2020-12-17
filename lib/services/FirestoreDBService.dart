@@ -4,19 +4,17 @@ import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/services/DatabaseBase.dart';
 
-class FirestoreDBService implements DatabaseBase{
+class FirestoreDBService implements DatabaseBase {
   final FirebaseFirestore _firebaseDB = FirebaseFirestore.instance;
+
   @override
-  Future<bool> saveUser(User_ user) async{
+  Future<bool> saveUser(User_ user) async {
     debugPrint(user.toMap().toString());
     DocumentSnapshot _readUser =
         await _firebaseDB.doc("users/${user.userID}").get();
 
     if (_readUser.data() == null) {
-      await _firebaseDB
-          .collection("users")
-          .doc(user.userID)
-          .set(user.toMap());
+      await _firebaseDB.collection("users").doc(user.userID).set(user.toMap());
       return true;
     } else {
       return true;
@@ -24,7 +22,7 @@ class FirestoreDBService implements DatabaseBase{
   }
 
   @override
-  Future<User_> readUser(String userID) async{
+  Future<User_> readUser(String userID) async {
     DocumentSnapshot _readUser =
         await _firebaseDB.collection("users").doc(userID).get();
     Map<String, dynamic> _readUserInfoMap = _readUser.data();
@@ -35,7 +33,7 @@ class FirestoreDBService implements DatabaseBase{
   }
 
   @override
-  Future<bool> updateProfilePhoto(String userID, String profilePhotoUrl) async{
+  Future<bool> updateProfilePhoto(String userID, String profilePhotoUrl) async {
     await _firebaseDB
         .collection("users")
         .doc(userID)
@@ -44,10 +42,16 @@ class FirestoreDBService implements DatabaseBase{
   }
 
   @override
-  Future<bool> createHizmet(Hizmet hizmet) async{
-    DocumentSnapshot _readHizmet = await _firebaseDB.doc("hizmetler/${hizmet.category}/${hizmet.subCategory}/${hizmet.hizmetID}").get();
-    if(_readHizmet.data() == null) {
-      await _firebaseDB.collection("hizmetler").doc("${hizmet.category}/${hizmet.subCategory}/${hizmet.hizmetID}").set(hizmet.toMap());
+  Future<bool> createHizmet(Hizmet hizmet) async {
+    DocumentSnapshot _readHizmet = await _firebaseDB
+        .doc(
+            "hizmetler/${hizmet.category}/${hizmet.subCategory}/${hizmet.hizmetID}")
+        .get();
+    if (_readHizmet.data() == null) {
+      await _firebaseDB
+          .collection("hizmetler")
+          .doc("${hizmet.category}/${hizmet.subCategory}/${hizmet.hizmetID}")
+          .set(hizmet.toMap());
       return true;
     } else {
       return true;
@@ -55,17 +59,33 @@ class FirestoreDBService implements DatabaseBase{
   }
 
   @override
-  Future<Hizmet> readHizmet(String hizmetID) async{
-    DocumentSnapshot _readUser = await _firebaseDB.collection("hizmetler").doc(hizmetID).get();
+  Future<Hizmet> readHizmet(
+      String hizmetID, String category, String subCategory) async {
+    DocumentSnapshot _readUser =
+        await _firebaseDB.collection("hizmetler").doc("$category/$subCategory/$hizmetID").get();
     Map<String, dynamic> _readHizmeInfoMap = _readUser.data();
     Hizmet _okunanHizmetNesnesi = Hizmet.fromMap(_readHizmeInfoMap);
     return _okunanHizmetNesnesi;
   }
 
+  @override
+  Future<List<Hizmet>> readFilterHizmet({String category, String subCategory}) async{
+    QuerySnapshot querySnapshot = await _firebaseDB.collection('hizmetler')
+        .doc(category)
+        .collection(subCategory)
+        .get();
 
+    //var a  = await _firebaseDB.collection("hizmetler").doc("$category/$subCategory").get();
+    List<Hizmet> hizmetler = [];
+    for(DocumentSnapshot hizmet in querySnapshot.docs){
+      debugPrint("Hizmet.data: " + hizmet.data().toString());
+      Hizmet _hizmet = Hizmet.fromMap(hizmet.data());
+      hizmetler.add(_hizmet);
+    }
+    return List<Hizmet>();
+  }
 
-
-  /*@override
+/*@override
   Future<bool> updateProfilFoto(String userID, String profilFotoURL) {
     // TODO: implement updateProfilFoto
     throw UnimplementedError();

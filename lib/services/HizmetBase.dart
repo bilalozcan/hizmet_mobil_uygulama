@@ -14,6 +14,7 @@ abstract class HizmetBase {
     @required payment,
   });
   Future<Hizmet> setHizmet(Hizmet hizmet);
-  Future<Hizmet> getHizmet(Hizmet hizmet);
+  Future<Hizmet> readHizmet(String hizmetID, String category, String subCategory);
+  Future<List<Hizmet>> readFilterHizmet({String category, String subCategory});
 
 }

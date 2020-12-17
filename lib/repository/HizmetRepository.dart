@@ -30,7 +30,7 @@ class HizmetRepository implements HizmetBase {
           detail, address, payment);
       bool result = await _firestoreDBService.createHizmet(_hizmet);
       if(result){
-        return await _firestoreDBService.readHizmet(_hizmet.hizmetID);
+        return await _firestoreDBService.readHizmet(_hizmet.hizmetID, _hizmet.category, _hizmet.subCategory);
       }else {
         return null;
       }
@@ -38,8 +38,18 @@ class HizmetRepository implements HizmetBase {
   }
 
   @override
-  Future<Hizmet> getHizmet(Hizmet hizmet) {
-    // TODO: implement getHizmet
+  Future<List<Hizmet>> readFilterHizmet({String category, String subCategory}) async{
+    if (appMode == AppMode.DEBUG) {
+      return null;
+    }else {
+      var hizmetList = await _firestoreDBService.readFilterHizmet(category: category, subCategory: subCategory);
+      return hizmetList;
+    }
+  }
+
+  @override
+  Future<Hizmet> readHizmet(String hizmetID, String category, String subCategory) {
+    // TODO: implement readHizmet
     throw UnimplementedError();
   }
 
@@ -48,4 +58,5 @@ class HizmetRepository implements HizmetBase {
     // TODO: implement setHizmet
     throw UnimplementedError();
   }
+
 }

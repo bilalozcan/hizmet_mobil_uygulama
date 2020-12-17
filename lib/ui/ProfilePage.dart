@@ -20,7 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
   int degree;
   DateTime datetime;
   String _profilePhoto;
-  PickedFile _profilFoto  ;
+  PickedFile _profilFoto;
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
     email = _userModel.user.email;
     degree = _userModel.user.degree;
     datetime = _userModel.user.dateOfBirth;
-      _profilePhoto =_userModel.user.profileURL;
+    _profilePhoto =_userModel.user.profileURL;
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -261,14 +261,16 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _profilFotoGuncelle(BuildContext context) async {
-    final _userModel = Provider.of<UserModel>(context, listen: true);
+    final _userModel = Provider.of<UserModel>(context, listen: false);
     if (_profilFoto  != null) {
       var url = await _userModel.uploadFile(
           _userModel.user.userID, "profil_foto", File(_profilFoto.path));
 
       if (url != null) {
-        showToast(
-            context, "Profil fotoğrafınız başarıyla güncellendi", Colors.green);
+        _profilePhoto = url;
+        _userModel.user.profileURL = url;
+        /*showToast(
+            context, "Profil fotoğrafınız başarıyla güncellendi", Colors.green);*/
       }
     }
   }

@@ -6,12 +6,12 @@ import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 import 'package:hizmet_mobil_uygulama/ui/SignUpPage.dart';
 
-class SignInPage extends StatefulWidget {
+class MainPage extends StatefulWidget {
   @override
-  _SignInPageState createState() => _SignInPageState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _MainPageState extends State<MainPage> {
   void _googleIleGiris(BuildContext context) async {
     final _userModel = Provider.of<UserModel>(context, listen: false);
     User_ _user = await _userModel.signInWithGoogle();

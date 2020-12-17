@@ -54,7 +54,7 @@ class _HizmetVerPageState extends State<HizmetVerPage> {
           final _userModel = Provider.of<UserModel>(context, listen: false);
           final _hizmetModel = Provider.of<HizmetModel>(context, listen: false);
           Hizmet _olusturulanHizmet = await _hizmetModel.createHizmet(
-              hizmetID: "sfdghjkl",
+              hizmetID: "65456321231fsdfsa",
               title: "Bana Bir Mobil Uygulam Lazım",
               category: "Kurumsal",
               subCategory: "Mobil Uygulama",
@@ -62,7 +62,9 @@ class _HizmetVerPageState extends State<HizmetVerPage> {
               detail: "Açıklam 123456",
               address: "Çırpıcı",
               payment: 1000.0);
+          debugPrint(_olusturulanHizmet.toString());
         },
+
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
