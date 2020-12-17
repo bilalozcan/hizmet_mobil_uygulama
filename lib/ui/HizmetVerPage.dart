@@ -5,6 +5,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
+import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
+import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
+import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
+import 'package:provider/provider.dart';
 
 class HizmetVerPage extends StatefulWidget {
   Category _category;
@@ -21,7 +25,6 @@ class _HizmetVerPageState extends State<HizmetVerPage> {
   Category _category;
   String CategoryCurrentValue = null;
   String SubCategoryCurrentValue = null;
-
 
   _HizmetVerPageState(this._category);
 
@@ -45,6 +48,22 @@ class _HizmetVerPageState extends State<HizmetVerPage> {
       appBar: AppBar(
         title: Text("Hizmet Ver page"),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () async {
+          final _userModel = Provider.of<UserModel>(context, listen: false);
+          final _hizmetModel = Provider.of<HizmetModel>(context, listen: false);
+          Hizmet _olusturulanHizmet = await _hizmetModel.createHizmet(
+              hizmetID: "sfdghjkl",
+              title: "Bana Bir Mobil Uygulam Lazım",
+              category: "Kurumsal",
+              subCategory: "Mobil Uygulama",
+              publisher: "USERID",
+              detail: "Açıklam 123456",
+              address: "Çırpıcı",
+              payment: 1000.0);
+        },
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,10 +86,13 @@ class _HizmetVerPageState extends State<HizmetVerPage> {
               onChanged: (gelen) {
                 debugPrint(gelen);
                 CategoryCurrentValue = gelen;
-                _subCategoryDropDownMenuItemList = _category.getSubCategory(gelen).SubCategoryDropdownMenuItemList(gelen);
+                _subCategoryDropDownMenuItemList = _category
+                    .getSubCategory(gelen)
+                    .SubCategoryDropdownMenuItemList(gelen);
                 setState(() {
                   CategoryCurrentValue;
-                  SubCategoryCurrentValue=_subCategoryDropDownMenuItemList.elementAt(0).value;
+                  SubCategoryCurrentValue =
+                      _subCategoryDropDownMenuItemList.elementAt(0).value;
                 });
               },
             ),

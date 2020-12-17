@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/locator.dart';
 import 'package:hizmet_mobil_uygulama/ui/LoadingPage.dart';
+import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,8 @@ class HizmetApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => UserModel()),
+        ChangeNotifierProvider(create: (context) => HizmetModel()),
+
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
