@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
       Future.delayed(Duration(milliseconds: 1), () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MainPage()),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       });
     }

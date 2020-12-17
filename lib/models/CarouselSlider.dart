@@ -31,7 +31,7 @@ class _CarouselSliderState extends State<CarouselSlider> {
     setState(() {
       if (_photosIndex == widget._photoPaths.length - 1) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainPage()));
+            context, MaterialPageRoute(builder: (context) => HomePage()));
       } else {
         _photosIndex++;
       }

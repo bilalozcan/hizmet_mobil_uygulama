@@ -43,23 +43,30 @@ class HizmetModel with ChangeNotifier implements HizmetBase {
     }
   }
 
+  //TEK BİR HİZMETİN DETAYLARINI EKRANDA GÖSTERİRKEN
   @override
-  Future<Hizmet> getHizmet(Hizmet hizmet) async{
+  Future<Hizmet> readHizmet(String hizmetID, String category, String subCategory) {
+    // TODO: implement readHizmet
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Hizmet>> readFilterHizmet({String category, String subCategory}) {
     try {
       state = ViewState.Busy;
-      _hizmet = await _hizmetRepository.getHizmet(hizmet);
-      if(_hizmet != null){
-        return _hizmet;
-      }else
-        return null;
+      return _hizmetRepository.readFilterHizmet(category: category, subCategory: subCategory);
     } finally {
-      state = ViewState.Busy;
+      state = ViewState.Idle;
     }
   }
+
 
   @override
   Future<Hizmet> setHizmet(Hizmet hizmet) {
     // TODO: implement setHizmet
     throw UnimplementedError();
   }
+
+
+
 }

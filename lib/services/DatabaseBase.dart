@@ -9,7 +9,8 @@ abstract class DatabaseBase {
   //Future<bool> updateUserName(String userID, String yeniUserName);
   Future<bool> updateProfilePhoto(String userID, String profilePhotoUrl);
   Future<bool> createHizmet(Hizmet hizmet);
-  Future<Hizmet> readHizmet(String hizmetID);
+  Future<Hizmet> readHizmet(String hizmetID, String category, String subCategory);
+  Future<List<Hizmet>> readFilterHizmet({String category, String subCategory});
   /*Future<List<User_>> getUserwithPagination(
       User_ enSonGetirilenUser, int getirilecekElemanSayisi);
   Future<List<Konusma>> getAllConversations(String userID);
