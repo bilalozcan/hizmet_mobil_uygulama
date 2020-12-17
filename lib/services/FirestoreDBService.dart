@@ -82,7 +82,7 @@ class FirestoreDBService implements DatabaseBase {
       Hizmet _hizmet = Hizmet.fromMap(hizmet.data());
       hizmetler.add(_hizmet);
     }
-    return List<Hizmet>();
+    return hizmetler;
   }
 
 /*@override
