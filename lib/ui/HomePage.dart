@@ -49,8 +49,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.ac_unit_outlined),
-          onPressed: ()  {
-          },
+          onPressed: () {},
         ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -85,69 +84,90 @@ class _HomePageState extends State<HomePage> {
               actions: [
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 8),
-                        child: GestureDetector(
-                          child: CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage(_userModel.user.profileURL)),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProfilePage()));
-                          },
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
+                      child:Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 8),
+                            child: GestureDetector(
+                              child: CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(_userModel.user.profileURL)),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProfilePage()));
+                              },
                             ),
-                            prefixIcon: IconButton(
-                              icon: Icon(
-                                Icons.search,
-                                color: Colors.black,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                prefixIcon: IconButton(
+                                  icon: Icon(
+                                    Icons.search,
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _pressed = true;
+                                    });
+                                  },
+                                ),
+                                hintText: "Hizmet Ara",
                               ),
-                              onPressed: () {
+                              onChanged: (value) {
                                 setState(() {
-                                  _pressed = true;
+                                  _value = value;
                                 });
                               },
                             ),
-                            hintText: "Hizmet Ara",
                           ),
-                          onChanged: (value) {
-                            setState(() {
-                              _value = value;
-                            });
-                          },
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                     /* Container(
+                        height: 150,
+                        child: GridView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 140,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 1),
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.blue[100 * ((index + 1) % 4)],
+                                    gradient: LinearGradient(
+                                        colors: [Colors.blue, Colors.green],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomRight)),
+                                margin: EdgeInsets.all(18),
+                                child: Text("$index. Kutu"),
+                              );
+                            }),
+                      ),*/
                 ),
               ],
               floating: true,
             ),
+            //BURAYA SLIVER GRID VİEW TARZI BIR SEY GELECEK
             SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
-                    return Card(
-                      child: ListTile(
-                        title: Text(_hizmetler[index].title),
-                        subtitle: Text(_hizmetler[index].detail),
-                        leading: Text(_hizmetler[index].hizmetID),
-                      ),
-                    );
-                  //else return CircularProgressIndicator(backgroundColor: Colors.red,);
-
-              },childCount: _hizmetler.length),
+                return Card(
+                  child: ListTile(
+                    title: Text(_hizmetler[index].title),
+                    subtitle: Text(_hizmetler[index].detail),
+                    leading: Text(_hizmetler[index].hizmetID),
+                  ),
+                );
+                //else return CircularProgressIndicator(backgroundColor: Colors.red,);
+              }, childCount: _hizmetler.length),
               /*SliverChildListDelegate(ListView.builder(
                 itemBuilder: (context, index) {
                   return Card(
@@ -167,15 +187,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-   readFilterHizmet(String category,String subCategory)async
-  {
-    HizmetModel _hizmetModel =
-    Provider.of<HizmetModel>(context, listen: false);
+  readFilterHizmet({String category, String subCategory}) async {
+    HizmetModel _hizmetModel = Provider.of<HizmetModel>(context, listen: false);
     _hizmetler = await _hizmetModel.readFilterHizmet(
         category: category, subCategory: subCategory);
     debugPrint(_hizmetler.toString());
-
   }
+
   void connectJson() {
     DefaultAssetBundle.of(context)
         .loadString("assets/Category.json")
