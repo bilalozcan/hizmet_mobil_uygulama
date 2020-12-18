@@ -57,11 +57,14 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               _currentNavigationBarIndex = currentIndex;
             });
-            if (_currentNavigationBarIndex == 1)
-              Navigator.push(
+            if (_currentNavigationBarIndex == 1) {
+              hizmetVerFonk();
+            }
+
+            /*Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => HizmetVerPage(_category)));
+                      builder: (context) => HizmetVerPage(_category)));*/
           },
           currentIndex: _currentNavigationBarIndex,
           items: [
@@ -141,25 +144,7 @@ class _HomePageState extends State<HomePage> {
                     floating: true,
                   ),
                   SliverToBoxAdapter(
-                    child: Container(
-                      height: 100.0,
-                      child: _category.categoryList.length != 0
-                          ? ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: _category.categoryList.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  width: 100.0,
-                                  child: Card(
-                                    child: Text(_category.categoryList[index]),
-                                  ),
-                                );
-                              },
-                            )
-                          : CircularProgressIndicator(
-                              backgroundColor: Colors.red,
-                            ),
-                    ),
+                    child: categoryList(),
                   ),
                   //newsListSliver,
                   SliverList(
@@ -200,14 +185,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  /*void connectJson() {
-    DefaultAssetBundle.of(context)
-        .loadString("assets/Category.json")
-        .then((gelenJson) {
-      LinkedHashMap<String, dynamic> map = json.decode(gelenJson.toString());
-      _category = Category.fromJson(map);
-    }).catchError((onError) => print(onError));
-  }*/
   connectJson() async {
     var gelenJson =
         await DefaultAssetBundle.of(context).loadString("assets/Category.json");
@@ -216,48 +193,81 @@ class _HomePageState extends State<HomePage> {
     return _category.categoryList;
   }
 
-  List<Widget> Search(String value) {
-    if (value != null || value != "")
-      return List.filled(50, Text(value));
-    else
-      return Pages();
+  categoryList() {
+    return Container(
+      padding: EdgeInsets.all(5),
+      height: 150.0,
+      child: _category.categoryList.length != 0
+          ? ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _category.categoryList.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    Container(
+                      height: 75,
+                      width: 75,
+                      margin: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: NetworkImage(
+                              "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
+                        ),
+                        color: Colors.blue,
+                        borderRadius: new BorderRadius.all(
+                            new Radius.circular(20.0)), //kenarları yuvarlaklaştırır
+                      ),
+                    ),
+                    Container(
+                      child: Text(
+                        _category.categoryList[index],style: TextStyle(fontSize: 25,color: Colors.black,fontWeight: FontWeight.bold ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                );
+                /*Container(
+            decoration: BoxDecoration(
+
+            ),
+            width: 100.0,
+            child: Card(
+              child: Text(_category.categoryList[index],textAlign: TextAlign.center,),
+            ),
+          );*/
+              },
+            )
+          : CircularProgressIndicator(
+              backgroundColor: Colors.red,
+            ),
+    );
   }
 
-  List<Widget> Pages() {
-    return [
-      Text(
-        "İlanlar Sayfası",
-        style: TextStyle(fontSize: 25, color: Colors.black),
-      ),
-      Text(
-        "İlanlar Sayfası",
-        style: TextStyle(fontSize: 25, color: Colors.black),
-      ),
-      SizedBox(
-        height: 300,
-      ),
-      SizedBox(
-        height: 300,
-      ),
-      Text(
-        "İlanlar Sayfası",
-        style: TextStyle(fontSize: 25, color: Colors.black),
-      ),
-      SizedBox(
-        height: 300,
-      ),
-      Text(
-        "İlanlar Sayfası",
-        style: TextStyle(fontSize: 25, color: Colors.black),
-      ),
-      SizedBox(
-        height: 30,
-      ),
-      Text(
-        "İlanlar Sayfası",
-        style: TextStyle(fontSize: 25, color: Colors.black),
-      ),
-    ];
+  hizmetVerFonk() {
+    return showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          child: Column(
+            //dikey
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Container(
+                  padding: EdgeInsets.only(right: 10),
+                  alignment: Alignment.bottomRight,
+                  child: ElevatedButton(
+                    child: const Text('Vazgeç'),
+                    onPressed: () => Navigator.pop(context),
+                  )),
+              categoryList(),
+            ],
+          ),
+        );
+      },
+    );
   }
+
 /*Dialog(child: CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"]),),*/
 }
