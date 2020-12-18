@@ -11,10 +11,20 @@ class HizmetModel with ChangeNotifier implements HizmetBase {
   HizmetRepository _hizmetRepository = locator<HizmetRepository>();
   Hizmet _hizmet;
 
+
+  Hizmet get hizmet => _hizmet;
+
+  set hizmet(Hizmet value) {
+    _hizmet = value;
+  }
+
   set state(ViewState value) {
     _state = value;
     notifyListeners();
   }
+
+
+  ViewState get state => _state;
 
   @override
   Future<Hizmet> createHizmet(

@@ -33,9 +33,7 @@ class _HomePageState extends State<HomePage> {
     _currentNavigationBarIndex = 0;
     _pressed = false;
     _hizmetler = List<Hizmet>();
-    //_hizmetler.add(Hizmet.Info("dsafsadfsafs", "fdsafsdfsa", "_category", "_subCategory", "_publisher", "_detail", "_address", 100.0));
-    connectJson();
-    readFilterHizmet();
+    readFilterHizmet("Kurumsal", "Mobil Uygulama");
   }
 
   @override
@@ -49,7 +47,9 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.ac_unit_outlined),
-          onPressed: () {},
+          onPressed: () {
+            readFilterHizmet("Kurumsal", "Mobil Uygulama");
+          },
         ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -77,130 +77,143 @@ class _HomePageState extends State<HomePage> {
                 icon: Icon(Icons.chat_outlined), label: "Sohbet")
           ],
         ),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              automaticallyImplyLeading: false,
-              actions: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                      child:Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 8),
-                            child: GestureDetector(
-                              child: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(_userModel.user.profileURL)),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ProfilePage()));
-                              },
-                            ),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width / 1.2,
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                prefixIcon: IconButton(
-                                  icon: Icon(
-                                    Icons.search,
-                                    color: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _pressed = true;
-                                    });
-                                  },
-                                ),
-                                hintText: "Hizmet Ara",
+        body: FutureBuilder(
+          future: connectJson(),
+          builder: (context, snapshot) {
+            Widget newsListSliver;
+            if (snapshot.hasData) {
+              newsListSliver = CustomScrollView(
+                slivers: <Widget>[
+                  SliverAppBar(
+                    automaticallyImplyLeading: false,
+                    actions: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 8),
+                              child: GestureDetector(
+                                child: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        _userModel.user.profileURL)),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProfilePage()));
+                                },
                               ),
-                              onChanged: (value) {
-                                setState(() {
-                                  _value = value;
-                                });
-                              },
                             ),
-                          ),
-                        ],
+                            Container(
+                              width: MediaQuery.of(context).size.width / 1.2,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  prefixIcon: IconButton(
+                                    icon: Icon(
+                                      Icons.search,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _pressed = true;
+                                      });
+                                    },
+                                  ),
+                                  hintText: "Hizmet Ara",
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _value = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                     /* Container(
-                        height: 150,
-                        child: GridView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 140,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 1),
-                            itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.blue[100 * ((index + 1) % 4)],
-                                    gradient: LinearGradient(
-                                        colors: [Colors.blue, Colors.green],
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomRight)),
-                                margin: EdgeInsets.all(18),
-                                child: Text("$index. Kutu"),
-                              );
-                            }),
-                      ),*/
-                ),
-              ],
-              floating: true,
-            ),
-            //BURAYA SLIVER GRID VİEW TARZI BIR SEY GELECEK
-            SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                return Card(
-                  child: ListTile(
-                    title: Text(_hizmetler[index].title),
-                    subtitle: Text(_hizmetler[index].detail),
-                    leading: Text(_hizmetler[index].hizmetID),
+                    ],
+                    floating: true,
                   ),
-                );
-                //else return CircularProgressIndicator(backgroundColor: Colors.red,);
-              }, childCount: _hizmetler.length),
-              /*SliverChildListDelegate(ListView.builder(
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text(_hizmetler[index].title),
-                      subtitle: Text(_hizmetler[index].detail),
-                      leading: Text(_hizmetler[index].hizmetID),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      height: 100.0,
+                      child: _category.categoryList.length != 0
+                          ? ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _category.categoryList.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  width: 100.0,
+                                  child: Card(
+                                    child: Text(_category.categoryList[index]),
+                                  ),
+                                );
+                              },
+                            )
+                          : CircularProgressIndicator(
+                              backgroundColor: Colors.red,
+                            ),
                     ),
-                  );
-                },
-                itemCount: 5,
-              ).buildSlivers(context)),*/
-            ),
-          ],
+                  ),
+                  //newsListSliver,
+                  SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                    return Card(
+                      child: ListTile(
+                        title: Text(_hizmetler[index].title),
+                        subtitle: Text(_hizmetler[index].detail),
+                        leading: Text(_hizmetler[index].hizmetID),
+                      ),
+                    );
+                    //else return CircularProgressIndicator(backgroundColor: Colors.red,);
+                  }, childCount: _hizmetler.length)),
+                ],
+              );
+            } else {
+              newsListSliver = Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+            return newsListSliver;
+          },
         ),
       ),
     );
   }
 
-  readFilterHizmet({String category, String subCategory}) async {
-    HizmetModel _hizmetModel = Provider.of<HizmetModel>(context, listen: false);
+  readFilterHizmet(String category, String subCategory) async {
+    final HizmetModel _hizmetModel =
+        Provider.of<HizmetModel>(context, listen: false);
     _hizmetler = await _hizmetModel.readFilterHizmet(
         category: category, subCategory: subCategory);
     debugPrint(_hizmetler.toString());
+    setState(() {
+      _hizmetler;
+    });
   }
 
-  void connectJson() {
+  /*void connectJson() {
     DefaultAssetBundle.of(context)
         .loadString("assets/Category.json")
         .then((gelenJson) {
       LinkedHashMap<String, dynamic> map = json.decode(gelenJson.toString());
       _category = Category.fromJson(map);
     }).catchError((onError) => print(onError));
+  }*/
+  connectJson() async {
+    var gelenJson =
+        await DefaultAssetBundle.of(context).loadString("assets/Category.json");
+    LinkedHashMap<String, dynamic> map = json.decode(gelenJson.toString());
+    _category = Category.fromJson(map);
+    return _category.categoryList;
   }
 
   List<Widget> Search(String value) {
