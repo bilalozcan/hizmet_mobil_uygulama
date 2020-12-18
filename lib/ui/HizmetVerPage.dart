@@ -45,28 +45,29 @@ class _HizmetVerPageState extends State<HizmetVerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Hizmet Ver page"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async {
-          final _userModel = Provider.of<UserModel>(context, listen: false);
-          final _hizmetModel = Provider.of<HizmetModel>(context, listen: false);
-          Hizmet _olusturulanHizmet = await _hizmetModel.createHizmet(
-              hizmetID: "65456321231fsdfsa",
-              title: "Bana Bir Mobil Uygulam Lazım",
-              category: "Kurumsal",
-              subCategory: "Mobil Uygulama",
-              publisher: "USERID",
-              detail: "Açıklam 123456",
-              address: "Çırpıcı",
-              payment: 1000.0);
-          debugPrint(_olusturulanHizmet.toString());
-        },
+        appBar: AppBar(
+          title: Text("Hizmet Ver page"),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () async {
+            final _userModel = Provider.of<UserModel>(context, listen: false);
+            final _hizmetModel = Provider.of<HizmetModel>(
+                context, listen: false);
+            Hizmet _olusturulanHizmet = await _hizmetModel.createHizmet(
+                hizmetID: "65456321231fsdfsa",
+                title: "Bana Bir Mobil Uygulam Lazım",
+                category: "Kurumsal",
+                subCategory: "Mobil Uygulama",
+                publisher: "USERID",
+                detail: "Açıklam 123456",
+                address: "Çırpıcı",
+                payment: 1000.0);
+            debugPrint(_olusturulanHizmet.toString());
+          },
 
-      ),
-      body: Column(
+        ),
+        body: /*Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -121,7 +122,36 @@ class _HizmetVerPageState extends State<HizmetVerPage> {
             ),
           ),
         ],
-      ),
+      ),*/
+        Center(
+          child: ElevatedButton(
+            child: const Text('showModalBottomSheet'),
+            onPressed: () {
+              showModalBottomSheet<void>(
+                barrierColor: Colors.green.withOpacity(0.4),
+                isScrollControlled: true,
+                context: context,
+                builder: (BuildContext context) {
+                  return Container(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          const Text('Modal BottomSheet'),
+                          ElevatedButton(
+                            child: const Text('Close BottomSheet'),
+                            onPressed: () => Navigator.pop(context),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
     );
   }
 
@@ -161,12 +191,13 @@ class _HizmetVerPageState extends State<HizmetVerPage> {
 
   veriOku() async {
     var gelenJson =
-        await DefaultAssetBundle.of(context).loadString("assets/Category.json");
+    await DefaultAssetBundle.of(context).loadString("assets/Category.json");
     //debugPrint(gelenJson);
 
     LinkedHashMap<String, dynamic> map = json.decode(gelenJson.toString());
     Category category = Category.fromJson(map);
-    for (var i in category.categoryList) debugPrint("KeyList: " + i);
+    for (var i in category.categoryList)
+      debugPrint("KeyList: " + i);
     SubCategory subCategory = category.getSubCategory("Ders");
     for (var i in category.categoryList) {
       debugPrint("Ders KeyList: " + i);
