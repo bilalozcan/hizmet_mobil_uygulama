@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
-import 'package:hizmet_mobil_uygulama/ui/HizmetVerPage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import 'ProfilePage.dart';
 
@@ -28,13 +28,21 @@ class _HomePageState extends State<HomePage> {
   String _value;
   bool _pressed;
   List<Hizmet> _hizmetler;
+  bool _subCategoryView;
+  List<dynamic> _subcategoryList;
+  GlobalKey<FormState> _formkey;
+  TextEditingController _aciklama = TextEditingController();
+  TextEditingController _title = TextEditingController();
+  TextEditingController _address = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _currentNavigationBarIndex = 0;
     _pressed = false;
+    _subCategoryView = false;
     _hizmetler = List<Hizmet>();
+    _formkey = GlobalKey<FormState>();
     readFilterHizmet("Kurumsal", "Mobil Uygulama");
     Hizmet hizmett = Hizmet.Info(
         "sadsadasdasd",
@@ -58,7 +66,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.ac_unit_outlined),
+          child: Icon(LineAwesomeIcons.blender),
           onPressed: () {
             readFilterHizmet("Kurumsal", "Mobil Uygulama");
           },
@@ -69,6 +77,10 @@ class _HomePageState extends State<HomePage> {
               _currentNavigationBarIndex = position;
             });
             if (_currentNavigationBarIndex == 1) {
+              setState(() {
+                _subcategoryList;
+                _subCategoryView;
+              });
               hizmetVerFonk();
             }
           },
@@ -76,42 +88,17 @@ class _HomePageState extends State<HomePage> {
           inactiveIconColor: Colors.black,
           tabs: [
             TabData(iconData: Icons.home_outlined, title: "Anasayfa"),
-            TabData(iconData: Icons.add_box_outlined, title: "Hizmet Ver",/*onclick: (){
+            TabData(
+              iconData: Icons.add_box_outlined,
+              title:
+                  "Hizmet Ver", /*onclick: (){
               return hizmetVerFonk();
-            }*/),
+            }*/
+            ),
             TabData(iconData: Icons.check_box_outlined, title: "Hizmetler"),
             TabData(iconData: Icons.chat_outlined, title: "Sohbet")
           ],
         ),
-        /*BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          onTap: (currentIndex) {
-            setState(() {
-              _currentNavigationBarIndex = currentIndex;
-            });
-            if (_currentNavigationBarIndex == 1) {
-              hizmetVerFonk();
-            }
-
-            /*Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => HizmetVerPage(_category)));*/
-          },
-          currentIndex: _currentNavigationBarIndex,
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined), label: "Anasayfa"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.add_box_outlined, size: 40),
-                label: "Hizmet Ver"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.check_box_outlined, size: 40),
-                label: "Hizmetlerim"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.chat_outlined), label: "Sohbet")
-          ],
-        ),*/
         body: FutureBuilder(
           future: connectJson(),
           builder: (context, snapshot) {
@@ -176,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                     floating: true,
                   ),
                   SliverToBoxAdapter(
-                    child: categoryList(_category,25),
+                    child: categoryList(_category.categoryList, 25),
                   ),
                   //newsListSliver,
                   SliverList(
@@ -229,39 +216,69 @@ class _HomePageState extends State<HomePage> {
     return _category.categoryList;
   }
 
-
   hizmetVerFonk() {
     return showModalBottomSheet<void>(
       isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          child: Column(
-            //dikey
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(right: 10),
-                alignment: Alignment.bottomRight,
-                /*child: ElevatedButton(
+        return StatefulBuilder(builder: (BuildContext context, setState) {
+          //Form(key: _formkey, child: Column,)
+          return Form(
+            key: _formkey,
+            child: Container(
+              child: Column(
+                //dikey
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(right: 10),
+                    alignment: Alignment.bottomRight,
+                    /*child: ElevatedButton(
                     child: const Text('Vazgeç'),
                     onPressed: () => Navigator.pop(context),
                   )),*/
-                child: CupertinoButton(
-                  child: Icon(
-                    Icons.close,
-                    color: Colors.black,
+                    child: CupertinoButton(
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
+                  categoryList(
+                      _category.categoryList, _category.categoryList.length,
+                      onPressedFunction: onPressedFunc, setState: setState),
+                  _subCategoryView
+                      ? categoryList(_subcategoryList, _subcategoryList.length,
+                          setState: setState)
+                      : Container(),
+                  TextFormField(
+                    controller: _title,
+                    decoration: InputDecoration(
+                        labelText: "Hizmet Başlık",
+                        border: OutlineInputBorder()),
+                  ),
+                  SizedBox(height: 5),
+                  TextFormField(
+                    controller: _aciklama,
+                    decoration: InputDecoration(
+                        labelText: "Hizmet Açıklama",
+                        border: OutlineInputBorder()),
+                  ),
+                  TextFormField(
+                    controller: _address,
+                    decoration: InputDecoration(
+                        labelText: "Adres",
+                        border: OutlineInputBorder()),
+                  ),
+
+                ],
               ),
-              categoryList(_category,25),
-              categoryList(_category,25),
-            ],
-          ),
-        );
+            ),
+          );
+        });
       },
     );
   }
@@ -286,54 +303,71 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-/*Dialog(child: CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"]),),*/
-}
-categoryList(Category _category,int size,{Function onPressedFunction}) {
-  return Container(
-    padding: EdgeInsets.all(5),
-    height: 150.0,
-    child: _category.categoryList.length != 0
-        ? ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: _category.categoryList.length,
-      itemBuilder: (context, index) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            GestureDetector(
-                onTap:onPressedFunction!=null ?  onPressedFunction:null,
-                child:Container(
-                  height: 75,
-                  width: 75,
-                  margin: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: NetworkImage(
-                          "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
+  onPressedFunc(String category) {
+    debugPrint("onpressedFunc çalıştı satır 304");
+    _subCategoryView = true;
+    _subcategoryList = _category.getSubCategory(category).subCategoryList;
+  }
+
+  categoryList(List<String> categoryList, int size,
+      {Function onPressedFunction, Function setState}) {
+    return Container(
+      padding: EdgeInsets.all(5),
+      height: 150.0,
+      child: categoryList.length != 0
+          ? ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: categoryList.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GestureDetector(
+                        onTap: () {
+                          if (onPressedFunction != null) {
+                            debugPrint("onTap Çalıştı Satır 324");
+                            onPressedFunction(categoryList[index]);
+                            setState(() {
+                              debugPrint("setState çalıştı Satır 324");
+                              _subCategoryView;
+                              _subcategoryList.length;
+                            });
+                          }
+                        },
+                        child: Container(
+                          height: 75,
+                          width: 75,
+                          margin: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: NetworkImage(
+                                  "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
+                            ),
+                            color: Colors.blue,
+                            borderRadius: new BorderRadius.all(
+                                new Radius.circular(
+                                    20.0)), //kenarları yuvarlaklaştırır
+                          ),
+                        )),
+                    Container(
+                      child: Text(
+                        categoryList[index],
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    color: Colors.blue,
-                    borderRadius: new BorderRadius.all(new Radius.circular(
-                        20.0)), //kenarları yuvarlaklaştırır
-                  ),
-                )
+                  ],
+                );
+              },
+            )
+          : CircularProgressIndicator(
+              backgroundColor: Colors.red,
             ),
-            Container(
-              child: Text(
-                _category.categoryList[index],
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        );
-      },
-    )
-        : CircularProgressIndicator(
-      backgroundColor: Colors.red,
-    ),
-  );
+    );
+  }
+/*Dialog(child: CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"]),),*/
 }
