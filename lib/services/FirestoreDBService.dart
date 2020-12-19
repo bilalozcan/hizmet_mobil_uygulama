@@ -26,10 +26,12 @@ class FirestoreDBService implements DatabaseBase {
     DocumentSnapshot _readUser =
         await _firebaseDB.collection("users").doc(userID).get();
     Map<String, dynamic> _readUserInfoMap = _readUser.data();
-
-    User_ _okunanUserNesnesi = User_.fromMap(_readUserInfoMap);
-    //print("Okunan user nesnesi :" + _okunanUserNesnesi.toString());
-    return _okunanUserNesnesi;
+    if(_readUserInfoMap!=null) {
+      User_ _okunanUserNesnesi = User_.fromMap(_readUserInfoMap);
+      //print("Okunan user nesnesi :" + _okunanUserNesnesi.toString());
+      return _okunanUserNesnesi;
+    }
+    else return null;
   }
 
   @override
@@ -78,7 +80,6 @@ class FirestoreDBService implements DatabaseBase {
     //var a  = await _firebaseDB.collection("hizmetler").doc("$category/$subCategory").get();
     List<Hizmet> hizmetler = [];
     for(DocumentSnapshot hizmet in querySnapshot.docs){
-      debugPrint("Hizmet.data: " + hizmet.data().toString());
       Hizmet _hizmet = Hizmet.fromMap(hizmet.data());
       hizmetler.add(_hizmet);
     }

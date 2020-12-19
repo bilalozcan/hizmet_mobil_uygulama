@@ -13,6 +13,7 @@ class UserModel with ChangeNotifier implements AuthBase {
   ViewState _state = ViewState.Idle;
   UserRepository _userRepository = locator<UserRepository>();
   User_ _user;
+  User_ _yeniUser;
 
   User_ get user => _user;
 
@@ -45,6 +46,20 @@ class UserModel with ChangeNotifier implements AuthBase {
       return null;
     } finally {
       state = ViewState.Idle;
+    }
+  }
+  Future<User_> anotherUser(String userID) async
+  {
+    try {
+      _yeniUser = await _userRepository.anotherUser(userID);
+      if (_yeniUser != null)
+        return _yeniUser;
+      else
+        return null;
+    } catch (e) {
+      debugPrint("Viewmodeldeki current user hata:" + e.toString());
+      return null;
+    } finally {
     }
   }
 
