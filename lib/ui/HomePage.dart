@@ -6,11 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
+import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import 'ProfilePage.dart';
@@ -30,12 +31,12 @@ class _HomePageState extends State<HomePage> {
   List<Hizmet> _hizmetler;
   bool _subCategoryView;
   List<dynamic> _subcategoryList;
-  List<GlobalKey<FormFieldState>> _formkey=[];
+  List<GlobalKey<FormFieldState>> _formkey = [];
   TextEditingController _aciklama = TextEditingController();
   TextEditingController _title = TextEditingController();
   TextEditingController _address = TextEditingController();
   List<Step> _stepList;
-  var _activeStep=0;
+  int _activeStep;
 
   String categoryName;
   String subCategoryName;
@@ -43,6 +44,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _activeStep = 0;
     _currentNavigationBarIndex = 0;
     _pressed = false;
     _subCategoryView = false;
@@ -61,147 +63,6 @@ class _HomePageState extends State<HomePage> {
         "burdur",
         500);
     _hizmetler.add(hizmett);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    UserModel _userModel = Provider.of<UserModel>(context);
-    _profilePhoto = _userModel.user.profileURL;
-    return WillPopScope(
-      onWillPop: () async {
-        exit(0);
-      },
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: Icon(LineAwesomeIcons.blender),
-          onPressed: () {
-            readFilterHizmet("Kurumsal", "Mobil Uygulama");
-          },
-        ),
-        bottomNavigationBar: FancyBottomNavigation(
-          onTabChangedListener: (position) {
-            setState(() {
-              _currentNavigationBarIndex = position;
-            });
-            if (_currentNavigationBarIndex == 1) {
-              setState(() {
-                _subcategoryList;
-                _subCategoryView;
-              });
-              hizmetVerFonk();
-            }
-          },
-          circleColor: Colors.green,
-          inactiveIconColor: Colors.black,
-          tabs: [
-            TabData(iconData: Icons.home_outlined, title: "Anasayfa"),
-            TabData(
-              iconData: Icons.add_box_outlined,
-              title:
-                  "Hizmet Ver", /*onclick: (){
-              return hizmetVerFonk();
-            }*/
-            ),
-            TabData(iconData: Icons.check_box_outlined, title: "Hizmetler"),
-            TabData(iconData: Icons.chat_outlined, title: "Sohbet")
-          ],
-        ),
-        body: FutureBuilder(
-          future: connectJson(),
-          builder: (context, snapshot) {
-            Widget newsListSliver;
-            if (snapshot.hasData) {
-              newsListSliver = CustomScrollView(
-                slivers: <Widget>[
-                  SliverAppBar(
-                    automaticallyImplyLeading: false,
-                    actions: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 8),
-                              child: GestureDetector(
-                                child: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        _userModel.user.profileURL)),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ProfilePage()));
-                                },
-                              ),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width / 1.2,
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  prefixIcon: IconButton(
-                                    icon: Icon(
-                                      Icons.search,
-                                      color: Colors.black,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _pressed = true;
-                                      });
-                                    },
-                                  ),
-                                  hintText: "Hizmet Ara",
-                                ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _value = value;
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                    floating: true,
-                  ),
-                  SliverToBoxAdapter(
-                    child: categoryList(_category.categoryList, 25),
-                  ),
-                  //newsListSliver,
-                  SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                    return FutureBuilder(
-                      future: hizmetCard(_hizmetler[index]),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData)
-                          return snapshot.data;
-                        else
-                          return CircularProgressIndicator(
-                            backgroundColor: Colors.red,
-                          );
-                      },
-                    );
-                    //else return CircularProgressIndicator(backgroundColor: Colors.red,);
-                  }, childCount: _hizmetler.length)),
-                ],
-              );
-            } else {
-              newsListSliver = Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-            return newsListSliver;
-          },
-        ),
-      ),
-    );
   }
 
   readFilterHizmet(String category, String subCategory) async {
@@ -224,13 +85,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   hizmetVerFonk() {
+    setState(() {});
     return showModalBottomSheet<void>(
       isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (BuildContext context, setState) {
           //Form(key: _formkey, child: Column,)
-          return _hizmetVerStepper();
+          return _hizmetVerStepper(setState);
           /*return Form(
             key: _formkey,
             child: Container(
@@ -333,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                     GestureDetector(
                         onTap: () {
                           setState(() {
-                            categoryName=categoryList[index];
+                            categoryName = categoryList[index];
                           });
                           if (onPressedFunction != null) {
                             debugPrint("onTap Çalıştı Satır 324");
@@ -380,7 +242,8 @@ class _HomePageState extends State<HomePage> {
             ),
     );
   }
-  _hizmetVerStepper() {
+
+  _hizmetVerStepper(Function setState) {
     return Container(
       alignment: Alignment.bottomCenter,
       decoration: BoxDecoration(
@@ -402,15 +265,16 @@ class _HomePageState extends State<HomePage> {
                 onPressed: _activeStep != 0 ? onStepCancel : () {},
               ),
               CupertinoButton(
-                child: Text(
-                    _activeStep < _stepListInit().length - 1 ? "İlerle" : "Bitir"),
+                child: Text(_activeStep < _stepListInit(setState).length - 1
+                    ? "İlerle"
+                    : "Bitir"),
                 onPressed: onStepContinue,
               ),
             ],
           );
         },
         currentStep: _activeStep,
-        onStepContinue: ()  {
+        onStepContinue: () {
           setState(() {
             continueButton(_activeStep);
           });
@@ -420,86 +284,271 @@ class _HomePageState extends State<HomePage> {
             if (_activeStep != 0) _activeStep--;
           });
         },
-        steps: _stepListInit(),
+        steps: _stepListInit(setState),
       ),
     );
   }
 
-  List<Step> _stepListInit() {
-    List<Step> steps=[
-    Step(title:Text("Kategoriler"),content:FormField(key:_formkey[0],validator:(value){
-      if(categoryName!=null){
-        debugPrint(categoryName);
-        categoryName=null;
-        return null;
-      }
-      else {
-        debugPrint("error");
-        return "Kategori secmeniz gerekmektedir";
-      }
-    },builder:(state){
-      return categoryList(
-      _category.categoryList, _category.categoryList.length,
-      onPressedFunction: onPressedFunc, setState: setState);
-    })),Step(title:Text("Alt Kategoriler"),content:FormField(key:_formkey[1],validator:(value){
-        if(categoryName!=null){
-          debugPrint(categoryName);
-          categoryName=null;
-          return null;
-        }
-        else {
-          debugPrint("error");
-          return "Kategori secmeniz gerekmektedir";
-        }
-      },builder:(state){
-        return categoryList(_subcategoryList, _subcategoryList.length,
-            setState: setState);
-      })),Step(
+  List<Step> _stepListInit(Function setState) {
+    List<Step> steps = [
+      Step(
+          title: Text("Kategoriler"),
+          content: FormField(
+              key: _formkey[0],
+              validator: (value) {
+                if (categoryName != null) {
+                  debugPrint(categoryName);
+                  categoryName = null;
+                  return null;
+                } else {
+                  debugPrint("error");
+                  return "Kategori secmeniz gerekmektedir";
+                }
+              },
+              builder: (state) {
+                return categoryList(
+                    _category.categoryList, _category.categoryList.length,
+                    onPressedFunction: onPressedFunc, setState: setState);
+              })),
+      Step(
+          title: Text("Alt Kategoriler"),
+          content: FormField(
+              key: _formkey[1],
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) {
+                if (categoryName != null) {
+                  debugPrint(categoryName);
+                  categoryName = null;
+                  return null;
+                } else {
+                  debugPrint("error");
+                  return "Kategori secmeniz gerekmektedir";
+                }
+              },
+              builder: (state) {
+                return categoryList(_subcategoryList, _subcategoryList.length,
+                    setState: setState);
+              })),
+      Step(
         isActive: _activeStep == 2 ? true : false,
         title: Text(
           _activeStep == 2 ? "Kişisel Bilgiler" : "Kisi...",
         ),
         content: Column(
           children: [
-            Form(
-              key: _formkey[2],
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _address,
-                    decoration: InputDecoration(
-                        labelText: "Adres", border: OutlineInputBorder()),
-                    //validator: _nameValidator,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-
-                  ),
-                  SizedBox(height: 5),
-                  TextFormField(
-                    controller: _aciklama,
-                    decoration: InputDecoration(
-                        labelText: "Açıklama", border: OutlineInputBorder()),
-                    //validator: _nameValidator,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-
-                  ),
-                ],
-              ),
-            )
+            FormField(
+                key: _formkey[2],
+                builder: (state) {
+                  return Column(
+                    children: [
+                      TextFormField(
+                          controller: _address,
+                          decoration: InputDecoration(
+                              labelText: "Adres", border: OutlineInputBorder()),
+                          //validator: _nameValidator,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) {
+                            if (value != null) {
+                              debugPrint("bos degil");
+                              return null;
+                            } else {
+                              debugPrint("hata var");
+                              return "hata";
+                            }
+                          }),
+                      SizedBox(height: 5),
+                      TextFormField(
+                        controller: _aciklama,
+                        decoration: InputDecoration(
+                            labelText: "Açıklama",
+                            border: OutlineInputBorder()),
+                        //validator: _nameValidator,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                      ),
+                    ],
+                  );
+                })
           ],
         ),
-      ),];
+      ),
+    ];
     return steps;
   }
 
   void continueButton(int activeStep) {
     if (_formkey[activeStep].currentState.validate()) {
-      if (activeStep < _stepListInit().length - 1) {
+      if (activeStep < _stepListInit(setState).length - 1) {
         _formkey[activeStep].currentState.save();
         debugPrint(_activeStep.toString());
         activeStep++;
-        _activeStep = activeStep;
+        setState(() {
+          _activeStep = activeStep;
+          debugPrint("active step" + _activeStep.toString());
+        });
+      } else {
+        _formkey[activeStep].currentState.save();
       }
-    }
+    } else
+      showToast(
+          context,
+          "Kullanım koşullarını kabul etmediğiniz için üyelik işlemine devam edemiyoruz.",
+          Colors.red);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    UserModel _userModel = Provider.of<UserModel>(context);
+    _profilePhoto = _userModel.user.profileURL;
+    return WillPopScope(
+      onWillPop: () async {
+        exit(0);
+      },
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: Icon(LineAwesomeIcons.blender),
+          onPressed: () {
+            readFilterHizmet("Kurumsal", "Mobil Uygulama");
+          },
+        ),
+        bottomNavigationBar: ConvexAppBar(onTap: (position){
+          setState(() {
+            _currentNavigationBarIndex=position;
+          });
+          if(_currentNavigationBarIndex==2)
+            {
+              return hizmetVerFonk();
+            }
+        },style: TabStyle.fixedCircle, items: [
+          TabItem(title: "Anasayfa", icon: Icons.home_outlined),
+          TabItem(title: "Hizmetlerim", icon: Icons.check_box_outlined),
+          TabItem(title: "Hizmet Ver", icon: Icons.add_box_outlined),
+          TabItem(title:"idk",icon:Icons.email),
+          TabItem(title: "Sohbet", icon: Icons.chat_outlined)
+        ]),
+        /*FancyBottomNavigation(
+          onTabChangedListener: (position) {
+            setState(() {
+              _currentNavigationBarIndex = position;
+            });
+            if (_currentNavigationBarIndex == 1) {
+              setState(() {
+                _subcategoryList;
+                _subCategoryView;
+              });
+              hizmetVerFonk();
+            }
+          },
+          circleColor: Colors.green,
+          inactiveIconColor: Colors.black,
+          tabs: [
+            TabData(iconData: Icons.home_outlined, title: "Anasayfa"),
+            TabData(
+              iconData: Icons.add_box_outlined,
+              title:
+              "Hizmet Ver", /*onclick: (){
+              return hizmetVerFonk();
+            }*/
+            ),
+            TabData(iconData: Icons.check_box_outlined, title: "Hizmetler"),
+            TabData(iconData: Icons.chat_outlined, title: "Sohbet")
+          ],
+        ),*/
+        body: FutureBuilder(
+          future: connectJson(),
+          builder: (context, snapshot) {
+            Widget newsListSliver;
+            if (snapshot.hasData) {
+              newsListSliver = CustomScrollView(
+                slivers: <Widget>[
+                  SliverAppBar(
+                    automaticallyImplyLeading: false,
+                    actions: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 8),
+                              child: GestureDetector(
+                                child: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        _userModel.user.profileURL)),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProfilePage()));
+                                },
+                              ),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width / 1.2,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  prefixIcon: IconButton(
+                                    icon: Icon(
+                                      Icons.search,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _pressed = true;
+                                      });
+                                    },
+                                  ),
+                                  hintText: "Hizmet Ara",
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _value = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    floating: true,
+                  ),
+                  SliverToBoxAdapter(
+                    child: categoryList(_category.categoryList, 25),
+                  ),
+                  //newsListSliver,
+                  SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                    return FutureBuilder(
+                      future: hizmetCard(_hizmetler[index]),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData)
+                          return snapshot.data;
+                        else
+                          return CircularProgressIndicator(
+                            backgroundColor: Colors.red,
+                          );
+                      },
+                    );
+                    //else return CircularProgressIndicator(backgroundColor: Colors.red,);
+                  }, childCount: _hizmetler.length)),
+                ],
+              );
+            } else {
+              newsListSliver = Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+            return newsListSliver;
+          },
+        ),
+      ),
+    );
   }
 /*Dialog(child: CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"]),),*/
 }
