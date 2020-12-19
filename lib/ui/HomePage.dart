@@ -5,11 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
+import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/ui/HizmetVerPage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 
 import 'ProfilePage.dart';
 
@@ -34,6 +36,16 @@ class _HomePageState extends State<HomePage> {
     _pressed = false;
     _hizmetler = List<Hizmet>();
     readFilterHizmet("Kurumsal", "Mobil Uygulama");
+    Hizmet hizmett = Hizmet.Info(
+        "sadsadasdasd",
+        "asdadasd",
+        "Kurumsal",
+        "Mobil Uygulama",
+        "aJ6PFs34srNEX3GLjqlaDFo18T53",
+        "yazılım",
+        "burdur",
+        500);
+    _hizmetler.add(hizmett);
   }
 
   @override
@@ -51,7 +63,27 @@ class _HomePageState extends State<HomePage> {
             readFilterHizmet("Kurumsal", "Mobil Uygulama");
           },
         ),
-        bottomNavigationBar: BottomNavigationBar(
+        bottomNavigationBar: FancyBottomNavigation(
+          onTabChangedListener: (position) {
+            setState(() {
+              _currentNavigationBarIndex = position;
+            });
+            if (_currentNavigationBarIndex == 1) {
+              hizmetVerFonk();
+            }
+          },
+          circleColor: Colors.green,
+          inactiveIconColor: Colors.black,
+          tabs: [
+            TabData(iconData: Icons.home_outlined, title: "Anasayfa"),
+            TabData(iconData: Icons.add_box_outlined, title: "Hizmet Ver",/*onclick: (){
+              return hizmetVerFonk();
+            }*/),
+            TabData(iconData: Icons.check_box_outlined, title: "Hizmetler"),
+            TabData(iconData: Icons.chat_outlined, title: "Sohbet")
+          ],
+        ),
+        /*BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           onTap: (currentIndex) {
             setState(() {
@@ -79,7 +111,7 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.chat_outlined), label: "Sohbet")
           ],
-        ),
+        ),*/
         body: FutureBuilder(
           future: connectJson(),
           builder: (context, snapshot) {
@@ -149,12 +181,16 @@ class _HomePageState extends State<HomePage> {
                   //newsListSliver,
                   SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
-                    return Card(
-                      child: ListTile(
-                        title: Text(_hizmetler[index].title),
-                        subtitle: Text(_hizmetler[index].detail),
-                        leading: Text(_hizmetler[index].hizmetID),
-                      ),
+                    return FutureBuilder(
+                      future: hizmetCard(_hizmetler[index]),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData)
+                          return snapshot.data;
+                        else
+                          return CircularProgressIndicator(
+                            backgroundColor: Colors.red,
+                          );
+                      },
                     );
                     //else return CircularProgressIndicator(backgroundColor: Colors.red,);
                   }, childCount: _hizmetler.length)),
@@ -177,8 +213,8 @@ class _HomePageState extends State<HomePage> {
   readFilterHizmet(String category, String subCategory) async {
     final HizmetModel _hizmetModel =
         Provider.of<HizmetModel>(context, listen: false);
-    _hizmetler = await _hizmetModel.readFilterHizmet(
-        category: category, subCategory: subCategory);
+    /*_hizmetler = await _hizmetModel.readFilterHizmet(
+        category: category, subCategory: subCategory);*/
     debugPrint(_hizmetler.toString());
     setState(() {
       _hizmetler;
@@ -215,27 +251,22 @@ class _HomePageState extends State<HomePage> {
                               "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
                         ),
                         color: Colors.blue,
-                        borderRadius: new BorderRadius.all(
-                            new Radius.circular(20.0)), //kenarları yuvarlaklaştırır
+                        borderRadius: new BorderRadius.all(new Radius.circular(
+                            20.0)), //kenarları yuvarlaklaştırır
                       ),
                     ),
                     Container(
                       child: Text(
-                        _category.categoryList[index],style: TextStyle(fontSize: 25,color: Colors.black,fontWeight: FontWeight.bold ),
+                        _category.categoryList[index],
+                        style: TextStyle(
+                            fontSize: 25,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                     ),
                   ],
                 );
-                /*Container(
-            decoration: BoxDecoration(
-
-            ),
-            width: 100.0,
-            child: Card(
-              child: Text(_category.categoryList[index],textAlign: TextAlign.center,),
-            ),
-          );*/
               },
             )
           : CircularProgressIndicator(
@@ -255,17 +286,47 @@ class _HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Container(
-                  padding: EdgeInsets.only(right: 10),
-                  alignment: Alignment.bottomRight,
-                  child: ElevatedButton(
+                padding: EdgeInsets.only(right: 10),
+                alignment: Alignment.bottomRight,
+                /*child: ElevatedButton(
                     child: const Text('Vazgeç'),
                     onPressed: () => Navigator.pop(context),
-                  )),
+                  )),*/
+                child: CupertinoButton(
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
               categoryList(),
             ],
           ),
         );
       },
+    );
+  }
+
+  hizmetCard(Hizmet hizmet) async {
+    final _userModel = Provider.of<UserModel>(context, listen: false);
+    User_ userCard = await _userModel.anotherUser(hizmet.publisher);
+    return Card(
+      child: ListTile(
+        title: Text(hizmet.title),
+        subtitle: Text(hizmet.detail),
+        leading: Column(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(userCard.profileURL),
+            ),
+            Text(userCard.name + " " + userCard.surname),
+          ],
+        ),
+      ),
     );
   }
 
