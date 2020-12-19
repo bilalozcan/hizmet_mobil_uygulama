@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                     floating: true,
                   ),
                   SliverToBoxAdapter(
-                    child: categoryList(),
+                    child: categoryList(_category,25),
                   ),
                   //newsListSliver,
                   SliverList(
@@ -229,51 +229,6 @@ class _HomePageState extends State<HomePage> {
     return _category.categoryList;
   }
 
-  categoryList() {
-    return Container(
-      padding: EdgeInsets.all(5),
-      height: 150.0,
-      child: _category.categoryList.length != 0
-          ? ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _category.categoryList.length,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    Container(
-                      height: 75,
-                      width: 75,
-                      margin: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: NetworkImage(
-                              "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
-                        ),
-                        color: Colors.blue,
-                        borderRadius: new BorderRadius.all(new Radius.circular(
-                            20.0)), //kenarları yuvarlaklaştırır
-                      ),
-                    ),
-                    Container(
-                      child: Text(
-                        _category.categoryList[index],
-                        style: TextStyle(
-                            fontSize: 25,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                );
-              },
-            )
-          : CircularProgressIndicator(
-              backgroundColor: Colors.red,
-            ),
-    );
-  }
 
   hizmetVerFonk() {
     return showModalBottomSheet<void>(
@@ -302,7 +257,8 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),
-              categoryList(),
+              categoryList(_category,25),
+              categoryList(_category,25),
             ],
           ),
         );
@@ -331,4 +287,53 @@ class _HomePageState extends State<HomePage> {
   }
 
 /*Dialog(child: CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"]),),*/
+}
+categoryList(Category _category,int size,{Function onPressedFunction}) {
+  return Container(
+    padding: EdgeInsets.all(5),
+    height: 150.0,
+    child: _category.categoryList.length != 0
+        ? ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: _category.categoryList.length,
+      itemBuilder: (context, index) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            GestureDetector(
+                onTap:onPressedFunction!=null ?  onPressedFunction:null,
+                child:Container(
+                  height: 75,
+                  width: 75,
+                  margin: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: NetworkImage(
+                          "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
+                    ),
+                    color: Colors.blue,
+                    borderRadius: new BorderRadius.all(new Radius.circular(
+                        20.0)), //kenarları yuvarlaklaştırır
+                  ),
+                )
+            ),
+            Container(
+              child: Text(
+                _category.categoryList[index],
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        );
+      },
+    )
+        : CircularProgressIndicator(
+      backgroundColor: Colors.red,
+    ),
+  );
 }
