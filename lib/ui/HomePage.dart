@@ -30,10 +30,15 @@ class _HomePageState extends State<HomePage> {
   List<Hizmet> _hizmetler;
   bool _subCategoryView;
   List<dynamic> _subcategoryList;
-  GlobalKey<FormState> _formkey;
+  List<GlobalKey<FormFieldState>> _formkey=[];
   TextEditingController _aciklama = TextEditingController();
   TextEditingController _title = TextEditingController();
   TextEditingController _address = TextEditingController();
+  List<Step> _stepList;
+  var _activeStep=0;
+
+  String categoryName;
+  String subCategoryName;
 
   @override
   void initState() {
@@ -42,7 +47,9 @@ class _HomePageState extends State<HomePage> {
     _pressed = false;
     _subCategoryView = false;
     _hizmetler = List<Hizmet>();
-    _formkey = GlobalKey<FormState>();
+    _formkey.add(new GlobalKey<FormFieldState>());
+    _formkey.add(new GlobalKey<FormFieldState>());
+    _formkey.add(new GlobalKey<FormFieldState>());
     readFilterHizmet("Kurumsal", "Mobil Uygulama");
     Hizmet hizmett = Hizmet.Info(
         "sadsadasdasd",
@@ -223,7 +230,8 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (BuildContext context, setState) {
           //Form(key: _formkey, child: Column,)
-          return Form(
+          return _hizmetVerStepper();
+          /*return Form(
             key: _formkey,
             child: Container(
               child: Column(
@@ -277,7 +285,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-          );
+          );*/
         });
       },
     );
@@ -324,6 +332,9 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     GestureDetector(
                         onTap: () {
+                          setState(() {
+                            categoryName=categoryList[index];
+                          });
                           if (onPressedFunction != null) {
                             debugPrint("onTap Çalıştı Satır 324");
                             onPressedFunction(categoryList[index]);
@@ -368,6 +379,127 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Colors.red,
             ),
     );
+  }
+  _hizmetVerStepper() {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.green,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(5),
+        ),
+      ),
+      child: Stepper(
+        controlsBuilder: (BuildContext context,
+            {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CupertinoButton(
+                child: Text("Geri Dön"),
+                onPressed: _activeStep != 0 ? onStepCancel : () {},
+              ),
+              CupertinoButton(
+                child: Text(
+                    _activeStep < _stepListInit().length - 1 ? "İlerle" : "Bitir"),
+                onPressed: onStepContinue,
+              ),
+            ],
+          );
+        },
+        currentStep: _activeStep,
+        onStepContinue: ()  {
+          setState(() {
+            continueButton(_activeStep);
+          });
+        },
+        onStepCancel: () {
+          setState(() {
+            if (_activeStep != 0) _activeStep--;
+          });
+        },
+        steps: _stepListInit(),
+      ),
+    );
+  }
+
+  List<Step> _stepListInit() {
+    List<Step> steps=[
+    Step(title:Text("Kategoriler"),content:FormField(key:_formkey[0],validator:(value){
+      if(categoryName!=null){
+        debugPrint(categoryName);
+        categoryName=null;
+        return null;
+      }
+      else {
+        debugPrint("error");
+        return "Kategori secmeniz gerekmektedir";
+      }
+    },builder:(state){
+      return categoryList(
+      _category.categoryList, _category.categoryList.length,
+      onPressedFunction: onPressedFunc, setState: setState);
+    })),Step(title:Text("Alt Kategoriler"),content:FormField(key:_formkey[1],validator:(value){
+        if(categoryName!=null){
+          debugPrint(categoryName);
+          categoryName=null;
+          return null;
+        }
+        else {
+          debugPrint("error");
+          return "Kategori secmeniz gerekmektedir";
+        }
+      },builder:(state){
+        return categoryList(_subcategoryList, _subcategoryList.length,
+            setState: setState);
+      })),Step(
+        isActive: _activeStep == 2 ? true : false,
+        title: Text(
+          _activeStep == 2 ? "Kişisel Bilgiler" : "Kisi...",
+        ),
+        content: Column(
+          children: [
+            Form(
+              key: _formkey[2],
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _address,
+                    decoration: InputDecoration(
+                        labelText: "Adres", border: OutlineInputBorder()),
+                    //validator: _nameValidator,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+
+                  ),
+                  SizedBox(height: 5),
+                  TextFormField(
+                    controller: _aciklama,
+                    decoration: InputDecoration(
+                        labelText: "Açıklama", border: OutlineInputBorder()),
+                    //validator: _nameValidator,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),];
+    return steps;
+  }
+
+  void continueButton(int activeStep) {
+    if (_formkey[activeStep].currentState.validate()) {
+      if (activeStep < _stepListInit().length - 1) {
+        _formkey[activeStep].currentState.save();
+        debugPrint(_activeStep.toString());
+        activeStep++;
+        _activeStep = activeStep;
+      }
+    }
   }
 /*Dialog(child: CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"]),),*/
 }
