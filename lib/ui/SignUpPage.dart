@@ -25,6 +25,7 @@ class _SignUpState extends State<SignUp> {
   TextEditingController _surname = TextEditingController();
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
+  TextEditingController _username=TextEditingController();
   String _gender;
   bool _accept;
   bool _obscureText;
@@ -134,8 +135,9 @@ class _SignUpState extends State<SignUp> {
                         labelText: "Soy isim", border: OutlineInputBorder()),
                     validator: _nameValidator,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-
                   ),
+                  SizedBox(height:5),
+                  TextFormField(controller:_username,decoration:InputDecoration(labelText:"Kullanıcı Adı",border:OutlineInputBorder()),validator: _usernameValidator,autovalidateMode: AutovalidateMode.onUserInteraction,)
                 ],
               ),
             )
@@ -306,7 +308,6 @@ class _SignUpState extends State<SignUp> {
     if (_formKeys[activeStep].currentState.validate()) {
       if (activeStep < _stepList.length - 1) {
         _formKeys[activeStep].currentState.save();
-        debugPrint(_activeStep.toString());
         activeStep++;
         _activeStep = activeStep;
       } else {
@@ -314,19 +315,14 @@ class _SignUpState extends State<SignUp> {
           final _userModel = Provider.of<UserModel>(context,listen: false);
           _formKeys[activeStep].currentState.save();
           try {
-            User_ _olusturulanUser =
             await _userModel.createUserWithEmailandPassword(_email.text, _password.text,_name.text,_surname.text,"DENEME");
-            /*if(_userModel.currentUser()!=null) {
-              debugPrint("bos degil");
-              _userModel.signOut();
-            }*/
             if(_userModel.user!=null)
               {
                 _userModel.signOut();
               }
             Navigator.push(context, MaterialPageRoute(builder:(context)=>LoginPage()));
-          } on PlatformException catch (e) {
-            showToast(context,"Kullanıcı Oluşturmada bir hatayla karşılaşıldı",Colors.red.shade700);
+          } catch (e) {
+            showToast(context,"Girmiş olduğunuz e-posta hatalı ya da daha önceden alınmış durumda. Lütfen geçerli bir e-posta giriniz",Colors.red.shade700);
           }
 
         } else
@@ -371,7 +367,7 @@ class _SignUpState extends State<SignUp> {
 
   String _repeatPasswordValidator(String repeatPassword) {
     if (repeatPassword != this._password.text) {
-      return "İki şifre birbiriyle eşleşmiyor";
+      return "Şifreler birbiriyle eşleşmiyor";
     }
     return null;
   }
@@ -379,8 +375,8 @@ class _SignUpState extends State<SignUp> {
   Widget _showPassword() {
     return IconButton(
       icon: Icon(
-        Icons.remove_red_eye,
-        color: _obscureText == true ? Colors.black : Colors.white,
+        _obscureText==true?Icons.visibility_outlined:Icons.visibility_off_outlined,
+        color: Colors.black
       ),
       onPressed: () {
         setState(() {
@@ -388,5 +384,9 @@ class _SignUpState extends State<SignUp> {
         });
       },
     );
+  }
+
+  String _usernameValidator(String value) {
+    return null;
   }
 }

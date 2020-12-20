@@ -26,12 +26,12 @@ class FirestoreDBService implements DatabaseBase {
     DocumentSnapshot _readUser =
         await _firebaseDB.collection("users").doc(userID).get();
     Map<String, dynamic> _readUserInfoMap = _readUser.data();
-    if(_readUserInfoMap!=null) {
+    if (_readUserInfoMap != null) {
       User_ _okunanUserNesnesi = User_.fromMap(_readUserInfoMap);
       //print("Okunan user nesnesi :" + _okunanUserNesnesi.toString());
       return _okunanUserNesnesi;
-    }
-    else return null;
+    } else
+      return null;
   }
 
   @override
@@ -45,52 +45,50 @@ class FirestoreDBService implements DatabaseBase {
 
   @override
   Future<bool> createHizmet(Hizmet hizmet) async {
-    DocumentSnapshot _readHizmet = await _firebaseDB
-        .doc(
-            "hizmetler/${hizmet.category}/${hizmet.subCategory}/${hizmet.hizmetID}")
-        .get();
-    if (_readHizmet.data() == null) {
-      await _firebaseDB
-          .collection("hizmetler")
-          .doc("${hizmet.category}/${hizmet.subCategory}/${hizmet.hizmetID}")
-          .set(hizmet.toMap());
+    DocumentReference documentReference = _firebaseDB
+        .collection("hizmetler")
+        .doc("${hizmet.category}")
+        .collection("${hizmet.subCategory}")
+        .doc();
+    DocumentSnapshot documentSnapshot = await documentReference.get();
+    if (documentSnapshot.data() == null) {
+      await documentReference.set(hizmet.toMap());
       return true;
-    } else {
+    } else
       return true;
-    }
   }
 
   @override
-  Future<Hizmet> readHizmet(
-      String hizmetID, String category, String subCategory) async {
-    DocumentSnapshot _readUser =
-        await _firebaseDB.collection("hizmetler").doc("$category/$subCategory/$hizmetID").get();
+  Future<Hizmet> readHizmet(String category, String subCategory) async {
+    DocumentSnapshot _readUser = await _firebaseDB
+        .collection("hizmetler")
+        .doc("$category")
+        .collection("${subCategory}")
+        .doc()
+        .get();
     Map<String, dynamic> _readHizmeInfoMap = _readUser.data();
     Hizmet _okunanHizmetNesnesi = Hizmet.fromMap(_readHizmeInfoMap);
     return _okunanHizmetNesnesi;
   }
 
   @override
-  Future<List<Hizmet>> readFilterHizmet({String category, String subCategory}) async{
-    QuerySnapshot querySnapshot = await _firebaseDB.collection('hizmetler')
+  Future<List<Hizmet>> readFilterHizmet(
+      {String category, String subCategory}) async {
+    QuerySnapshot querySnapshot = await _firebaseDB
+        .collection('hizmetler')
         .doc(category)
         .collection(subCategory)
         .get();
 
-    //var a  = await _firebaseDB.collection("hizmetler").doc("$category/$subCategory").get();
     List<Hizmet> hizmetler = [];
-    for(DocumentSnapshot hizmet in querySnapshot.docs){
+    for (DocumentSnapshot hizmet in querySnapshot.docs) {
       Hizmet _hizmet = Hizmet.fromMap(hizmet.data());
       hizmetler.add(_hizmet);
     }
     return hizmetler;
   }
 
-/*@override
-  Future<bool> updateProfilFoto(String userID, String profilFotoURL) {
-    // TODO: implement updateProfilFoto
-    throw UnimplementedError();
-  }
+/*
 
   @override
   Future<bool> updateUserName(String userID, String yeniUserName) {

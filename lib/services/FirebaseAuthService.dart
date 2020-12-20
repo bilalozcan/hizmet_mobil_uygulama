@@ -51,7 +51,6 @@ class FirebaseAuthService implements AuthBase {
 
       final _googleSignIn = GoogleSignIn();
       await _googleSignIn.signOut();
-
       await _firebaseAuth.signOut();
       return true;
     } catch (e) {
@@ -85,9 +84,9 @@ class FirebaseAuthService implements AuthBase {
   @override
   Future<User_> createUserWithEmailandPassword(String email, String password,
       String name, String surname, String username) async {
-    UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
-   // return _userFromFirebase(result.user);
+      UserCredential result = await _firebaseAuth
+          .createUserWithEmailAndPassword(
+          email: email, password: password);
     return _userFromFirebaseInfo(result.user, name, surname, username);
   }
 

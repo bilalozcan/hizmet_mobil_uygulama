@@ -13,11 +13,13 @@ class UserModel with ChangeNotifier implements AuthBase {
   ViewState _state = ViewState.Idle;
   UserRepository _userRepository = locator<UserRepository>();
   User_ _user;
-  User_ _yeniUser;
-
+  User_ _differentUser;
   User_ get user => _user;
 
   ViewState get state => _state;
+  set user(User_ value) {
+    _user = value;
+  }
 
   get sifreHataMesaji => null;
 
@@ -48,12 +50,12 @@ class UserModel with ChangeNotifier implements AuthBase {
       state = ViewState.Idle;
     }
   }
-  Future<User_> anotherUser(String userID) async
+  Future<User_> differentUser(String userID) async
   {
     try {
-      _yeniUser = await _userRepository.anotherUser(userID);
-      if (_yeniUser != null)
-        return _yeniUser;
+      _differentUser = await _userRepository.differentUser(userID);
+      if (_differentUser != null)
+        return _differentUser;
       else
         return null;
     } catch (e) {
@@ -71,7 +73,6 @@ class UserModel with ChangeNotifier implements AuthBase {
       _user = null;
       return sonuc;
     } catch (e) {
-      debugPrint("Viewmodeldeki current user hata:" + e.toString());
       return false;
     } finally {
       state = ViewState.Idle;
@@ -124,7 +125,7 @@ class UserModel with ChangeNotifier implements AuthBase {
   Future<String> uploadFile(String userID, String fileType, File profilePhoto) async{
     try{
       state = ViewState.Busy;
-      var downloadLink =
+      String downloadLink =
       await _userRepository.uploadFile(userID, fileType, profilePhoto);
       return downloadLink;
     }finally{

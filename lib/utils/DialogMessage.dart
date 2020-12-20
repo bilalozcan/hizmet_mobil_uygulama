@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hizmet_mobil_uygulama/mainFdu.dart';
+import 'package:hizmet_mobil_uygulama/ui/LoginPage.dart';
+import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 dialogMessageForExit(BuildContext context) {
+  var _userModel=Provider.of<UserModel>(context,listen:false);
   showDialog(
       context: context,
       builder: (context) {
@@ -13,10 +16,9 @@ dialogMessageForExit(BuildContext context) {
             CupertinoButton(
               child: Text("EVET"),
               onPressed: () async{
-                //firebaseAuth.signOut();
-                SharedPreferences value=await SharedPreferences.getInstance();
-                value.setInt("login",0);
-                Navigator.of(context).pushNamedAndRemoveUntil("/SignIn", (route) => false);
+                _userModel.signOut();
+                _userModel=null;
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>LoginPage()),(Route<dynamic> route) => false);
               },
             ),
             CupertinoButton(
