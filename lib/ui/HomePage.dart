@@ -146,9 +146,11 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             )
-          : Center(child:CircularProgressIndicator(
-        backgroundColor: Colors.red,
-      ),),
+          : Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.red,
+              ),
+            ),
     );
   }
 
@@ -178,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (context) => HizmetVerPageNew()));
               }
             },
-            backgroundColor:Colors.white ,
+            backgroundColor: Colors.white,
             color: Color.fromRGBO(34, 63, 71, 1),
             activeColor: Colors.green,
             style: TabStyle.fixedCircle,
@@ -259,9 +261,11 @@ class _HomePageState extends State<HomePage> {
                         if (snapshot.hasData)
                           return snapshot.data;
                         else
-                          return Center(child:CircularProgressIndicator(
-                            backgroundColor: Colors.red,
-                          ),);
+                          return Center(
+                            child: CircularProgressIndicator(
+                              backgroundColor: Colors.red,
+                            ),
+                          );
                       },
                     );
                     //else return CircularProgressIndicator(backgroundColor: Colors.red,);

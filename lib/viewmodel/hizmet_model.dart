@@ -28,8 +28,7 @@ class HizmetModel with ChangeNotifier implements HizmetBase {
 
   @override
   Future<Hizmet> createHizmet(
-      {hizmetID,
-      title,
+      {title,
       category,
       subCategory,
       publisher,
