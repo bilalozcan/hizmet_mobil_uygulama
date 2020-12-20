@@ -67,7 +67,6 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
   }
 
   onPressedFunc(String category) {
-    debugPrint("onpressedFunc çalıştı satır 304");
     _subCategoryView = true;
     _subcategoryList = _category.getSubCategory(category).subCategoryList;
   }
