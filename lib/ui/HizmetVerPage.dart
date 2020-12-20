@@ -190,20 +190,18 @@ class _HizmetVerPageState extends State<HizmetVerPage> {
   }*/
 
   veriOku() async {
-    var gelenJson =
+    String fromJson =
     await DefaultAssetBundle.of(context).loadString("assets/Category.json");
-    //debugPrint(gelenJson);
 
-    LinkedHashMap<String, dynamic> map = json.decode(gelenJson.toString());
+    LinkedHashMap<String, dynamic> map = json.decode(fromJson.toString());
     Category category = Category.fromJson(map);
-    for (var i in category.categoryList)
+    for (String i in category.categoryList)
       debugPrint("KeyList: " + i);
     SubCategory subCategory = category.getSubCategory("Ders");
-    for (var i in category.categoryList) {
-      debugPrint("Ders KeyList: " + i);
+    for (String i in category.categoryList) {
     }
     Data data = subCategory.getData("Diğer");
-    for (var i in data.datas) {
+    for (String i in data.datas) {
       debugPrint("Diğer List: " + i);
     }
   }

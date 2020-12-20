@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:hizmet_mobil_uygulama/locator.dart';
@@ -8,7 +7,6 @@ import 'package:hizmet_mobil_uygulama/services/FakeAuthService.dart';
 import 'package:hizmet_mobil_uygulama/services/FirebaseAuthService.dart';
 import 'package:hizmet_mobil_uygulama/services/FirebaseStorageService.dart';
 import 'package:hizmet_mobil_uygulama/services/FirestoreDBService.dart';
-import 'package:image_picker_platform_interface/src/types/picked_file/unsupported.dart';
 
 enum AppMode { DEBUG, RELEASE }
 
@@ -16,7 +14,8 @@ class UserRepository implements AuthBase {
   FirebaseAuthService _firebaseAuthService = locator<FirebaseAuthService>();
   FakeAuthService _fakeAuthenticationService = locator<FakeAuthService>();
   FirestoreDBService _firestoreDBService = locator<FirestoreDBService>();
-  FirebaseStorageService _firebaseStorageService=locator<FirebaseStorageService>();
+  FirebaseStorageService _firebaseStorageService =
+      locator<FirebaseStorageService>();
   AppMode appMode = AppMode.RELEASE;
 
   @override
@@ -31,11 +30,12 @@ class UserRepository implements AuthBase {
         return null;
     }
   }
-  Future<User_> anotherUser(String userID) async {
+
+  Future<User_> differentUser(String userID) async {
     if (appMode == AppMode.DEBUG) {
       return await _fakeAuthenticationService.currentUser();
     } else {
-        return await _firestoreDBService.readUser(userID);
+      return await _firestoreDBService.readUser(userID);
     }
   }
 
@@ -68,14 +68,14 @@ class UserRepository implements AuthBase {
   }
 
   @override
-  Future<User_> createUserWithEmailandPassword(
-      String email, String password,String name, String surname,String username) async {
+  Future<User_> createUserWithEmailandPassword(String email, String password,
+      String name, String surname, String username) async {
     if (appMode == AppMode.DEBUG) {
       return await _fakeAuthenticationService.createUserWithEmailandPassword(
-          email, password,name,surname,username);
+          email, password, name, surname, username);
     } else {
       User_ _user = await _firebaseAuthService.createUserWithEmailandPassword(
-          email, password,name,surname,username);
+          email, password, name, surname, username);
 
       bool _sonuc = await _firestoreDBService.saveUser(_user);
       if (_sonuc) {
@@ -100,14 +100,15 @@ class UserRepository implements AuthBase {
   }
 
   @override
-  Future<String> uploadFile(String userID, String fileType, File profilePhoto) async{
+  Future<String> uploadFile(
+      String userID, String fileType, File profilePhoto) async {
     if (appMode == AppMode.DEBUG) {
-      return  "dosya_indirme_linki";
+      return "dosya_indirme_linki";
     } else {
-      var profilFotoURL = await _firebaseStorageService.uploadFile(
+      String profilePhotoURL = await _firebaseStorageService.uploadFile(
           userID, fileType, profilePhoto);
-      await _firestoreDBService.updateProfilePhoto(userID, profilFotoURL);
-      return profilFotoURL;
+      await _firestoreDBService.updateProfilePhoto(userID, profilePhotoURL);
+      return profilePhotoURL;
     }
   }
 }

@@ -26,11 +26,22 @@ class _LoginPageState extends State<LoginPage> {
     _formKey.currentState.save();
     final _userModel = Provider.of<UserModel>(context, listen: false);
     try {
-      User_ _girisYapanUser = await _userModel.signInWithEmailandPassword(
-          _email.text, _password.text);
+      await _userModel.signInWithEmailandPassword(_email.text, _password.text);
+    } catch (e) {
+      showToast(context, "E-posta veya şifre hatalı. Lütfen tekrar deneyiniz", Colors.red.shade700);
+    }
+  }
+  loginDeneme() async {
+    _formKey.currentState.save();
+    final _userModel = Provider.of<UserModel>(context, listen: false);
+    try {
+      return FutureBuilder(future: _userModel.signInWithEmailandPassword(_email.text, _password.text),builder: (context,snapshot){
+        if(!snapshot.hasData)
+          return CircularProgressIndicator(backgroundColor: Colors.red,);
+      },);
+    }
+    catch (e){
 
-    } on PlatformException catch (e) {
-      showToast(context, "Oturum Açma Hatası. ${e.code}", Colors.red.shade700);
     }
   }
 
@@ -82,8 +93,8 @@ class _LoginPageState extends State<LoginPage> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscureText == true
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
                           color: Colors.black,
                         ),
                         onPressed: () {
@@ -102,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(
                       "Giriş yap",
                     ),
-                    onPressed: () => login(), //enterButton,
+                    onPressed: () => loginDeneme(), //enterButton,
                   ),
                   InkWell(
                     child: Text(
@@ -127,145 +138,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-/*class SignIn extends StatefulWidget {
-  @override
-  _SignInState createState() => _SignInState();
-}
-
-class _SignInState extends State<SignIn> {
-  String _email;
-  String _password;
-  bool _obscureText;
-  var formKey;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _obscureText = true;
-    formKey = GlobalKey<FormState>();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: (){
-        exit(0);
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text("Giriş"),
-        ),
-        body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("HİZMET",
-                        style: GoogleFonts.swankyAndMooMoo(fontSize: 48)),
-                    TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                          labelText: "E-mail",
-                          labelStyle: TextStyle(color: Colors.blue[700]),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          )),
-                      onSaved: (email) {
-                        setState(() {
-                          this._email = email;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 25),
-                    TextFormField(
-                      obscureText: _obscureText,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            Icons.remove_red_eye,
-                            color: _obscureText == true
-                                ? Colors.black
-                                : Colors.white,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                        ),
-                        labelText: "Şifre",
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                      ),
-                      onSaved: (password) {
-                        setState(() {
-                          this._password = password;
-                        });
-                      },
-                    ),
-                    CupertinoButton(
-                      child: Text(
-                        "Giriş yap",
-                      ),
-                      onPressed: enterButton,
-                    ),
-                    InkWell(
-                      child: Text(
-                        "Şifreni mi Unuttun?",
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ResetPassword(),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    CupertinoButton(
-                      color: Colors.white,
-                      child: Text("Yeni Hizmet Hesabı Oluştur",
-                          style: TextStyle(color: Colors.green)),
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                LoginPage(firebaseAuth: firebaseAuth)),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  enterButton() {
-    if (formKey.currentState.validate())
-      setState(() {
-        formKey.currentState.save();
-        debugPrint(this._email);
-        debugPrint(this._password);
-      });
-    HizmetUser user = HizmetUser.SignIn(
-        context: context,
-        firebaseAuth: firebaseAuth,
-        email: this._email,
-        password: this._password);
-    user.userSignIn(context);
-  }
-}
-*/
