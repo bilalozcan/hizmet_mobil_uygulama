@@ -5,6 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
+import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
+import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
+import 'package:provider/provider.dart';
 
 class HizmetVerPageNew extends StatefulWidget {
   @override
@@ -14,22 +17,27 @@ class HizmetVerPageNew extends StatefulWidget {
 class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
   Category _category;
   bool _subCategoryView;
+  bool _hizmetView;
   List<dynamic> _subcategoryList;
+  List<dynamic> _hizmetList;
   List<GlobalKey<FormFieldState>> _formkey = [];
   TextEditingController _aciklama = TextEditingController();
-  TextEditingController _address = TextEditingController();
+  TextEditingController _title = TextEditingController();
   TextEditingController _fiyat = TextEditingController();
   int _activeStep;
   String categoryName;
   String subCategoryName;
   String selectCategory;
   String selectSubCategory;
+  String selectHizmet;
 
   @override
   void initState() {
     super.initState();
     _activeStep = 0;
     _subCategoryView = false;
+    _hizmetView = false;
+    _formkey.add(new GlobalKey<FormFieldState>());
     _formkey.add(new GlobalKey<FormFieldState>());
     _formkey.add(new GlobalKey<FormFieldState>());
     _formkey.add(new GlobalKey<FormFieldState>());
@@ -66,20 +74,27 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
     );
   }
 
-  onPressedFunc(String category) {
+  subCategoryListInit(String category) {
     _subCategoryView = true;
     _subcategoryList = _category.getSubCategory(category).subCategoryList;
   }
 
-  categoryList(List<String> categoryList,
+  hizmetlerInit(String category, String subCategory) {
+    _hizmetView = true;
+    //debugPrint("ASDASD:" +_category.getSubCategory(category).getData(subCategory).runtimeType.toString());
+    //_hizmetList = _category.getSubCategory(selectCategory).getData(selectSubCategory);
+    debugPrint(_category.getSubCategory(selectCategory).getData(selectSubCategory).runtimeType.toString());
+  }
+
+  categoryList(List<String> stringList,
       {Function onPressedFunction, Function setState}) {
     return Container(
       padding: EdgeInsets.all(5),
       height: 150.0,
-      child: categoryList.length != 0
+      child: stringList.length != 0
           ? ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: categoryList.length,
+              itemCount: stringList.length,
               itemBuilder: (context, index) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -87,13 +102,14 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          categoryName = categoryList[index];
+                          categoryName = stringList[index];
                         });
                         if (onPressedFunction != null) {
-                          onPressedFunction(categoryList[index]);
                           setState(() {
                             _subCategoryView;
                             _subcategoryList.length;
+                            _hizmetView;
+                            _hizmetList.length;
                           });
                         }
                       },
@@ -102,12 +118,12 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                         width: 75,
                         margin: EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                          border:Border.all(
-                              color:categoryName == categoryList[index] ? Colors.green : Colors.deepOrange,
-                              width: 5
-                          ),
+                          border: Border.all(
+                              color: categoryName == stringList[index]
+                                  ? Colors.green
+                                  : Colors.deepOrange,
+                              width: 5),
                           image: DecorationImage(
-
                             fit: BoxFit.fill,
                             image: NetworkImage(
                                 "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
@@ -121,7 +137,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                     ),
                     Container(
                       child: Text(
-                        categoryList[index],
+                        stringList[index],
                         style: TextStyle(
                           fontSize: 10,
                           color: Colors.black,
@@ -151,33 +167,37 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
     return ListView(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(top:25),
+          padding: EdgeInsets.only(top: 25),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text("Kategori",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight:FontWeight.bold
-              ),),
+              Text(
+                "Kategori",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
               Divider(
                 color: Colors.blueAccent,
               ),
-
-              HideContainer(selectCategory,75),
+              HideContainer(selectCategory, 75),
               Divider(
                 color: Colors.blueAccent,
               ),
-              HideContainer(selectSubCategory,50),
+              HideContainer(selectSubCategory, 50),
               Divider(
                 color: Colors.blueAccent,
               ),
-              ],
+            ],
           ),
         ),
         Container(
           child: Stepper(
+            onStepTapped: (index) {
+              _activeStep = index;
+              setState(() {
+                _activeStep;
+              });
+            },
             controlsBuilder: (BuildContext context,
                 {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
               return Row(
@@ -222,7 +242,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
               key: _formkey[0],
               validator: (value) {
                 if (categoryName != null) {
-                  selectCategory=categoryName;
+                  selectCategory = categoryName;
                   categoryName = null;
                   return null;
                 } else {
@@ -231,7 +251,10 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
               },
               builder: (state) {
                 return categoryList(_category.categoryList,
-                    onPressedFunction: onPressedFunc, setState: setState);
+                    onPressedFunction: selectCategory != null
+                        ? subCategoryListInit(selectCategory)
+                        : null,
+                    setState: setState);
               })),
       Step(
         title: Text("Alt Kategoriler"),
@@ -239,7 +262,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
             key: _formkey[1],
             validator: (value) {
               if (categoryName != null) {
-                selectSubCategory=categoryName;
+                selectSubCategory = categoryName;
                 categoryName = null;
                 return null;
               } else {
@@ -248,27 +271,53 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
             },
             builder: (state) {
               return _subcategoryList != null
-                  ? categoryList(_subcategoryList, setState: setState)
+                  ? categoryList(_subcategoryList,
+                      onPressedFunction: selectSubCategory != null
+                          ? hizmetlerInit(selectCategory, selectSubCategory)
+                          : null,
+                      setState: setState)
                   : Container();
             }),
       ),
       Step(
-        isActive: _activeStep == 2 ? true : false,
+        title: Text("Verilecek Hizmet"),
+        content: FormField(
+            key: _formkey[2],
+            validator: (value) {
+              if (categoryName != null) {
+                selectHizmet = categoryName;
+                categoryName = null;
+                return null;
+              } else {
+                return "Kategori secmeniz gerekmektedir";
+              }
+            },
+            builder: (state) {
+              return _hizmetList != null
+                  ? categoryList(_hizmetList, setState: setState)
+                  : Container();
+            }),
+      ),
+      Step(
+        isActive: _activeStep == 3 ? true : false,
         title: Text(
-          _activeStep == 2 ? "İlan Bilgileri" : "Kisi...",
+          _activeStep == 3 ? "İlan Bilgileri" : "Kisi...",
         ),
         content: Column(
           children: [
             FormField(
-                key: _formkey[2],
+                key: _formkey[3],
                 builder: (state) {
                   return Column(
                     children: [
-                      SizedBox(height: 5,),
+                      SizedBox(
+                        height: 5,
+                      ),
                       TextFormField(
-                          controller: _address,
+                          controller: _title,
                           decoration: InputDecoration(
-                              labelText: "İlan Başlığı", border: OutlineInputBorder()),
+                              labelText: "İlan Başlığı",
+                              border: OutlineInputBorder()),
                           //validator: _nameValidator,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
@@ -291,11 +340,10 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                       ),
                       SizedBox(height: 5),
                       TextFormField(
-                        keyboardType:TextInputType.number ,
-                        controller:_fiyat ,
+                        keyboardType: TextInputType.number,
+                        controller: _fiyat,
                         decoration: InputDecoration(
-                            labelText: "Fiyat",
-                            border: OutlineInputBorder()),
+                            labelText: "Fiyat", border: OutlineInputBorder()),
                         //validator: _nameValidator,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                       ),
@@ -319,28 +367,38 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
         });
       } else {
         _formkey[activeStep].currentState.save();
+        final _hizmetModel = Provider.of<HizmetModel>(context, listen: false);
+        final _userModel = Provider.of<UserModel>(context, listen: false);
+
+        _hizmetModel.createHizmet(
+            title: _title.text,
+            category: selectCategory,
+            subCategory: selectSubCategory,
+            publisher: _userModel.user.userID,
+            detail: _aciklama.text,
+            address: "Zeytniburnu",
+            payment: double.parse(_fiyat.text));
+        Navigator.pop(context);
+        debugPrint("categoryName: " + selectCategory);
+        debugPrint("subCategoryName: " + selectSubCategory);
       }
     } else
       showToast(context, "Lütfen Bir Kategori Seçiniz.", Colors.red);
   }
-  HideContainer(String name,double size){
-    return Visibility(
 
+  HideContainer(String name, double size) {
+    return Visibility(
       visible: name != null ? true : false,
       child: Container(
         padding: EdgeInsets.only(left: 15),
         child: Row(
           children: [
-
             Container(
               height: size,
               width: size,
               alignment: Alignment.topLeft,
               decoration: BoxDecoration(
-                border:Border.all(
-                    color: Colors.black12,
-                    width: 5
-                ),
+                border: Border.all(color: Colors.black12, width: 5),
                 image: DecorationImage(
                   fit: BoxFit.fill,
                   image: NetworkImage(
@@ -348,16 +406,15 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                 ),
                 color: Colors.blue,
                 borderRadius: new BorderRadius.all(
-                    new Radius.circular(
-                        20.0)), //kenarları yuvarlaklaştırır
+                    new Radius.circular(20.0)), //kenarları yuvarlaklaştırır
               ),
             ),
             Container(
               padding: EdgeInsets.only(left: 20),
               child: Text(
-                name!= null ? name : "Kategori",
+                name != null ? name : "Kategori",
                 style: TextStyle(
-                  fontSize: size/3,
+                  fontSize: size / 3,
                   fontWeight: FontWeight.normal,
                   color: Colors.black,
                 ),
