@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
+import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -23,9 +24,8 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
   TextEditingController _aciklama = TextEditingController();
   TextEditingController _address = TextEditingController();
   int _activeStep;
-
-  String categoryName;
-  String subCategoryName;
+  List<String> categoryPath=[];
+  double _currentPayment;
 
   @override
   void initState() {
@@ -35,6 +35,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
     _formkey.add(new GlobalKey<FormFieldState>());
     _formkey.add(new GlobalKey<FormFieldState>());
     _formkey.add(new GlobalKey<FormFieldState>());
+    _currentPayment=0;
   }
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                ),
              );
            }
-           return newsListSliver;
+           return Column(children: [newsListSliver,],);
          },
        ),
 
@@ -83,7 +84,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
               GestureDetector(
                   onTap: () {
                     setState(() {
-                      categoryName = categoryList[index];
+                      categoryPath.add(categoryList[index]);
                     });
                     if (onPressedFunction != null) {
                       debugPrint("onTap Çalıştı Satır 324");
@@ -148,37 +149,44 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
           Radius.circular(5),
         ),
       ),
-      child: Stepper(
-        controlsBuilder: (BuildContext context,
-            {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CupertinoButton(
-                child: Text("Geri Dön"),
-                onPressed: _activeStep != 0 ? onStepCancel : () {},
-              ),
-              CupertinoButton(
-                child: Text(_activeStep < _stepListInit(setState).length -1
-                    ? "İlerle"
-                    : "Bitir"),
-                onPressed: onStepContinue,
-              ),
-            ],
-          );
-        },
-        currentStep: _activeStep,
-        onStepContinue: () {
-          setState(() {
-            continueButton(_activeStep);
-          });
-        },
-        onStepCancel: () {
-          setState(() {
-            if (_activeStep != 0) _activeStep--;
-          });
-        },
-        steps: _stepListInit(setState),
+      child: Container(
+        padding: EdgeInsets.all(8),
+        child: Stepper(
+          onStepTapped: (position){ /*İstenilirse eklenebilir... Opsiyonel*/
+            setState((){_activeStep=position;});
+          },
+          physics: ClampingScrollPhysics(),
+          controlsBuilder: (BuildContext context,
+              {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CupertinoButton(
+                  child: Text("Geri Dön"),
+                  onPressed: _activeStep != 0 ? onStepCancel : () {},
+                ),
+                CupertinoButton(
+                  child: Text(_activeStep < _stepListInit(setState).length -1
+                      ? "İlerle"
+                      : "Bitir"),
+                  onPressed: onStepContinue,
+                ),
+              ],
+            );
+          },
+          currentStep: _activeStep,
+          onStepContinue: () {
+            setState(() {
+              continueButton(_activeStep);
+            });
+          },
+          onStepCancel: () {
+            setState(() {
+              if (_activeStep != 0) _activeStep--;
+            });
+          },
+          steps: _stepListInit(setState),
+        ),
       ),
     );
   }
@@ -191,8 +199,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
           content: FormField(
               key: _formkey[0],
               validator: (value) {
-                if (categoryName != null) {
-                  categoryName = null;
+                if (categoryPath[0] != null) {
                   return null;
                 } else {
                   debugPrint("error");
@@ -206,13 +213,11 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
               })
       ),
       Step(
-          title: Text("Alt Kategoriler"),
+          title: Text( "Alt Kategoriler"),
           content: FormField(
               key: _formkey[1],
               validator: (value) {
-                if (categoryName != null) {
-                  debugPrint(categoryName);
-                  categoryName = null;
+                if (categoryPath[1] != null) {
                   return null;
                 } else {
                   debugPrint("error");
@@ -261,6 +266,11 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                         //validator: _nameValidator,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                       ),
+                      Slider(value:_currentPayment,min:0,max:2000,divisions: 2000,label: _currentPayment.toString(), onChanged: (double value) {
+                        setState(() {
+                          _currentPayment = value;
+                        });
+                      })
                     ],
                   );
                 })
@@ -286,7 +296,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
   }*/
   void continueButton(int activeStep) {
     if (_formkey[activeStep].currentState.validate()) {
-      if (activeStep < _stepListInit(setState).length - 1) {
+      if (activeStep < _stepListInit(setState).length-1) {
         _formkey[activeStep].currentState.save();
         debugPrint(_activeStep.toString());
         activeStep++;
@@ -296,11 +306,15 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
         });
       } else {
         _formkey[activeStep].currentState.save();
+        final hizmetModel=Provider.of<HizmetModel>(context,listen:false);
+        //hizmetModel.createHizmet(hizmetID:"1",title:"Uygulama",category: categoryPath[0],subCategory: categoryPath[1],publisher: "0Sck4MaFeQMTa4nnv3BU12Z6vP83",detail: _aciklama.text,address: _address.text,payment:1000.0);
+        hizmetModel.createHizmet(hizmetID:"3",title:"Deneme",category: categoryPath[0],subCategory: categoryPath[1],publisher: "0Sck4MaFeQMTa4nnv3BU12Z6vP83",detail: _aciklama.text,address: _address.text,payment:_currentPayment);
       }
-    } else
+    } else {
       showToast(
           context,
           "Kullanım koşullarını kabul etmediğiniz için üyelik işlemine devam edemiyoruz.",
           Colors.red);
+    }
   }
 }

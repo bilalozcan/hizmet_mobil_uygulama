@@ -15,7 +15,7 @@ class HizmetRepository implements HizmetBase {
 
   @override
   Future<Hizmet> createHizmet(
-      {hizmetID,
+      {
       title,
       category,
       subCategory,
@@ -24,14 +24,14 @@ class HizmetRepository implements HizmetBase {
       address,
       payment}) async {
     if (appMode == AppMode.DEBUG) {
-      return Hizmet.Info(hizmetID, title, category, subCategory, publisher,
+      return Hizmet.Info( title, category, subCategory, publisher,
           detail, address, payment);
     }else {
-      Hizmet _hizmet = Hizmet.Info(hizmetID, title, category, subCategory, publisher,
+      Hizmet _hizmet = Hizmet.Info( title, category, subCategory, publisher,
           detail, address, payment);
       bool result = await _firestoreDBService.createHizmet(_hizmet);
       if(result){
-        return await _firestoreDBService.readHizmet(_hizmet.hizmetID, _hizmet.category, _hizmet.subCategory);
+        return await _firestoreDBService.readHizmet( _hizmet.category, _hizmet.subCategory);
       }else {
         return null;
       }
@@ -50,7 +50,7 @@ class HizmetRepository implements HizmetBase {
   }
 
   @override
-  Future<Hizmet> readHizmet(String hizmetID, String category, String subCategory) {
+  Future<Hizmet> readHizmet(String category, String subCategory) {
     // TODO: implement readHizmet
     throw UnimplementedError();
   }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'User_.dart';
 
 class Hizmet {
-  String _hizmetID;
   String _title;
   String _category;
   String _subCategory;
@@ -19,7 +18,6 @@ class Hizmet {
 
 
   Hizmet.Info(
-      this._hizmetID,
       this._title,
       this._category,
       this._subCategory,
@@ -30,7 +28,6 @@ class Hizmet {
 
   Map<String, dynamic> toMap() {
     return {
-      'hizmetID': _hizmetID,
       'title': _title,
       'category': _category,
       'subCategory': _subCategory,
@@ -44,7 +41,7 @@ class Hizmet {
   }
 
   Hizmet.fromMap(Map<String, dynamic> parsedMap)
-      : _hizmetID = parsedMap['hizmetID'],
+      :
         _title = parsedMap['title'],
         _category = parsedMap['category'],
         _subCategory = parsedMap['subCategory'],
@@ -57,7 +54,7 @@ class Hizmet {
 
   @override
   String toString() {
-    return 'Hizmet{hizmetID: $_hizmetID, title: $_title, category: $_category, subCategory: $_subCategory, publisher $_publisher, detail: $_detail, publishedAt: $_publishedAt, address: $_address, payment: $_payment, review: $_review}';
+    return 'Hizmet{title: $_title, category: $_category, subCategory: $_subCategory, publisher $_publisher, detail: $_detail, publishedAt: $_publishedAt, address: $_address, payment: $_payment, review: $_review}';
   }
 
   int get review => _review;
@@ -115,9 +112,4 @@ class Hizmet {
     _title = value;
   }
 
-  String get hizmetID => _hizmetID;
-
-  set hizmetID(String value) {
-    _hizmetID = value;
-  }
 }

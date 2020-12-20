@@ -52,8 +52,8 @@ class _HomePageState extends State<HomePage> {
     _formkey.add(new GlobalKey<FormFieldState>());
     _formkey.add(new GlobalKey<FormFieldState>());
     _formkey.add(new GlobalKey<FormFieldState>());
-    readFilterHizmet("Kurumsal", "Mobil Uygulama");
-    Hizmet hizmett = Hizmet.Info(
+    readFilterHizmet("Ders", "Spor Dersleri");
+    /*Hizmet hizmett = Hizmet.Info(
         "sadsadasdasd",
         "asdadasd",
         "Kurumsal",
@@ -61,15 +61,14 @@ class _HomePageState extends State<HomePage> {
         "aJ6PFs34srNEX3GLjqlaDFo18T53",
         "yazılım",
         "burdur",
-        500);
-    _hizmetler.add(hizmett);
+        500);*/
   }
 
   readFilterHizmet(String category, String subCategory) async {
     final HizmetModel _hizmetModel =
         Provider.of<HizmetModel>(context, listen: false);
-    /*_hizmetler = await _hizmetModel.readFilterHizmet(
-        category: category, subCategory: subCategory);*/
+    _hizmetler = await _hizmetModel.readFilterHizmet(
+        category: category, subCategory: subCategory);
     debugPrint(_hizmetler.toString());
     setState(() {
       _hizmetler;
