@@ -18,8 +18,8 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
   Category _category;
   bool _subCategoryView;
   bool _hizmetView;
-  List<dynamic> _subcategoryList;
-  List<dynamic> _hizmetList;
+  List<String> _subcategoryList;
+  List<String> _hizmetList;
   List<GlobalKey<FormFieldState>> _formkey = [];
   TextEditingController _aciklama = TextEditingController();
   TextEditingController _title = TextEditingController();
@@ -81,9 +81,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
 
   hizmetlerInit(String category, String subCategory) {
     _hizmetView = true;
-    //debugPrint("ASDASD:" +_category.getSubCategory(category).getData(subCategory).runtimeType.toString());
-    //_hizmetList = _category.getSubCategory(selectCategory).getData(selectSubCategory);
-    debugPrint(_category.getSubCategory(selectCategory).getData(selectSubCategory).runtimeType.toString());
+    _hizmetList=_category.getSubCategory(selectCategory).getData(selectSubCategory);
   }
 
   categoryList(List<String> stringList,
@@ -184,6 +182,10 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                 color: Colors.blueAccent,
               ),
               HideContainer(selectSubCategory, 50),
+              Divider(
+                color: Colors.blueAccent,
+              ),
+              HideContainer(selectHizmet, 40),
               Divider(
                 color: Colors.blueAccent,
               ),
@@ -374,6 +376,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
             title: _title.text,
             category: selectCategory,
             subCategory: selectSubCategory,
+            hizmet:selectHizmet,
             publisher: _userModel.user.userID,
             detail: _aciklama.text,
             address: "Zeytniburnu",
