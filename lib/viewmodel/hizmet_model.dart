@@ -39,7 +39,6 @@ class HizmetModel with ChangeNotifier implements HizmetBase {
     try {
       state = ViewState.Busy;
       _hizmet = await _hizmetRepository.createHizmet(
-          hizmetID: hizmetID,
           title: title,
           category: category,
           subCategory: subCategory,
@@ -55,7 +54,7 @@ class HizmetModel with ChangeNotifier implements HizmetBase {
 
   //TEK BİR HİZMETİN DETAYLARINI EKRANDA GÖSTERİRKEN
   @override
-  Future<Hizmet> readHizmet(String hizmetID, String category, String subCategory) {
+  Future<Hizmet> readHizmet(String category, String subCategory) {
     // TODO: implement readHizmet
     throw UnimplementedError();
   }

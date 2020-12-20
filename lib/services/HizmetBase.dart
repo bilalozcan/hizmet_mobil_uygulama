@@ -4,7 +4,6 @@ import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 
 abstract class HizmetBase {
   Future<Hizmet> createHizmet({
-    @required hizmetID,
     @required title,
     @required category,
     @required subCategory,
@@ -14,7 +13,7 @@ abstract class HizmetBase {
     @required payment,
   });
   Future<Hizmet> setHizmet(Hizmet hizmet);
-  Future<Hizmet> readHizmet(String hizmetID, String category, String subCategory);
+  Future<Hizmet> readHizmet(String category, String subCategory);
   Future<List<Hizmet>> readFilterHizmet({String category, String subCategory});
 
 }

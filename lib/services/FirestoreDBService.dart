@@ -45,26 +45,21 @@ class FirestoreDBService implements DatabaseBase {
 
   @override
   Future<bool> createHizmet(Hizmet hizmet) async {
-    DocumentSnapshot _readHizmet = await _firebaseDB
-        .doc(
-            "hizmetler/${hizmet.category}/${hizmet.subCategory}/${hizmet.hizmetID}")
-        .get();
-    if (_readHizmet.data() == null) {
-      await _firebaseDB
-          .collection("hizmetler")
-          .doc("${hizmet.category}/${hizmet.subCategory}/${hizmet.hizmetID}")
-          .set(hizmet.toMap());
-      return true;
-    } else {
-      return true;
-    }
+    DocumentReference documentReference= _firebaseDB.collection("hizmetler").doc("${hizmet.category}").collection("${hizmet.subCategory}").doc();
+    DocumentSnapshot documentSnapshot= await documentReference.get();
+    if(documentSnapshot.data()==null)
+      {
+        await documentReference.set(hizmet.toMap());
+        return true;
+      }
+    else return true;
   }
 
   @override
   Future<Hizmet> readHizmet(
-      String hizmetID, String category, String subCategory) async {
+       String category, String subCategory) async {
     DocumentSnapshot _readUser =
-        await _firebaseDB.collection("hizmetler").doc("$category/$subCategory/$hizmetID").get();
+    await _firebaseDB.collection("hizmetler").doc("$category").collection("${subCategory}").doc().get();
     Map<String, dynamic> _readHizmeInfoMap = _readUser.data();
     Hizmet _okunanHizmetNesnesi = Hizmet.fromMap(_readHizmeInfoMap);
     return _okunanHizmetNesnesi;
