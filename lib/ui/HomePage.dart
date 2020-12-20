@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
+import 'package:hizmet_mobil_uygulama/ui/HizmetVerPageNew.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
@@ -35,7 +36,6 @@ class _HomePageState extends State<HomePage> {
   TextEditingController _aciklama = TextEditingController();
   TextEditingController _title = TextEditingController();
   TextEditingController _address = TextEditingController();
-  List<Step> _stepList;
   int _activeStep;
 
   String categoryName;
@@ -82,75 +82,6 @@ class _HomePageState extends State<HomePage> {
     LinkedHashMap<String, dynamic> map = json.decode(gelenJson.toString());
     _category = Category.fromJson(map);
     return _category.categoryList;
-  }
-
-  hizmetVerFonk() {
-    setState(() {});
-    return showModalBottomSheet<void>(
-      isScrollControlled: true,
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(builder: (BuildContext context, setState) {
-          //Form(key: _formkey, child: Column,)
-          return _hizmetVerStepper(setState);
-          /*return Form(
-            key: _formkey,
-            child: Container(
-              child: Column(
-                //dikey
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(right: 10),
-                    alignment: Alignment.bottomRight,
-                    /*child: ElevatedButton(
-                    child: const Text('Vazgeç'),
-                    onPressed: () => Navigator.pop(context),
-                  )),*/
-                    child: CupertinoButton(
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                  categoryList(
-                      _category.categoryList, _category.categoryList.length,
-                      onPressedFunction: onPressedFunc, setState: setState),
-                  _subCategoryView
-                      ? categoryList(_subcategoryList, _subcategoryList.length,
-                          setState: setState)
-                      : Container(),
-                  TextFormField(
-                    controller: _title,
-                    decoration: InputDecoration(
-                        labelText: "Hizmet Başlık",
-                        border: OutlineInputBorder()),
-                  ),
-                  SizedBox(height: 5),
-                  TextFormField(
-                    controller: _aciklama,
-                    decoration: InputDecoration(
-                        labelText: "Hizmet Açıklama",
-                        border: OutlineInputBorder()),
-                  ),
-                  TextFormField(
-                    controller: _address,
-                    decoration: InputDecoration(
-                        labelText: "Adres",
-                        border: OutlineInputBorder()),
-                  ),
-
-                ],
-              ),
-            ),
-          );*/
-        });
-      },
-    );
   }
 
   hizmetCard(Hizmet hizmet) async {
@@ -243,157 +174,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _hizmetVerStepper(Function setState) {
-    return Container(
-      alignment: Alignment.bottomCenter,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.green,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(5),
-        ),
-      ),
-      child: Stepper(
-        controlsBuilder: (BuildContext context,
-            {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CupertinoButton(
-                child: Text("Geri Dön"),
-                onPressed: _activeStep != 0 ? onStepCancel : () {},
-              ),
-              CupertinoButton(
-                child: Text(_activeStep < _stepListInit(setState).length - 1
-                    ? "İlerle"
-                    : "Bitir"),
-                onPressed: onStepContinue,
-              ),
-            ],
-          );
-        },
-        currentStep: _activeStep,
-        onStepContinue: () {
-          setState(() {
-            continueButton(_activeStep);
-          });
-        },
-        onStepCancel: () {
-          setState(() {
-            if (_activeStep != 0) _activeStep--;
-          });
-        },
-        steps: _stepListInit(setState),
-      ),
-    );
-  }
 
-  List<Step> _stepListInit(Function setState) {
-    List<Step> steps = [
-      Step(
-          title: Text("Kategoriler"),
-          content: FormField(
-              key: _formkey[0],
-              validator: (value) {
-                if (categoryName != null) {
-                  debugPrint(categoryName);
-                  categoryName = null;
-                  return null;
-                } else {
-                  debugPrint("error");
-                  return "Kategori secmeniz gerekmektedir";
-                }
-              },
-              builder: (state) {
-                return categoryList(
-                    _category.categoryList, _category.categoryList.length,
-                    onPressedFunction: onPressedFunc, setState: setState);
-              })),
-      Step(
-          title: Text("Alt Kategoriler"),
-          content: FormField(
-              key: _formkey[1],
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) {
-                if (categoryName != null) {
-                  debugPrint(categoryName);
-                  categoryName = null;
-                  return null;
-                } else {
-                  debugPrint("error");
-                  return "Kategori secmeniz gerekmektedir";
-                }
-              },
-              builder: (state) {
-                return categoryList(_subcategoryList, _subcategoryList.length,
-                    setState: setState);
-              })),
-      Step(
-        isActive: _activeStep == 2 ? true : false,
-        title: Text(
-          _activeStep == 2 ? "Kişisel Bilgiler" : "Kisi...",
-        ),
-        content: Column(
-          children: [
-            FormField(
-                key: _formkey[2],
-                builder: (state) {
-                  return Column(
-                    children: [
-                      TextFormField(
-                          controller: _address,
-                          decoration: InputDecoration(
-                              labelText: "Adres", border: OutlineInputBorder()),
-                          //validator: _nameValidator,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value != null) {
-                              debugPrint("bos degil");
-                              return null;
-                            } else {
-                              debugPrint("hata var");
-                              return "hata";
-                            }
-                          }),
-                      SizedBox(height: 5),
-                      TextFormField(
-                        controller: _aciklama,
-                        decoration: InputDecoration(
-                            labelText: "Açıklama",
-                            border: OutlineInputBorder()),
-                        //validator: _nameValidator,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                      ),
-                    ],
-                  );
-                })
-          ],
-        ),
-      ),
-    ];
-    return steps;
-  }
 
-  void continueButton(int activeStep) {
-    if (_formkey[activeStep].currentState.validate()) {
-      if (activeStep < _stepListInit(setState).length - 1) {
-        _formkey[activeStep].currentState.save();
-        debugPrint(_activeStep.toString());
-        activeStep++;
-        setState(() {
-          _activeStep = activeStep;
-          debugPrint("active step" + _activeStep.toString());
-        });
-      } else {
-        _formkey[activeStep].currentState.save();
-      }
-    } else
-      showToast(
-          context,
-          "Kullanım koşullarını kabul etmediğiniz için üyelik işlemine devam edemiyoruz.",
-          Colors.red);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -416,7 +198,10 @@ class _HomePageState extends State<HomePage> {
           });
           if(_currentNavigationBarIndex==2)
             {
-              return hizmetVerFonk();
+              return Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HizmetVerPageNew()));
             }
         },style: TabStyle.fixedCircle, items: [
           TabItem(title: "Anasayfa", icon: Icons.home_outlined),
@@ -425,34 +210,6 @@ class _HomePageState extends State<HomePage> {
           TabItem(title:"idk",icon:Icons.email),
           TabItem(title: "Sohbet", icon: Icons.chat_outlined)
         ]),
-        /*FancyBottomNavigation(
-          onTabChangedListener: (position) {
-            setState(() {
-              _currentNavigationBarIndex = position;
-            });
-            if (_currentNavigationBarIndex == 1) {
-              setState(() {
-                _subcategoryList;
-                _subCategoryView;
-              });
-              hizmetVerFonk();
-            }
-          },
-          circleColor: Colors.green,
-          inactiveIconColor: Colors.black,
-          tabs: [
-            TabData(iconData: Icons.home_outlined, title: "Anasayfa"),
-            TabData(
-              iconData: Icons.add_box_outlined,
-              title:
-              "Hizmet Ver", /*onclick: (){
-              return hizmetVerFonk();
-            }*/
-            ),
-            TabData(iconData: Icons.check_box_outlined, title: "Hizmetler"),
-            TabData(iconData: Icons.chat_outlined, title: "Sohbet")
-          ],
-        ),*/
         body: FutureBuilder(
           future: connectJson(),
           builder: (context, snapshot) {
