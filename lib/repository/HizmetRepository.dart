@@ -43,8 +43,7 @@ class HizmetRepository implements HizmetBase {
     if (appMode == AppMode.DEBUG) {
       return null;
     }else {
-      var hizmetList = await _firestoreDBService.readFilterHizmet(category: category, subCategory: subCategory);
-      debugPrint("hizmetList"+hizmetList.toString());
+      List<Hizmet> hizmetList = await _firestoreDBService.readFilterHizmet(category: category, subCategory: subCategory);
       return hizmetList;
     }
   }

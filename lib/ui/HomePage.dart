@@ -7,10 +7,8 @@ import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/ui/HizmetVerPageNew.dart';
-import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -25,33 +23,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentNavigationBarIndex;
   Category _category;
-  String _profilePhoto;
-  PickedFile _profilFoto;
-  String _value;
-  bool _pressed;
+  String _searchedWord;
   List<Hizmet> _hizmetler;
   bool _subCategoryView;
   List<dynamic> _subcategoryList;
-  List<GlobalKey<FormFieldState>> _formkey = [];
-  TextEditingController _aciklama = TextEditingController();
-  TextEditingController _title = TextEditingController();
-  TextEditingController _address = TextEditingController();
-  int _activeStep;
-
-  String categoryName;
-  String subCategoryName;
 
   @override
   void initState() {
     super.initState();
-    _activeStep = 0;
     _currentNavigationBarIndex = 0;
-    _pressed = false;
     _subCategoryView = false;
     _hizmetler = List<Hizmet>();
-    _formkey.add(new GlobalKey<FormFieldState>());
-    _formkey.add(new GlobalKey<FormFieldState>());
-    _formkey.add(new GlobalKey<FormFieldState>());
     readFilterHizmet("Ders", "Spor Dersleri");
     /*Hizmet hizmett = Hizmet.Info(
         "sadsadasdasd",
@@ -76,16 +58,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   connectJson() async {
-    var gelenJson =
+    String fromJson =
         await DefaultAssetBundle.of(context).loadString("assets/Category.json");
-    LinkedHashMap<String, dynamic> map = json.decode(gelenJson.toString());
+    LinkedHashMap<String, dynamic> map = json.decode(fromJson.toString());
     _category = Category.fromJson(map);
     return _category.categoryList;
   }
 
   hizmetCard(Hizmet hizmet) async {
     final _userModel = Provider.of<UserModel>(context, listen: false);
-    User_ userCard = await _userModel.anotherUser(hizmet.publisher);
+    User_ userCard = await _userModel.differentUser(hizmet.publisher);
     return Card(
       child: ListTile(
         title: Text(hizmet.title),
@@ -124,9 +106,6 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     GestureDetector(
                         onTap: () {
-                          setState(() {
-                            categoryName = categoryList[index];
-                          });
                           if (onPressedFunction != null) {
                             debugPrint("onTap Çalıştı Satır 324");
                             onPressedFunction(categoryList[index]);
@@ -167,19 +146,15 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             )
-          : CircularProgressIndicator(
-              backgroundColor: Colors.red,
-            ),
+          : Center(child:CircularProgressIndicator(
+        backgroundColor: Colors.red,
+      ),),
     );
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
     UserModel _userModel = Provider.of<UserModel>(context);
-    _profilePhoto = _userModel.user.profileURL;
     return WillPopScope(
       onWillPop: () async {
         exit(0);
@@ -191,24 +166,29 @@ class _HomePageState extends State<HomePage> {
             readFilterHizmet("Kurumsal", "Mobil Uygulama");
           },
         ),
-        bottomNavigationBar: ConvexAppBar(onTap: (position){
-          setState(() {
-            _currentNavigationBarIndex=position;
-          });
-          if(_currentNavigationBarIndex==2)
-            {
-              return Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => HizmetVerPageNew()));
-            }
-        },style: TabStyle.fixedCircle, items: [
-          TabItem(title: "Anasayfa", icon: Icons.home_outlined),
-          TabItem(title: "Hizmetlerim", icon: Icons.check_box_outlined),
-          TabItem(title: "Hizmet Ver", icon: Icons.add_box_outlined),
-          TabItem(title:"idk",icon:Icons.email),
-          TabItem(title: "Sohbet", icon: Icons.chat_outlined)
-        ]),
+        bottomNavigationBar: ConvexAppBar(
+            onTap: (position) {
+              setState(() {
+                _currentNavigationBarIndex = position;
+              });
+              if (_currentNavigationBarIndex == 2) {
+                return Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HizmetVerPageNew()));
+              }
+            },
+            backgroundColor:Colors.white ,
+            color: Color.fromRGBO(34, 63, 71, 1),
+            activeColor: Colors.green,
+            style: TabStyle.fixedCircle,
+            items: [
+              TabItem(title: "Anasayfa", icon: Icons.home_outlined),
+              TabItem(title: "Hizmetlerim", icon: Icons.check_box_outlined),
+              TabItem(title: "Hizmet Ver", icon: Icons.add_box_outlined),
+              TabItem(title: "Bildirimler", icon: Icons.notifications_outlined),
+              TabItem(title: "Sohbet", icon: Icons.chat_outlined)
+            ]),
         body: FutureBuilder(
           future: connectJson(),
           builder: (context, snapshot) {
@@ -251,17 +231,12 @@ class _HomePageState extends State<HomePage> {
                                       Icons.search,
                                       color: Colors.black,
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _pressed = true;
-                                      });
-                                    },
                                   ),
                                   hintText: "Hizmet Ara",
                                 ),
-                                onChanged: (value) {
+                                onChanged: (searchedWord) {
                                   setState(() {
-                                    _value = value;
+                                    _searchedWord = searchedWord;
                                   });
                                 },
                               ),
@@ -284,9 +259,9 @@ class _HomePageState extends State<HomePage> {
                         if (snapshot.hasData)
                           return snapshot.data;
                         else
-                          return CircularProgressIndicator(
+                          return Center(child:CircularProgressIndicator(
                             backgroundColor: Colors.red,
-                          );
+                          ),);
                       },
                     );
                     //else return CircularProgressIndicator(backgroundColor: Colors.red,);

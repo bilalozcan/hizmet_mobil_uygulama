@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/common_widget/SocialLoginButton.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/ui/LoginPage.dart';
+import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 import 'package:hizmet_mobil_uygulama/ui/SignUpPage.dart';
@@ -12,25 +13,28 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  void _googleIleGiris(BuildContext context) async {
+  void _signInWithGoogle(BuildContext context) async {
     final _userModel = Provider.of<UserModel>(context, listen: false);
     User_ _user = await _userModel.signInWithGoogle();
-    if (_user != null) print("Oturum açan user id:" + _user.userID.toString());
+    if (_user != null) {
+      showToast(context, "Hoşgeldiniz ${_user.name}", Colors.green);
+    }
   }
 
-  void _emailVeSifreGiris(BuildContext context) {
+  void _signInWithEmailAndPassword(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (context) =>LoginPage() ,
+        builder: (context) => LoginPage(),
       ),
     );
   }
-  void _emailVeSifreKayit(BuildContext context) {
+
+  void _signUpWithEmailAndPassword(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (context) =>SignUp() ,
+        builder: (context) => SignUp(),
       ),
     );
   }
@@ -39,7 +43,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Flutter Lovers"),
+        title: Text("HİZMET"),
         elevation: 0,
       ),
       backgroundColor: Colors.grey.shade200,
@@ -62,11 +66,10 @@ class _MainPageState extends State<MainPage> {
               butonText: "Gmail ile Giriş Yap",
               textColor: Colors.black87,
               butonColor: Colors.white,
-              //butonIcon: Image.asset("images/google-logo.png"),
-              onPressed: () => _googleIleGiris(context),
+              onPressed: () => _signInWithGoogle(context),
             ),
             SocialLoginButton(
-              onPressed: () => _emailVeSifreGiris(context),
+              onPressed: () => _signInWithEmailAndPassword(context),
               butonIcon: Icon(
                 Icons.email,
                 color: Colors.white,
@@ -75,7 +78,7 @@ class _MainPageState extends State<MainPage> {
               butonText: "Email ve Şifre ile Giriş yap",
             ),
             SocialLoginButton(
-              onPressed: () => _emailVeSifreKayit(context),
+              onPressed: () => _signUpWithEmailAndPassword(context),
               butonColor: Colors.deepOrange,
               butonIcon: Icon(
                 Icons.email,
