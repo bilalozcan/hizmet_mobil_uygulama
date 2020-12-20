@@ -7,6 +7,7 @@ class Hizmet {
   String _title;
   String _category;
   String _subCategory;
+  String _hizmet;
   String _publisher;
   String _detail;
   DateTime _publishedAt;
@@ -21,6 +22,7 @@ class Hizmet {
       this._title,
       this._category,
       this._subCategory,
+      this._hizmet,
       this._publisher,
       this._detail,
       this._address,
@@ -31,6 +33,7 @@ class Hizmet {
       'title': _title,
       'category': _category,
       'subCategory': _subCategory,
+      'hizmet':_hizmet,
       'publisher': _publisher,
       'detail': _detail,
       'publishedAt': _publishedAt ?? FieldValue.serverTimestamp(),
@@ -45,6 +48,7 @@ class Hizmet {
         _title = parsedMap['title'],
         _category = parsedMap['category'],
         _subCategory = parsedMap['subCategory'],
+  _hizmet=parsedMap['hizmet'],
         _publisher = parsedMap['publisher'],
         _detail = parsedMap['detail'],
         _publishedAt = (parsedMap['publishedAt'] as Timestamp).toDate(),
@@ -54,7 +58,7 @@ class Hizmet {
 
   @override
   String toString() {
-    return 'Hizmet{title: $_title, category: $_category, subCategory: $_subCategory, publisher $_publisher, detail: $_detail, publishedAt: $_publishedAt, address: $_address, payment: $_payment, review: $_review}';
+    return 'Hizmet{title: $_title, category: $_category, subCategory: $_subCategory,  hizmet:$_hizmet,publisher $_publisher, detail: $_detail, publishedAt: $_publishedAt, address: $_address, payment: $_payment, review: $_review}';
   }
 
   int get review => _review;
@@ -98,6 +102,11 @@ class Hizmet {
 
   set subCategory(String value) {
     _subCategory = value;
+  }
+  String get hizmet => _hizmet;
+
+  set hizmet(String value) {
+    _hizmet = value;
   }
 
   String get category => _category;

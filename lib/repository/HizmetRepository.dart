@@ -19,19 +19,20 @@ class HizmetRepository implements HizmetBase {
       title,
       category,
       subCategory,
+        hizmet,
       publisher,
       detail,
       address,
       payment}) async {
     if (appMode == AppMode.DEBUG) {
-      return Hizmet.Info( title, category, subCategory, publisher,
+      return Hizmet.Info( title, category, subCategory,hizmet, publisher,
           detail, address, payment);
     }else {
-      Hizmet _hizmet = Hizmet.Info( title, category, subCategory, publisher,
+      Hizmet _hizmet = Hizmet.Info( title, category, subCategory,hizmet, publisher,
           detail, address, payment);
       bool result = await _firestoreDBService.createHizmet(_hizmet);
       if(result){
-        return await _firestoreDBService.readHizmet( _hizmet.category, _hizmet.subCategory);
+        return await _firestoreDBService.readHizmet( _hizmet.category, _hizmet.subCategory,_hizmet.hizmet);
       }else {
         return null;
       }

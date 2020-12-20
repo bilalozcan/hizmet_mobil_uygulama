@@ -45,11 +45,11 @@ class FirestoreDBService implements DatabaseBase {
 
   @override
   Future<bool> createHizmet(Hizmet hizmet) async {
-    DocumentReference documentReference = _firebaseDB
+    var documentReference = _firebaseDB
         .collection("hizmetler")
         .doc("${hizmet.category}")
         .collection("${hizmet.subCategory}")
-        .doc();
+        .doc("${hizmet.hizmet}").collection("${hizmet.hizmet}").doc();
     DocumentSnapshot documentSnapshot = await documentReference.get();
     if (documentSnapshot.data() == null) {
       await documentReference.set(hizmet.toMap());
@@ -59,13 +59,13 @@ class FirestoreDBService implements DatabaseBase {
   }
 
   @override
-  Future<Hizmet> readHizmet(String category, String subCategory) async {
+  Future<Hizmet> readHizmet(String category, String subCategory,String hizmet) async {
     DocumentSnapshot _readUser = await _firebaseDB
         .collection("hizmetler")
         .doc("$category")
         .collection("${subCategory}")
-        .doc()
-        .get();
+        .doc("${hizmet}")
+        .collection("${hizmet}").doc().get();
     Map<String, dynamic> _readHizmeInfoMap = _readUser.data();
     Hizmet _okunanHizmetNesnesi = Hizmet.fromMap(_readHizmeInfoMap);
     return _okunanHizmetNesnesi;
@@ -73,7 +73,7 @@ class FirestoreDBService implements DatabaseBase {
 
   @override
   Future<List<Hizmet>> readFilterHizmet(
-      {String category, String subCategory}) async {
+      {String category, String subCategory,String hizmet}) async {
     QuerySnapshot querySnapshot = await _firebaseDB
         .collection('hizmetler')
         .doc(category)

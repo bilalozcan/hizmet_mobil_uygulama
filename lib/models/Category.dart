@@ -33,12 +33,10 @@ class SubCategory {
     return SubCategory(subCategories: parsedJson);
   }
 
-  List<dynamic> getData(String key) {
-    //debugPrint(subCategories[key]);
-    List<dynamic> dataList = [];
+  List<String> getData(String key) {
+    List<String> dataList = [];
     debugPrint(subCategories[key].runtimeType.toString());
     for(var i in subCategories[key]){
-      debugPrint(i.toString());
       dataList.add(i);
     }
     return dataList;
@@ -49,8 +47,8 @@ class SubCategory {
 }
 
 class Data {
-  List<dynamic> data;
-  List<dynamic> datas;
+  List<String> data;
+  List<String> datas;
 
   Data({@required this.data}){
     datas = [];
