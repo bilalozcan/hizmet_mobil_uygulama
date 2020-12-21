@@ -108,7 +108,6 @@ class _HomePageState extends State<HomePage> {
       {Function setState}) {
     return Container(
       padding: EdgeInsets.all(5),
-      height: 150.0,
       child: categoryList.length != 0
           ? ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -130,8 +129,7 @@ class _HomePageState extends State<HomePage> {
                               hizmetlerInit(selectCategory, selectSubCategory);
                               _subCategoryView;
                             });
-                          }
-                          else if (selectHizmet == null) {
+                          } else if (selectHizmet == null) {
                             setState(() {
                               selectHizmet = categoryList[index];
                               _subCategoryView;
@@ -146,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                             image: DecorationImage(
                               fit: BoxFit.fill,
                               image: NetworkImage(
-                                  "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
+                              "https://media-exp1.licdn.com/dms/image/C4E03AQHzHgb0LxczlQ/profile-displayphoto-shrink_800_800/0/1581495839216?e=1614211200&v=beta&t=AepGW-2sHNwfjNl66CA2-ZD2oaVCpijNy0UODvru3A8")
                             ),
                             color: Colors.blue,
                             borderRadius: new BorderRadius.all(
@@ -184,12 +182,6 @@ class _HomePageState extends State<HomePage> {
         exit(0);
       },
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: Icon(LineAwesomeIcons.blender),
-          onPressed: () {
-            readFilterHizmet("Kurumsal", "Mobil Uygulama");
-          },
-        ),
         bottomNavigationBar: ConvexAppBar(
             onTap: (position) {
               setState(() {
@@ -275,16 +267,44 @@ class _HomePageState extends State<HomePage> {
                   SliverToBoxAdapter(
                       child: Container(
                     alignment: Alignment.topCenter,
-                    height: 90,
+                    height: 100,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        HideContainer(selectCategory, 50),
-                        HideContainer(selectSubCategory, 40),
-                        HideContainer(selectHizmet, 30),
+                        GestureDetector(
+                          child:HideContainer(selectCategory, 50),
+                          onTap: (){
+                            setState(() {
+                              if(selectCategory!=null&&selectSubCategory==null){
+                              selectCategory=null;
+                              }
+                            });
+                          },
+                        ),
+                        GestureDetector(
+                          child:HideContainer(selectSubCategory, 40),
+                          onTap: (){
+                            setState(() {
+                              if(selectSubCategory!=null&&selectHizmet==null){
+                                selectSubCategory=null;
+                              }
+                            });
+                          },
+                        ),
+                        GestureDetector(
+                          child:HideContainer(selectHizmet, 30),
+                          onTap: (){
+                            setState(() {
+                              if(selectHizmet!=null){
+                                selectHizmet=null;
+                              }
+                            });
+                          },
+                        ),
+
                         Expanded(
-                          child: Selected()!=null ? Selected():Container(),
+                          child: Selected() != null ? Selected() : Container(),
                         )
                       ],
                     ),
@@ -329,14 +349,15 @@ class _HomePageState extends State<HomePage> {
       visible: name != null ? true : false,
       child: Container(
         padding: EdgeInsets.only(top: 9, left: 3, right: 3),
-        child: Column(children: [
-          Container(
+        child: Column(
+            children: [
 
+          Container(
             height: size,
             width: size,
             alignment: Alignment.topLeft,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12, width: 5),
+              border: Border.all(color: Colors.red, width: 3),
               image: DecorationImage(
                 fit: BoxFit.fill,
                 image: NetworkImage(
@@ -364,14 +385,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Selected() {
-    if(selectCategory == null)
-    return categoryList(_category.categoryList, 50,
-    setState: setState);
-    else if(selectSubCategory == null)
-    return categoryList(_subcategoryList, 50,
-    setState: setState);
-    else if(selectHizmet == null)
-    return categoryList(_hizmetList, 50,
-    setState: setState);
+    if (selectCategory == null){
+      return categoryList(_category.categoryList, 50, setState: setState);
+    }
+
+    else if (selectSubCategory == null){
+      return categoryList(_subcategoryList, 50, setState: setState);
+    }
+    else if (selectHizmet == null){
+      readFilterHizmet(selectCategory, selectSubCategory);
+      return categoryList(_hizmetList, 50, setState: setState);
+    }
+
   }
 }
