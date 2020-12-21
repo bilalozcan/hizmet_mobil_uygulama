@@ -25,8 +25,8 @@
   },
   "Temizlik": {
     "Temizlik": [
-      "Ev Temizliği",
-      "Apartman Temizliği",
+      "Ev \n Temizliği",
+      "Apartman \n Temizliği",
       "Halı Yıkama",
       "İnşaat Temizliği",
       "Koltuk Yıkama",
@@ -55,8 +55,8 @@
   },
   "Nakliyat": {
     "Nakliyat": [
-      "Evden Eve Bakliyat (Şehir İçi)",
-      "Evden Eve Bakliyat (Şehirler Arası)",
+      "Evden Eve \n Nakliyat (Şehir İçi)",
+      "Evden Eve \n Nakliyat (Şehirler Arası)",
       "Eşya Taşıma",
       "Asansörlü Nakliyat"
     ]
