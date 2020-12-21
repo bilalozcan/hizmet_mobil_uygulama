@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_star_rating/flutter_star_rating.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
@@ -27,6 +28,13 @@ class _HomePageState extends State<HomePage> {
   List<Hizmet> _hizmetler;
   bool _subCategoryView;
   List<dynamic> _subcategoryList;
+  String selectCategory;
+  String selectSubCategory;
+  String selectHizmet;
+
+  bool _hizmetView;
+
+  List<String> _hizmetList;
 
   @override
   void initState() {
@@ -65,6 +73,17 @@ class _HomePageState extends State<HomePage> {
     return _category.categoryList;
   }
 
+  subCategoryListInit(String category) {
+    _subCategoryView = true;
+    _subcategoryList = _category.getSubCategory(category).subCategoryList;
+  }
+
+  hizmetlerInit(String category, String subCategory) {
+    _hizmetView = true;
+    _hizmetList =
+        _category.getSubCategory(selectCategory).getData(selectSubCategory);
+  }
+
   hizmetCard(Hizmet hizmet) async {
     final _userModel = Provider.of<UserModel>(context, listen: false);
     User_ userCard = await _userModel.differentUser(hizmet.publisher);
@@ -85,14 +104,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  onPressedFunc(String category) {
-    debugPrint("onpressedFunc çalıştı satır 304");
-    _subCategoryView = true;
-    _subcategoryList = _category.getSubCategory(category).subCategoryList;
-  }
-
-  categoryList(List<String> categoryList, int size,
-      {Function onPressedFunction, Function setState}) {
+  Widget categoryList(List<String> categoryList, double size,
+      {Function setState}) {
     return Container(
       padding: EdgeInsets.all(5),
       height: 150.0,
@@ -102,23 +115,32 @@ class _HomePageState extends State<HomePage> {
               itemCount: categoryList.length,
               itemBuilder: (context, index) {
                 return Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     GestureDetector(
                         onTap: () {
-                          if (onPressedFunction != null) {
-                            debugPrint("onTap Çalıştı Satır 324");
-                            onPressedFunction(categoryList[index]);
+                          if (selectCategory == null) {
                             setState(() {
-                              debugPrint("setState çalıştı Satır 324");
+                              selectCategory = categoryList[index];
+                              subCategoryListInit(selectCategory);
                               _subCategoryView;
-                              _subcategoryList.length;
+                            });
+                          } else if (selectSubCategory == null) {
+                            setState(() {
+                              selectSubCategory = categoryList[index];
+                              hizmetlerInit(selectCategory, selectSubCategory);
+                              _subCategoryView;
+                            });
+                          }
+                          else if (selectHizmet == null) {
+                            setState(() {
+                              selectHizmet = categoryList[index];
+                              _subCategoryView;
                             });
                           }
                         },
                         child: Container(
-                          height: 75,
-                          width: 75,
+                          height: size,
+                          width: size,
                           margin: EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             image: DecorationImage(
@@ -222,7 +244,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.only(top:5),
+                              padding: EdgeInsets.only(top: 5),
                               width: MediaQuery.of(context).size.width / 1.2,
                               child: TextFormField(
                                 decoration: InputDecoration(
@@ -251,8 +273,22 @@ class _HomePageState extends State<HomePage> {
                     floating: true,
                   ),
                   SliverToBoxAdapter(
-                    child: categoryList(_category.categoryList, 25),
-                  ),
+                      child: Container(
+                    alignment: Alignment.topCenter,
+                    height: 90,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        HideContainer(selectCategory, 50),
+                        HideContainer(selectSubCategory, 40),
+                        HideContainer(selectHizmet, 30),
+                        Expanded(
+                          child: Selected()!=null ? Selected():Container(),
+                        )
+                      ],
+                    ),
+                  )),
                   //newsListSliver,
                   SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
@@ -286,5 +322,56 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
 /*Dialog(child: CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"]),),*/
+  HideContainer(String name, double size) {
+    return Visibility(
+      visible: name != null ? true : false,
+      child: Container(
+        padding: EdgeInsets.only(top: 9, left: 3, right: 3),
+        child: Column(children: [
+          Container(
+
+            height: size,
+            width: size,
+            alignment: Alignment.topLeft,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black12, width: 5),
+              image: DecorationImage(
+                fit: BoxFit.fill,
+                image: NetworkImage(
+                    "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
+              ),
+              color: Colors.blue,
+              borderRadius: new BorderRadius.all(
+                  new Radius.circular(20.0)), //kenarları yuvarlaklaştırır
+            ),
+          ),
+          Container(
+            child: Text(
+              name != null ? name : "Kategori",
+              style: TextStyle(
+                fontSize: size / 3,
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Selected() {
+    if(selectCategory == null)
+    return categoryList(_category.categoryList, 50,
+    setState: setState);
+    else if(selectSubCategory == null)
+    return categoryList(_subcategoryList, 50,
+    setState: setState);
+    else if(selectHizmet == null)
+    return categoryList(_hizmetList, 50,
+    setState: setState);
+  }
 }
