@@ -174,7 +174,6 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
       children: <Widget>[
         SingleChildScrollView(
           child: Container(
-            color: Colors.yellow.shade50,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -212,6 +211,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
         SingleChildScrollView(
           child: Container(
             child: Stepper(
+              physics: ClampingScrollPhysics(),
               onStepTapped: (index) {
                 debugPrint("buraya 201 tıklandı $index");
                 if(index < _activeStep || ((selectCategory!=null) && (index>1 && selectSubCategory!=null) && (index>2 && selectHizmet!=null)))
