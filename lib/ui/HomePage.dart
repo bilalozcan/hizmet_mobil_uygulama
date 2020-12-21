@@ -222,6 +222,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             Container(
+                              padding: EdgeInsets.only(top:5),
                               width: MediaQuery.of(context).size.width / 1.2,
                               child: TextFormField(
                                 decoration: InputDecoration(
