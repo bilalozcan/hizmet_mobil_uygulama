@@ -3,10 +3,12 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class HizmetVerPageNew extends StatefulWidget {
@@ -47,12 +49,12 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
   Widget build(BuildContext context) {
     setState(() {});
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         child: Icon(Icons.close),
         onPressed: () {
           Navigator.pop(context);
         },
-      ),
+      ),*/
       body: FutureBuilder(
         future: connectJson(),
         builder: (context, snapshot) {
@@ -81,7 +83,9 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
 
   hizmetlerInit(String category, String subCategory) {
     _hizmetView = true;
-    _hizmetList=_category.getSubCategory(selectCategory).getData(selectSubCategory);
+    _hizmetList = _category
+        .getSubCategory(selectCategory)
+        .getData(selectSubCategory);
   }
 
   categoryList(List<String> stringList,
@@ -115,18 +119,22 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                         height: 75,
                         width: 75,
                         margin: EdgeInsets.all(5),
+                        child: Icon(
+                          LineAwesomeIcons.school,
+                          size:55,
+                        ),
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: categoryName == stringList[index]
                                   ? Colors.green
                                   : Colors.deepOrange,
                               width: 5),
-                          image: DecorationImage(
+                          /*image: DecorationImage(
                             fit: BoxFit.fill,
                             image: NetworkImage(
                                 "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
-                          ),
-                          color: Colors.blue,
+                          ),*/
+                          //color: Colors.blue,
                           borderRadius: new BorderRadius.all(
                               new Radius.circular(
                                   20.0)), //kenarları yuvarlaklaştırır
@@ -164,72 +172,96 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
   _hizmetVerStepper(Function setState) {
     return ListView(
       children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(top: 25),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text(
-                "Kategori",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              ),
-              Divider(
-                color: Colors.blueAccent,
-              ),
-              HideContainer(selectCategory, 75),
-              Divider(
-                color: Colors.blueAccent,
-              ),
-              HideContainer(selectSubCategory, 50),
-              Divider(
-                color: Colors.blueAccent,
-              ),
-              HideContainer(selectHizmet, 40),
-              Divider(
-                color: Colors.blueAccent,
-              ),
-            ],
+        SingleChildScrollView(
+          child: Container(
+            color: Colors.yellow.shade50,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding:EdgeInsets.only(left: 15),
+                      child: Text(
+                        "Hizmet Ver",
+                        style: GoogleFonts.varelaRound(fontSize: 30,color: Colors.black),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close,size: 35,),
+                      alignment: Alignment.topRight,
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+                Divider(
+                  color: Colors.blueAccent,
+                ),
+                HideContainer(selectCategory, 75),
+                HideContainer(selectSubCategory, 50),
+                HideContainer(selectHizmet, 40),
+              ],
+            ),
           ),
         ),
-        Container(
-          child: Stepper(
-            onStepTapped: (index) {
-              _activeStep = index;
-              setState(() {
-                _activeStep;
-              });
-            },
-            controlsBuilder: (BuildContext context,
-                {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CupertinoButton(
-                    child: Text("Geri Dön"),
-                    onPressed: _activeStep != 0 ? onStepCancel : () {},
-                  ),
-                  CupertinoButton(
-                    child: Text(_activeStep < _stepListInit(setState).length - 1
-                        ? "İlerle"
-                        : "Bitir"),
-                    onPressed: onStepContinue,
-                  ),
-                ],
-              );
-            },
-            currentStep: _activeStep,
-            onStepContinue: () {
-              setState(() {
-                continueButton(_activeStep);
-              });
-            },
-            onStepCancel: () {
-              setState(() {
-                if (_activeStep != 0) _activeStep--;
-              });
-            },
-            steps: _stepListInit(setState),
+        SingleChildScrollView(
+          child: Container(
+            child: Stepper(
+              onStepTapped: (index) {
+                debugPrint("buraya 201 tıklandı $index");
+                if(index < _activeStep || ((selectCategory!=null) && (index>1 && selectSubCategory!=null) && (index>2 && selectHizmet!=null)))
+                _activeStep = index;
+
+                setState(() {
+                  _activeStep;
+                  if (_activeStep == 0) {
+                    selectCategory = null;
+                    selectSubCategory = null;
+                    selectHizmet = null;
+                  }
+                  if (_activeStep == 1) selectHizmet = null;
+                });
+              },
+              controlsBuilder: (BuildContext context,
+                  {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CupertinoButton(
+                      child: Text("Geri Dön"),
+                      onPressed: _activeStep != 0 ? onStepCancel : () {},
+                    ),
+                    CupertinoButton(
+                      child: Text(
+                          _activeStep < _stepListInit(setState).length - 1
+                              ? "İlerle"
+                              : "Bitir"),
+                      onPressed: onStepContinue,
+                    ),
+                  ],
+                );
+              },
+              currentStep: _activeStep,
+              onStepContinue: () {
+                setState(() {
+                  continueButton(_activeStep);
+                });
+              },
+              onStepCancel: () {
+                setState(() {
+                  if (_activeStep == 1) selectCategory = null;
+                  if (_activeStep == 2) selectSubCategory = null;
+                  if (_activeStep == 3) selectHizmet = null;
+                  if (_activeStep != 0) _activeStep--;
+                });
+              },
+              steps: _stepListInit(setState),
+            ),
           ),
         ),
       ],
@@ -376,7 +408,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
             title: _title.text,
             category: selectCategory,
             subCategory: selectSubCategory,
-            hizmet:selectHizmet,
+            hizmet: selectHizmet,
             publisher: _userModel.user.userID,
             detail: _aciklama.text,
             address: "Zeytniburnu",
@@ -392,40 +424,46 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
   HideContainer(String name, double size) {
     return Visibility(
       visible: name != null ? true : false,
-      child: Container(
-        padding: EdgeInsets.only(left: 15),
-        child: Row(
-          children: [
-            Container(
-              height: size,
-              width: size,
-              alignment: Alignment.topLeft,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black12, width: 5),
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: NetworkImage(
-                      "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
+      child: Column(
+        children: [
+
+          Container(
+            padding: EdgeInsets.only(left: 15),
+            child: Row(children: [
+              Container(
+                height: size,
+                width: size,
+                alignment: Alignment.topLeft,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black12, width: 5),
+                  image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: NetworkImage(
+                        "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
+                  ),
+                  color: Colors.blue,
+                  borderRadius: new BorderRadius.all(
+                      new Radius.circular(20.0)), //kenarları yuvarlaklaştırır
                 ),
-                color: Colors.blue,
-                borderRadius: new BorderRadius.all(
-                    new Radius.circular(20.0)), //kenarları yuvarlaklaştırır
               ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 20),
-              child: Text(
-                name != null ? name : "Kategori",
-                style: TextStyle(
-                  fontSize: size / 3,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black,
+              Container(
+                padding: EdgeInsets.only(left: 20),
+                child: Text(
+                  name != null ? name : "Kategori",
+                  style: TextStyle(
+                    fontSize: size / 3,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-          ],
-        ),
+            ]),
+          ),
+          Divider(
+            color: Colors.blueAccent,
+          ),
+        ],
       ),
     );
   }
