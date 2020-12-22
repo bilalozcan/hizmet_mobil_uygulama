@@ -10,7 +10,7 @@ class HizmetModel with ChangeNotifier implements HizmetBase {
   ViewState _state = ViewState.Idle;
   HizmetRepository _hizmetRepository = locator<HizmetRepository>();
   Hizmet _hizmet;
-
+  List<Hizmet> hizmetler;
 
   Hizmet get hizmet => _hizmet;
 
@@ -23,7 +23,6 @@ class HizmetModel with ChangeNotifier implements HizmetBase {
     notifyListeners();
   }
 
-
   ViewState get state => _state;
 
   @override
@@ -31,7 +30,7 @@ class HizmetModel with ChangeNotifier implements HizmetBase {
       {title,
       category,
       subCategory,
-        hizmet,
+      hizmet,
       publisher,
       detail,
       address,
@@ -42,7 +41,7 @@ class HizmetModel with ChangeNotifier implements HizmetBase {
           title: title,
           category: category,
           subCategory: subCategory,
-          hizmet:hizmet,
+          hizmet: hizmet,
           publisher: publisher,
           detail: detail,
           address: address,
@@ -61,22 +60,27 @@ class HizmetModel with ChangeNotifier implements HizmetBase {
   }
 
   @override
-  Future<List<Hizmet>> readFilterHizmet({String category, String subCategory}) {
+  Future<List<Hizmet>> readFilterHizmet(
+      {String category, String subCategory, String hizmet}) async {
     try {
       state = ViewState.Busy;
-      return _hizmetRepository.readFilterHizmet(category: category, subCategory: subCategory);
+      hizmetler = await _hizmetRepository.readFilterHizmet(
+          category: category, subCategory: subCategory, hizmet: hizmet);
+      if (hizmetler != null) {
+        debugPrint("hizmetler null değil");
+        return hizmetler;
+      } else {
+        debugPrint("hizmetler null geldi");
+        return null;
+      }
     } finally {
       state = ViewState.Idle;
     }
   }
-
 
   @override
   Future<Hizmet> setHizmet(Hizmet hizmet) {
     // TODO: implement setHizmet
     throw UnimplementedError();
   }
-
-
-
 }

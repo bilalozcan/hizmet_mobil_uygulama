@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   String selectCategory;
   String selectSubCategory;
   String selectHizmet;
-
+  var _hizmetModel;
   bool _hizmetView;
 
   List<String> _hizmetList;
@@ -41,8 +41,9 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _currentNavigationBarIndex = 0;
     _subCategoryView = false;
-    _hizmetler = List<Hizmet>();
-    readFilterHizmet("Ders", "Spor Dersleri");
+    _hizmetler = [];
+
+    //readFilterHizmet("Ders", "Spor Dersleri");
     /*Hizmet hizmett = Hizmet.Info(
         "sadsadasdasd",
         "asdadasd",
@@ -54,12 +55,17 @@ class _HomePageState extends State<HomePage> {
         500);*/
   }
 
-  readFilterHizmet(String category, String subCategory) async {
-    final HizmetModel _hizmetModel =
-        Provider.of<HizmetModel>(context, listen: false);
-    _hizmetler = await _hizmetModel.readFilterHizmet(
-        category: category, subCategory: subCategory);
-    debugPrint(_hizmetler.toString());
+  readFilterHizmet(String category, String subCategory, String hizmet) async {
+    final _hizmetModel = Provider.of<HizmetModel>(context, listen: false);
+    try {
+      await _hizmetModel.readFilterHizmet(
+          category: category, subCategory: subCategory, hizmet: hizmet);
+      if(_hizmetModel.hizmetler != null){
+        _hizmetler = _hizmetModel.hizmetler;
+      }
+    } catch(e) {
+      debugPrint("Debugg");
+    }
     setState(() {
       _hizmetler;
     });
@@ -393,8 +399,10 @@ class _HomePageState extends State<HomePage> {
       return categoryList(_subcategoryList, 50, setState: setState);
     }
     else if (selectHizmet == null){
-      readFilterHizmet(selectCategory, selectSubCategory);
       return categoryList(_hizmetList, 50, setState: setState);
+    }else{
+      readFilterHizmet(selectCategory, selectSubCategory, selectHizmet);
+
     }
 
   }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 
@@ -12,8 +11,11 @@ abstract class HizmetBase {
     @required address,
     @required payment,
   });
-  Future<Hizmet> setHizmet(Hizmet hizmet);
-  Future<Hizmet> readHizmet(String category, String subCategory);
-  Future<List<Hizmet>> readFilterHizmet({String category, String subCategory});
 
+  Future<Hizmet> setHizmet(Hizmet hizmet);
+
+  Future<Hizmet> readHizmet(String category, String subCategory);
+
+  Future<List<Hizmet>> readFilterHizmet(
+      {String category, String subCategory, String hizmet});
 }

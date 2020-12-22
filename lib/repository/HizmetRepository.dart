@@ -15,36 +15,38 @@ class HizmetRepository implements HizmetBase {
 
   @override
   Future<Hizmet> createHizmet(
-      {
-      title,
+      {title,
       category,
       subCategory,
-        hizmet,
+      hizmet,
       publisher,
       detail,
       address,
       payment}) async {
     if (appMode == AppMode.DEBUG) {
-      return Hizmet.Info( title, category, subCategory,hizmet, publisher,
+      return Hizmet.Info(title, category, subCategory, hizmet, publisher,
           detail, address, payment);
-    }else {
-      Hizmet _hizmet = Hizmet.Info( title, category, subCategory,hizmet, publisher,
-          detail, address, payment);
+    } else {
+      Hizmet _hizmet = Hizmet.Info(title, category, subCategory, hizmet,
+          publisher, detail, address, payment);
       bool result = await _firestoreDBService.createHizmet(_hizmet);
-      if(result){
-        return await _firestoreDBService.readHizmet( _hizmet.category, _hizmet.subCategory,_hizmet.hizmet);
-      }else {
+      if (result) {
+        return await _firestoreDBService.readHizmet(
+            _hizmet.category, _hizmet.subCategory, _hizmet.hizmet);
+      } else {
         return null;
       }
     }
   }
 
   @override
-  Future<List<Hizmet>> readFilterHizmet({String category, String subCategory}) async{
+  Future<List<Hizmet>> readFilterHizmet(
+      {String category, String subCategory, String hizmet}) async {
     if (appMode == AppMode.DEBUG) {
       return null;
-    }else {
-      List<Hizmet> hizmetList = await _firestoreDBService.readFilterHizmet(category: category, subCategory: subCategory);
+    } else {
+      List<Hizmet> hizmetList = await _firestoreDBService.readFilterHizmet(
+          category: category, subCategory: subCategory, hizmet: hizmet);
       return hizmetList;
     }
   }
@@ -60,5 +62,4 @@ class HizmetRepository implements HizmetBase {
     // TODO: implement setHizmet
     throw UnimplementedError();
   }
-
 }
