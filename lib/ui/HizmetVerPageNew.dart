@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
+import 'package:hizmet_mobil_uygulama/models/CategoryIcon.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
@@ -28,10 +29,15 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
   TextEditingController _fiyat = TextEditingController();
   int _activeStep;
   String categoryName;
+  int categoryNameIndex;
   String subCategoryName;
   String selectCategory;
   String selectSubCategory;
   String selectHizmet;
+  int selectCategoryIndex;
+  int selectSubCategoryIndex;
+  int selectHizmetIndex;
+  CategoryIcon categoryIcon;
 
   @override
   void initState() {
@@ -43,6 +49,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
     _formkey.add(new GlobalKey<FormFieldState>());
     _formkey.add(new GlobalKey<FormFieldState>());
     _formkey.add(new GlobalKey<FormFieldState>());
+    categoryIcon = CategoryIcon(_category);
   }
 
   @override
@@ -105,6 +112,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                       onTap: () {
                         setState(() {
                           categoryName = stringList[index];
+                          categoryNameIndex = index;
                         });
                         if (onPressedFunction != null) {
                           setState(() {
@@ -119,21 +127,20 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                         height: 75,
                         width: 75,
                         margin: EdgeInsets.all(5),
-                        child: Icon(
-                          LineAwesomeIcons.school,
-                          size:55,
-                        ),
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: categoryName == stringList[index]
                                   ? Colors.green
                                   : Colors.deepOrange,
                               width: 5),
-                          /*image: DecorationImage(
+                          image: DecorationImage(
                             fit: BoxFit.fill,
-                            image: NetworkImage(
-                                "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
-                          ),*/
+                            image: AssetImage(
+                                categoryIcon.GetIcon(index,selectCategoryIndex,selectSubCategoryIndex,selectHizmetIndex)!=null
+                                    ?categoryIcon.GetIcon(index,selectCategoryIndex,selectSubCategoryIndex,selectHizmetIndex):
+                                "assets/Category/Cat111.png"
+                            ) ,
+                          ),
                           //color: Colors.blue,
                           borderRadius: new BorderRadius.all(
                               new Radius.circular(
@@ -169,6 +176,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
     return _category.categoryList;
   }
 
+
   _hizmetVerStepper(Function setState) {
     return ListView(
       children: <Widget>[
@@ -201,9 +209,9 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                 Divider(
                   color: Colors.blueAccent,
                 ),
-                HideContainer(selectCategory, 75),
-                HideContainer(selectSubCategory, 50),
-                HideContainer(selectHizmet, 40),
+                HideContainer(selectCategory, 75,1),
+                HideContainer(selectSubCategory, 50,2),
+                HideContainer(selectHizmet, 40,3),
               ],
             ),
           ),
@@ -213,7 +221,6 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
             child: Stepper(
               physics: ClampingScrollPhysics(),
               onStepTapped: (index) {
-                debugPrint("buraya 201 tıklandı $index");
                 if(index < _activeStep || ((selectCategory!=null) && (index>1 && selectSubCategory!=null) && (index>2 && selectHizmet!=null)))
                 _activeStep = index;
 
@@ -223,6 +230,9 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                     selectCategory = null;
                     selectSubCategory = null;
                     selectHizmet = null;
+                    selectCategoryIndex = null;
+                    selectSubCategoryIndex = null;
+                    selectHizmetIndex = null;
                   }
                   if (_activeStep == 1) selectHizmet = null;
                 });
@@ -254,9 +264,9 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
               },
               onStepCancel: () {
                 setState(() {
-                  if (_activeStep == 1) selectCategory = null;
-                  if (_activeStep == 2) selectSubCategory = null;
-                  if (_activeStep == 3) selectHizmet = null;
+                  if (_activeStep == 1){ selectCategory = null; selectCategoryIndex =null;}
+                  if (_activeStep == 2){ selectSubCategory = null; selectSubCategoryIndex = null;}
+                  if (_activeStep == 3){ selectHizmet = null; selectHizmetIndex = null;}
                   if (_activeStep != 0) _activeStep--;
                 });
               },
@@ -277,7 +287,9 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
               validator: (value) {
                 if (categoryName != null) {
                   selectCategory = categoryName;
+                  selectCategoryIndex =categoryNameIndex;
                   categoryName = null;
+                  categoryNameIndex = null;
                   return null;
                 } else {
                   return "Kategori secmeniz gerekmektedir";
@@ -297,7 +309,9 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
             validator: (value) {
               if (categoryName != null) {
                 selectSubCategory = categoryName;
+                selectSubCategoryIndex = categoryNameIndex;
                 categoryName = null;
+                categoryNameIndex = null;
                 return null;
               } else {
                 return "Kategori secmeniz gerekmektedir";
@@ -320,7 +334,9 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
             validator: (value) {
               if (categoryName != null) {
                 selectHizmet = categoryName;
+                selectHizmetIndex = categoryNameIndex;
                 categoryName = null;
+                categoryNameIndex = null;
                 return null;
               } else {
                 return "Kategori secmeniz gerekmektedir";
@@ -421,7 +437,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
       showToast(context, "Lütfen Bir Kategori Seçiniz.", Colors.red);
   }
 
-  HideContainer(String name, double size) {
+  HideContainer(String name, double size, int durum) {
     return Visibility(
       visible: name != null ? true : false,
       child: Column(
@@ -437,10 +453,10 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.black12, width: 5),
                   image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: NetworkImage(
-                        "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
-                  ),
+                    fit: BoxFit.contain,
+                    image: AssetImage(
+                        Durum(durum)!=null ? Durum(durum):"assets/Category/Cat111.png"
+                    ),),
                   color: Colors.blue,
                   borderRadius: new BorderRadius.all(
                       new Radius.circular(20.0)), //kenarları yuvarlaklaştırır
@@ -466,5 +482,16 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
         ],
       ),
     );
+  }
+  String Durum(int durum){
+    if(durum == 1){
+      return categoryIcon.SelectGetIcon(selectCategoryIndex, null, null);
+    }
+    if(durum == 2){
+      return categoryIcon.SelectGetIcon(selectCategoryIndex, selectSubCategoryIndex, null);
+    }
+    if(durum == 3){
+      return categoryIcon.SelectGetIcon(selectCategoryIndex, selectSubCategoryIndex, selectHizmetIndex);
+    }
   }
 }

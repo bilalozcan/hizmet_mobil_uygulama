@@ -66,6 +66,35 @@ flutter:
      - assets/carouselPhotos/photo2.jpg
      - assets/carouselPhotos/photo3.jpg
      - assets/Category.json
+     - assets/Category/Cat1.png
+     - assets/Category/Cat2.png
+     - assets/Category/Cat3.png
+     - assets/Category/Cat4.png
+     - assets/Category/Cat5.png
+     - assets/Category/Cat6.png
+     - assets/Category/Cat11.png
+     - assets/Category/Cat12.png
+     - assets/Category/Cat13.png
+     - assets/Category/Cat14.png
+     - assets/Category/Cat21.png
+     - assets/Category/Cat31.png
+     - assets/Category/Cat32.png
+     - assets/Category/Cat41.png
+     - assets/Category/Cat51.png
+     - assets/Category/Cat52.png
+     - assets/Category/Cat61.png
+     - assets/Category/Cat62.png
+     - assets/Category/Cat111.png
+     - assets/Category/Cat112.png
+     - assets/Category/Cat113.png
+     - assets/Category/Cat114.png
+     - assets/Category/Cat121.png
+     - assets/Category/Cat122.png
+     - assets/Category/Cat123.png
+     - assets/Category/Cat124.png
+     - assets/Category/Cat125.png
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
