@@ -63,15 +63,13 @@ class _HomePageState extends State<HomePage> {
     try {
       await _hizmetModel.readFilterHizmet(
           category: category, subCategory: subCategory, hizmet: hizmet);
+
       if (_hizmetModel.hizmetler != null) {
         _hizmetler = _hizmetModel.hizmetler;
       }
     } catch (e) {
       debugPrint("Debugg");
     }
-    setState(() {
-      _hizmetler;
-    });
   }
 
   connectJson() async {
@@ -192,6 +190,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     UserModel _userModel = Provider.of<UserModel>(context);
     final _hizmetModel = Provider.of<HizmetModel>(context, listen: false);
+
     return WillPopScope(
       onWillPop: () async {
         exit(0);
@@ -240,8 +239,7 @@ class _HomePageState extends State<HomePage> {
                               padding: EdgeInsets.only(left: 8),
                               child: GestureDetector(
                                 child: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        _userModel.user.profileURL)),
+                                    backgroundImage:AssetImage("assets/carouselPhotos/photo1.jpg")),
                                 onTap: () {
                                   Navigator.push(
                                       context,
@@ -477,6 +475,7 @@ class _HomePageState extends State<HomePage> {
       return categoryList(_hizmetList, 50, setState: setState);
     } else {
       //readFilterHizmet(selectCategory, selectSubCategory, selectHizmet);
+
     }
   }
 }

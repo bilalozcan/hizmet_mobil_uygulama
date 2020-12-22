@@ -21,10 +21,17 @@ class _ProfilePageState extends State<ProfilePage> {
   int degree;
   DateTime datetime;
   PickedFile _profilePhoto;
+  var _userModel;
 
   @override
   void initState() {
     super.initState();
+    _userModel=Provider.of<UserModel>(context,listen:false);
+    name = _userModel.user.name;
+    surname = _userModel.user.surname;
+    email = _userModel.user.email;
+    degree = _userModel.user.degree;
+    datetime = _userModel.user.dateOfBirth;
   }
 
   @override
@@ -34,12 +41,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    UserModel _userModel = Provider.of<UserModel>(context);
-    name = _userModel.user.name;
-    surname = _userModel.user.surname;
-    email = _userModel.user.email;
-    degree = _userModel.user.degree;
-    datetime = _userModel.user.dateOfBirth;
+    //UserModel _userModel = Provider.of<UserModel>(context);
+
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -47,8 +50,11 @@ class _ProfilePageState extends State<ProfilePage> {
             actions: [
               IconButton(
                 icon: Icon(Icons.settings),
-                onPressed: () {
-                  //dialogMessageForExit(context);
+                onPressed: () async {
+                  await showDialog(context:context,builder:(BuildContext context)
+                  {
+                    return  dialogMessageForExit();
+                  });
                 },
               )
             ],

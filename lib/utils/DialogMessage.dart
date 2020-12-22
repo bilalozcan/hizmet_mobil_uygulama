@@ -5,8 +5,41 @@ import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-dialogMessageForExit(BuildContext context) {
-  var _userModel=Provider.of<UserModel>(context,listen:false);
+class dialogMessageForExit extends StatefulWidget {
+  @override
+  _dialogMessageForExitState createState() => _dialogMessageForExitState();
+}
+
+class _dialogMessageForExitState extends State<dialogMessageForExit> {
+  @override
+  Widget build(BuildContext context) {
+    var _userModel = Provider.of<UserModel>(context);
+    return AlertDialog(
+      title: Text("Hesaptan Çıkış Yapmak İstediğinize Emin Misiniz?"),
+      actions: [
+        CupertinoButton(
+          child: Text("EVET"),
+          onPressed: () async{
+            await _userModel.signOut();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                      (Route<dynamic> route) => false);
+          },
+        ),
+        CupertinoButton(
+          child: Text("HAYIR"),
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        )
+      ],
+    );
+  }
+}
+
+/*dialogMessageForExit(BuildContext context) {
+  var _userModel = Provider.of<UserModel>(context);
+
   showDialog(
       context: context,
       builder: (context) {
@@ -15,10 +48,12 @@ dialogMessageForExit(BuildContext context) {
           actions: [
             CupertinoButton(
               child: Text("EVET"),
-              onPressed: () async{
+              onPressed: () {
                 _userModel.signOut();
-                _userModel=null;
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>LoginPage()),(Route<dynamic> route) => false);
+                debugPrint("null deger " + _userModel.user.toString());
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    (Route<dynamic> route) => false);
               },
             ),
             CupertinoButton(
@@ -30,4 +65,4 @@ dialogMessageForExit(BuildContext context) {
           ],
         );
       });
-}
+}*/
