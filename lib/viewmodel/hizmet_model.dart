@@ -67,10 +67,8 @@ class HizmetModel with ChangeNotifier implements HizmetBase {
       hizmetler = await _hizmetRepository.readFilterHizmet(
           category: category, subCategory: subCategory, hizmet: hizmet);
       if (hizmetler != null) {
-        debugPrint("hizmetler null değil");
         return hizmetler;
       } else {
-        debugPrint("hizmetler null geldi");
         return null;
       }
     } finally {
