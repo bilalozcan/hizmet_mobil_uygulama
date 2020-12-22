@@ -73,6 +73,7 @@ class UserModel with ChangeNotifier implements AuthBase {
       _user = null;
       return sonuc;
     } catch (e) {
+      debugPrint("Hatalı cıkıs yapma islemi denemesi");
       return false;
     } finally {
       state = ViewState.Idle;

@@ -46,9 +46,6 @@ class FirebaseAuthService implements AuthBase {
   @override
   Future<bool> signOut() async {
     try {
-      //final _facebookLogin = FacebookLogin();
-      //await _facebookLogin.logOut();
-
       final _googleSignIn = GoogleSignIn();
       await _googleSignIn.signOut();
       await _firebaseAuth.signOut();

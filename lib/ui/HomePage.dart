@@ -61,14 +61,13 @@ class _HomePageState extends State<HomePage> {
       await _hizmetModel.readFilterHizmet(
           category: category, subCategory: subCategory, hizmet: hizmet);
       if(_hizmetModel.hizmetler != null){
-        _hizmetler = _hizmetModel.hizmetler;
+        /*setState(() {
+          _hizmetler = _hizmetModel.hizmetler;
+        });*/
       }
     } catch(e) {
       debugPrint("Debugg");
     }
-    setState(() {
-      _hizmetler;
-    });
   }
 
   connectJson() async {
@@ -182,7 +181,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    UserModel _userModel = Provider.of<UserModel>(context);
+    UserModel _userModel = Provider.of<UserModel>(context,listen:true);
+    HizmetModel _hizmetModel=Provider.of<HizmetModel>(context);
+
     return WillPopScope(
       onWillPop: () async {
         exit(0);
@@ -231,8 +232,7 @@ class _HomePageState extends State<HomePage> {
                               padding: EdgeInsets.only(left: 8),
                               child: GestureDetector(
                                 child: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        _userModel.user.profileURL)),
+                                    backgroundImage:AssetImage("assets/carouselPhotos/photo1.jpg")),
                                 onTap: () {
                                   Navigator.push(
                                       context,
@@ -319,7 +319,7 @@ class _HomePageState extends State<HomePage> {
                   SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
                     return FutureBuilder(
-                      future: hizmetCard(_hizmetler[index]),
+                      future: hizmetCard(_hizmetModel.hizmetler[index]),
                       builder: (context, snapshot) {
                         if (snapshot.hasData)
                           return snapshot.data;
@@ -399,10 +399,9 @@ class _HomePageState extends State<HomePage> {
       return categoryList(_subcategoryList, 50, setState: setState);
     }
     else if (selectHizmet == null){
-      return categoryList(_hizmetList, 50, setState: setState);
-    }else{
-      readFilterHizmet(selectCategory, selectSubCategory, selectHizmet);
-
+     var a= categoryList(_hizmetList, 50, setState: setState);
+     readFilterHizmet(selectCategory, selectSubCategory, selectHizmet);
+     return a;
     }
 
   }

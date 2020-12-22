@@ -47,15 +47,19 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final _userModel = Provider.of<UserModel>(context, listen: true);
-    if (_userModel.user != null) {
-      Future.delayed(Duration(milliseconds: 1), () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      });
-    }
+    final _userModel = Provider.of<UserModel>(context);
+    Future.delayed(Duration(milliseconds:50),(){
+      if (_userModel.user != null) {
+        debugPrint("hadi bakim ibne"+_userModel.user.toString());
+        Future.delayed(Duration(milliseconds: 100), () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        });
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Login"),
@@ -113,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(
                       "Giriş yap",
                     ),
-                    onPressed: () => loginDeneme(), //enterButton,
+                    onPressed: () => login(), //enterButton,
                   ),
                   InkWell(
                     child: Text(
