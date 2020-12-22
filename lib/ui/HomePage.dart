@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_star_rating/flutter_star_rating.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
+import 'package:hizmet_mobil_uygulama/models/CategoryIcon.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/ui/HizmetVerPageNew.dart';
@@ -25,10 +26,14 @@ class _HomePageState extends State<HomePage> {
   int _currentNavigationBarIndex;
   Category _category;
   String _searchedWord;
+  int selectCategoryIndex;
+  int selectSubCategoryIndex;
+  int selectHizmetIndex;
   List<Hizmet> _hizmetler;
   bool _subCategoryView;
   List<dynamic> _subcategoryList;
   String selectCategory;
+  CategoryIcon categoryIcon;
   String selectSubCategory;
   String selectHizmet;
   var _hizmetModel;
@@ -41,9 +46,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _currentNavigationBarIndex = 0;
     _subCategoryView = false;
-    _hizmetler = [];
 
-    //readFilterHizmet("Ders", "Spor Dersleri");
     /*Hizmet hizmett = Hizmet.Info(
         "sadsadasdasd",
         "asdadasd",
@@ -60,12 +63,11 @@ class _HomePageState extends State<HomePage> {
     try {
       await _hizmetModel.readFilterHizmet(
           category: category, subCategory: subCategory, hizmet: hizmet);
-      if(_hizmetModel.hizmetler != null){
-        /*setState(() {
-          _hizmetler = _hizmetModel.hizmetler;
-        });*/
+
+      if (_hizmetModel.hizmetler != null) {
+        _hizmetler = _hizmetModel.hizmetler;
       }
-    } catch(e) {
+    } catch (e) {
       debugPrint("Debugg");
     }
   }
@@ -125,18 +127,21 @@ class _HomePageState extends State<HomePage> {
                           if (selectCategory == null) {
                             setState(() {
                               selectCategory = categoryList[index];
+                              selectCategoryIndex = index;
                               subCategoryListInit(selectCategory);
                               _subCategoryView;
                             });
                           } else if (selectSubCategory == null) {
                             setState(() {
                               selectSubCategory = categoryList[index];
+                              selectSubCategoryIndex = index;
                               hizmetlerInit(selectCategory, selectSubCategory);
                               _subCategoryView;
                             });
                           } else if (selectHizmet == null) {
                             setState(() {
                               selectHizmet = categoryList[index];
+                              selectHizmetIndex = index;
                               _subCategoryView;
                             });
                           }
@@ -147,10 +152,12 @@ class _HomePageState extends State<HomePage> {
                           margin: EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: NetworkImage(
-                              "https://media-exp1.licdn.com/dms/image/C4E03AQHzHgb0LxczlQ/profile-displayphoto-shrink_800_800/0/1581495839216?e=1614211200&v=beta&t=AepGW-2sHNwfjNl66CA2-ZD2oaVCpijNy0UODvru3A8")
-                            ),
+                              fit: BoxFit.contain,
+                              image: AssetImage(
+                                categoryIcon.GetIcon(index,selectCategoryIndex,selectSubCategoryIndex,selectHizmetIndex)!=null
+                                    ?categoryIcon.GetIcon(index,selectCategoryIndex,selectSubCategoryIndex,selectHizmetIndex):
+                                    "assets/Category/Cat111.png"
+                              ) ,                           ),
                             color: Colors.blue,
                             borderRadius: new BorderRadius.all(
                                 new Radius.circular(
@@ -181,8 +188,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    UserModel _userModel = Provider.of<UserModel>(context,listen:true);
-    HizmetModel _hizmetModel=Provider.of<HizmetModel>(context);
+    UserModel _userModel = Provider.of<UserModel>(context);
+    final _hizmetModel = Provider.of<HizmetModel>(context, listen: false);
 
     return WillPopScope(
       onWillPop: () async {
@@ -241,9 +248,18 @@ class _HomePageState extends State<HomePage> {
                                 },
                               ),
                             ),
+                            IconButton(
+                              icon: Icon(Icons.phone),
+                              onPressed: () {
+                                _hizmetModel.readFilterHizmet(
+                                    category: selectCategory,
+                                    subCategory: selectSubCategory,
+                                    hizmet: selectHizmet);
+                              },
+                            ),
                             Container(
                               padding: EdgeInsets.only(top: 5),
-                              width: MediaQuery.of(context).size.width / 1.2,
+                              width: MediaQuery.of(context).size.width / 2,
                               child: TextFormField(
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -279,36 +295,38 @@ class _HomePageState extends State<HomePage> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         GestureDetector(
-                          child:HideContainer(selectCategory, 50),
+                          child:HideContainer(selectCategory, 50,1),
                           onTap: (){
                             setState(() {
                               if(selectCategory!=null&&selectSubCategory==null){
                               selectCategory=null;
+                              selectCategoryIndex= null;
                               }
                             });
                           },
                         ),
                         GestureDetector(
-                          child:HideContainer(selectSubCategory, 40),
+                          child:HideContainer(selectSubCategory, 40,2),
                           onTap: (){
                             setState(() {
                               if(selectSubCategory!=null&&selectHizmet==null){
                                 selectSubCategory=null;
+                                selectSubCategoryIndex = null;
                               }
                             });
                           },
                         ),
                         GestureDetector(
-                          child:HideContainer(selectHizmet, 30),
+                          child:HideContainer(selectHizmet, 30,3),
                           onTap: (){
                             setState(() {
                               if(selectHizmet!=null){
                                 selectHizmet=null;
+                                selectHizmetIndex = null;
                               }
                             });
                           },
                         ),
-
                         Expanded(
                           child: Selected() != null ? Selected() : Container(),
                         )
@@ -317,22 +335,69 @@ class _HomePageState extends State<HomePage> {
                   )),
                   //newsListSliver,
                   SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                    return FutureBuilder(
-                      future: hizmetCard(_hizmetModel.hizmetler[index]),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData)
-                          return snapshot.data;
-                        else
-                          return Center(
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                      },
-                    );
-                    //else return CircularProgressIndicator(backgroundColor: Colors.red,);
-                  }, childCount: _hizmetler.length)),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        debugPrint("SliverChildBuilderDelegate 322.Satır");
+                        return Consumer<HizmetModel>(
+                          builder: (context, hizmetModel, child) {
+
+                            return Expanded(
+                              child:  Card(
+                                child: ListTile(
+                                  title: Text(hizmetModel
+                                      .hizmetler[0].title),
+                                  subtitle: Text(hizmetModel
+                                      .hizmetler[0].detail),
+                                ),
+                              ),
+                              /*ListView.builder(
+                                itemBuilder: (context, index2) {
+                                  if (hizmetModel.hizmetler.isEmpty)
+                                    return Container();
+                                  else
+                                    return Card(
+                                      child: ListTile(
+                                        title: Text(hizmetModel
+                                            .hizmetler[index2].title),
+                                        subtitle: Text(hizmetModel
+                                            .hizmetler[index2].detail),
+                                      ),
+                                    );
+                                },
+                                itemCount: hizmetModel.hizmetler.length,
+                              ),*/
+                            );
+                          },
+                        );
+                        /*FutureBuilder(
+                          future: _hizmetModel.readFilterHizmet(
+                              category: selectCategory,
+                              subCategory: selectSubCategory,
+                              hizmet: selectHizmet),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              debugPrint("if");
+                              Hizmet hizmet2 = snapshot.data[index];
+                              return Card(
+                                child: ListTile(
+                                  title: Text(hizmet2.title),
+                                  subtitle: Text(hizmet2.detail),
+                                ),
+                              );
+                            } else {
+                              debugPrint("else");
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          },
+                        );*/
+                        //else return CircularProgressIndicator(backgroundColor: Colors.red,);
+                      },childCount: 2,
+                    ),
+                  ),
                 ],
               );
             } else {
@@ -350,14 +415,12 @@ class _HomePageState extends State<HomePage> {
   }
 
 /*Dialog(child: CarouselSlider(photoPaths:["assets/carouselPhotos/photo1.jpg","assets/carouselPhotos/photo2.jpg","assets/carouselPhotos/photo3.jpg"]),),*/
-  HideContainer(String name, double size) {
+  HideContainer(String name, double size,int durum) {
     return Visibility(
       visible: name != null ? true : false,
       child: Container(
         padding: EdgeInsets.only(top: 9, left: 3, right: 3),
-        child: Column(
-            children: [
-
+        child: Column(children: [
           Container(
             height: size,
             width: size,
@@ -365,9 +428,10 @@ class _HomePageState extends State<HomePage> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.red, width: 3),
               image: DecorationImage(
-                fit: BoxFit.fill,
-                image: NetworkImage(
-                    "https://media-exp1.licdn.com/dms/image/C5603AQGYY7KwmBuSTA/profile-displayphoto-shrink_200_200/0/1558715457827?e=1613606400&v=beta&t=PPKBiSjJbAGRF0yfMlb1DlotvAPm_c2XdVzZ4VT0Wvg"),
+                fit: BoxFit.contain,
+                image: AssetImage(
+                    Durum(durum)!=null ? Durum(durum):"assets/Category/Cat111.png"
+                ),
               ),
               color: Colors.blue,
               borderRadius: new BorderRadius.all(
@@ -389,20 +453,29 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+  String Durum(int durum){
+    if(durum == 1){
+      return categoryIcon.SelectGetIcon(selectCategoryIndex, null, null);
+    }
+    if(durum == 2){
+      return categoryIcon.SelectGetIcon(selectCategoryIndex, selectSubCategoryIndex, null);
+    }
+    if(durum == 3){
+      return categoryIcon.SelectGetIcon(selectCategoryIndex, selectSubCategoryIndex, selectHizmetIndex);
+    }
+  }
 
   Selected() {
-    if (selectCategory == null){
+    if (selectCategory == null) {
       return categoryList(_category.categoryList, 50, setState: setState);
     }
-
     else if (selectSubCategory == null){
       return categoryList(_subcategoryList, 50, setState: setState);
-    }
-    else if (selectHizmet == null){
-     var a= categoryList(_hizmetList, 50, setState: setState);
-     readFilterHizmet(selectCategory, selectSubCategory, selectHizmet);
-     return a;
-    }
+    } else if (selectHizmet == null) {
+      return categoryList(_hizmetList, 50, setState: setState);
+    } else {
+      //readFilterHizmet(selectCategory, selectSubCategory, selectHizmet);
 
+    }
   }
 }
