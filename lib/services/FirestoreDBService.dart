@@ -77,7 +77,7 @@ class FirestoreDBService implements DatabaseBase {
     QuerySnapshot querySnapshot = await _firebaseDB
         .collection('hizmetler')
         .doc(category)
-        .collection(subCategory)
+        .collection(subCategory).doc(hizmet).collection(hizmet)
         .get();
 
     List<Hizmet> hizmetler = [];
