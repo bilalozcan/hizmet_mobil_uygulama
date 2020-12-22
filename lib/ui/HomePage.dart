@@ -63,10 +63,10 @@ class _HomePageState extends State<HomePage> {
     try {
       await _hizmetModel.readFilterHizmet(
           category: category, subCategory: subCategory, hizmet: hizmet);
-      if(_hizmetModel.hizmetler != null){
+      if (_hizmetModel.hizmetler != null) {
         _hizmetler = _hizmetModel.hizmetler;
       }
-    } catch(e) {
+    } catch (e) {
       debugPrint("Debugg");
     }
     setState(() {
@@ -191,6 +191,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     UserModel _userModel = Provider.of<UserModel>(context);
+    final _hizmetModel = Provider.of<HizmetModel>(context, listen: false);
     return WillPopScope(
       onWillPop: () async {
         exit(0);
@@ -249,9 +250,18 @@ class _HomePageState extends State<HomePage> {
                                 },
                               ),
                             ),
+                            IconButton(
+                              icon: Icon(Icons.phone),
+                              onPressed: () {
+                                _hizmetModel.readFilterHizmet(
+                                    category: selectCategory,
+                                    subCategory: selectSubCategory,
+                                    hizmet: selectHizmet);
+                              },
+                            ),
                             Container(
                               padding: EdgeInsets.only(top: 5),
-                              width: MediaQuery.of(context).size.width / 1.2,
+                              width: MediaQuery.of(context).size.width / 2,
                               child: TextFormField(
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -319,7 +329,6 @@ class _HomePageState extends State<HomePage> {
                             });
                           },
                         ),
-
                         Expanded(
                           child: Selected() != null ? Selected() : Container(),
                         )
@@ -328,22 +337,69 @@ class _HomePageState extends State<HomePage> {
                   )),
                   //newsListSliver,
                   SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                    return FutureBuilder(
-                      future: hizmetCard(_hizmetler[index]),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData)
-                          return snapshot.data;
-                        else
-                          return Center(
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                      },
-                    );
-                    //else return CircularProgressIndicator(backgroundColor: Colors.red,);
-                  }, childCount: _hizmetler.length)),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        debugPrint("SliverChildBuilderDelegate 322.Satır");
+                        return Consumer<HizmetModel>(
+                          builder: (context, hizmetModel, child) {
+
+                            return Expanded(
+                              child:  Card(
+                                child: ListTile(
+                                  title: Text(hizmetModel
+                                      .hizmetler[0].title),
+                                  subtitle: Text(hizmetModel
+                                      .hizmetler[0].detail),
+                                ),
+                              ),
+                              /*ListView.builder(
+                                itemBuilder: (context, index2) {
+                                  if (hizmetModel.hizmetler.isEmpty)
+                                    return Container();
+                                  else
+                                    return Card(
+                                      child: ListTile(
+                                        title: Text(hizmetModel
+                                            .hizmetler[index2].title),
+                                        subtitle: Text(hizmetModel
+                                            .hizmetler[index2].detail),
+                                      ),
+                                    );
+                                },
+                                itemCount: hizmetModel.hizmetler.length,
+                              ),*/
+                            );
+                          },
+                        );
+                        /*FutureBuilder(
+                          future: _hizmetModel.readFilterHizmet(
+                              category: selectCategory,
+                              subCategory: selectSubCategory,
+                              hizmet: selectHizmet),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              debugPrint("if");
+                              Hizmet hizmet2 = snapshot.data[index];
+                              return Card(
+                                child: ListTile(
+                                  title: Text(hizmet2.title),
+                                  subtitle: Text(hizmet2.detail),
+                                ),
+                              );
+                            } else {
+                              debugPrint("else");
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          },
+                        );*/
+                        //else return CircularProgressIndicator(backgroundColor: Colors.red,);
+                      },childCount: 2,
+                    ),
+                  ),
                 ],
               );
             } else {
@@ -366,9 +422,7 @@ class _HomePageState extends State<HomePage> {
       visible: name != null ? true : false,
       child: Container(
         padding: EdgeInsets.only(top: 9, left: 3, right: 3),
-        child: Column(
-            children: [
-
+        child: Column(children: [
           Container(
             height: size,
             width: size,
@@ -414,18 +468,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   Selected() {
-    if (selectCategory == null){
+    if (selectCategory == null) {
       return categoryList(_category.categoryList, 50, setState: setState);
     }
     else if (selectSubCategory == null){
       return categoryList(_subcategoryList, 50, setState: setState);
-    }
-    else if (selectHizmet == null){
+    } else if (selectHizmet == null) {
       return categoryList(_hizmetList, 50, setState: setState);
-    }else{
-      readFilterHizmet(selectCategory, selectSubCategory, selectHizmet);
-
+    } else {
+      //readFilterHizmet(selectCategory, selectSubCategory, selectHizmet);
     }
-
   }
 }
