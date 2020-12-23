@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Container(
                     padding: EdgeInsets.only(top: 5),
-                    width: MediaQuery.of(context).size.width / 2,
+                    width: MediaQuery.of(context).size.width / 1.2,
                     child: TextFormField(
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -102,105 +102,10 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: Column(
-          children: [
-            FutureBuilder(
-              future: connectJson(),
-              builder: (context, snapshot) {
-                Widget filterContainer;
-                if (snapshot.hasData) {
-                  filterContainer = Container(
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      height: 100,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          GestureDetector(
-                            child: HideContainer(selectCategory, 50, 1),
-                            onTap: () {
-                              setState(() {
-                                if (selectCategory != null &&
-                                    selectSubCategory == null) {
-                                  selectCategory = null;
-                                  selectCategoryIndex = null;
-                                  _hizmetModel.hizmetler = null;
-                                }
-                              });
-                            },
-                          ),
-                          GestureDetector(
-                            child: HideContainer(selectSubCategory, 40, 2),
-                            onTap: () {
-                              setState(() {
-                                if (selectSubCategory != null &&
-                                    selectHizmet == null) {
-                                  selectSubCategory = null;
-                                  selectSubCategoryIndex = null;
-                                  _hizmetModel.hizmetler = _tempHizmetler;
-                                }
-                              });
-                            },
-                          ),
-                          GestureDetector(
-                            child: HideContainer(selectHizmet, 30, 3),
-                            onTap: () {
-                              setState(() {
-                                if (selectHizmet != null) {
-                                  selectHizmet = null;
-                                  selectHizmetIndex = null;
-                                  _hizmetModel.hizmetler = _tempHizmetler;
-                                }
-                              });
-                            },
-                          ),
-                          Expanded(
-                            child:
-                                Selected() != null ? Selected() : Container(),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                } else
-                  filterContainer = CircularProgressIndicator(
-                    backgroundColor: Colors.red,
-                  );
-                return filterContainer;
-              },
-            ),
-            Consumer<HizmetModel>(
-              builder: (context, hizmetModel, child) {
-                if (hizmetModel.hizmetler != null) {
-                  return Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return Card(
-                          child: ListTile(
-                            title: Text(hizmetModel.hizmetler[index].title),
-                            subtitle: Text(hizmetModel.hizmetler[index].detail),
-                            leading: Icon(Icons.android),
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>HizmetDetailPage(hizmetModel.hizmetler[index])));
-                            },
-                          ),
-                        );
-                      },
-                      itemCount: hizmetModel.hizmetler.length,
-                    ),
-                  );
-                } else {
-                  return Center(
-                    child: Text("Hizmet Bulunamadı"),
-                  );
-                }
-              },
-            ),
-          ],
-        ),
+        body: widgetCatalog(_hizmetModel),
         bottomNavigationBar: ConvexAppBar(
           onTap: (position) {
+            debugPrint("position:" + position.toString());
             setState(() {
               _currentNavigationBarIndex = position;
             });
@@ -224,7 +129,113 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
+  Widget widgetCatalog(hizmetModel){
+    debugPrint("_currentNavigationBarIndex:" + _currentNavigationBarIndex.toString());
+    if(_currentNavigationBarIndex == 0)
+      return Column(
+        children: [
+          FutureBuilder(
+            future: connectJson(),
+            builder: (context, snapshot) {
+              Widget filterContainer;
+              if (snapshot.hasData) {
+                filterContainer = Container(
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    height: 100,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        GestureDetector(
+                          child: HideContainer(selectCategory, 50, 1),
+                          onTap: () {
+                            setState(() {
+                              if (selectCategory != null &&
+                                  selectSubCategory == null) {
+                                selectCategory = null;
+                                selectCategoryIndex = null;
+                                hizmetModel.hizmetler = null;
+                              }
+                            });
+                          },
+                        ),
+                        GestureDetector(
+                          child: HideContainer(selectSubCategory, 40, 2),
+                          onTap: () {
+                            setState(() {
+                              if (selectSubCategory != null &&
+                                  selectHizmet == null) {
+                                selectSubCategory = null;
+                                selectSubCategoryIndex = null;
+                                hizmetModel.hizmetler = _tempHizmetler;
+                              }
+                            });
+                          },
+                        ),
+                        GestureDetector(
+                          child: HideContainer(selectHizmet, 30, 3),
+                          onTap: () {
+                            setState(() {
+                              if (selectHizmet != null) {
+                                selectHizmet = null;
+                                selectHizmetIndex = null;
+                                hizmetModel.hizmetler = _tempHizmetler;
+                              }
+                            });
+                          },
+                        ),
+                        Expanded(
+                          child:
+                          Selected() != null ? Selected() : Container(),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              } else
+                filterContainer = CircularProgressIndicator(
+                  backgroundColor: Colors.red,
+                );
+              return filterContainer;
+            },
+          ),
+          Consumer<HizmetModel>(
+            builder: (context, hizmetModel, child) {
+              if (hizmetModel.hizmetler != null) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: ListTile(
+                          title: Text(hizmetModel.hizmetler[index].title),
+                          subtitle: Text(hizmetModel.hizmetler[index].detail),
+                          leading: Icon(Icons.android),
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>HizmetDetailPage(hizmetModel.hizmetler[index])));
+                          },
+                        ),
+                      );
+                    },
+                    itemCount: hizmetModel.hizmetler.length,
+                  ),
+                );
+              } else {
+                return Center(
+                  child: Text("Hizmet Bulunamadı"),
+                );
+              }
+            },
+          ),
+        ],
+      );
+    else if(_currentNavigationBarIndex == 1)
+      return Container(child: Center(child: Text("Hizmetlerim"),),);
+    else if(_currentNavigationBarIndex == 3)
+      return Container(child: Center(child: Text("Bildirimler"),),);
+    else if(_currentNavigationBarIndex == 4)
+      return Container(child: Center(child: Text("Sohbet"),),);
+  }
   connectJson() async {
     String fromJson =
         await DefaultAssetBundle.of(context).loadString("assets/Category.json");
