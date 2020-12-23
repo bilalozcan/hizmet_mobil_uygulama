@@ -7,6 +7,7 @@ import 'package:hizmet_mobil_uygulama/mainFdu.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/repository/UserRepository.dart';
 import 'package:hizmet_mobil_uygulama/ui/HomePage.dart';
+import 'package:hizmet_mobil_uygulama/ui/SignUpPage.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
@@ -31,26 +32,12 @@ class _LoginPageState extends State<LoginPage> {
       showToast(context, "E-posta veya şifre hatalı. Lütfen tekrar deneyiniz", Colors.red.shade700);
     }
   }
-  loginDeneme() async {
-    _formKey.currentState.save();
-    final _userModel = Provider.of<UserModel>(context, listen: false);
-    try {
-      return FutureBuilder(future: _userModel.signInWithEmailandPassword(_email.text, _password.text),builder: (context,snapshot){
-        if(!snapshot.hasData)
-          return CircularProgressIndicator(backgroundColor: Colors.red,);
-      },);
-    }
-    catch (e){
-
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    final _userModel = Provider.of<UserModel>(context);
+    final _userModel = Provider.of<UserModel>(context,listen:false);
     Future.delayed(Duration(milliseconds:50),(){
       if (_userModel.user != null) {
-        debugPrint("hadi bakim ibne"+_userModel.user.toString());
         Future.delayed(Duration(milliseconds: 100), () {
           Navigator.push(
             context,
@@ -131,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.white,
                     child: Text("Yeni Hizmet Hesabı Oluştur",
                         style: TextStyle(color: Colors.green)),
-                    onPressed: () {},
+                    onPressed: () {Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SignUp()));},
                   )
                 ],
               ),

@@ -48,4 +48,10 @@ class FakeAuthService implements AuthBase {
     // TODO: implement uploadFile
     throw UnimplementedError();
   }
+
+  @override
+  Future<bool>updatePassword(String newPassword) {
+    // TODO: implement updatePassword
+    return null;
+  }
 }

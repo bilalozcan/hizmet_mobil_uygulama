@@ -111,4 +111,14 @@ class UserRepository implements AuthBase {
       return profilePhotoURL;
     }
   }
+
+  @override
+  updatePassword(String newPassword) async{
+    // TODO: implement updatePassword
+    if(appMode==AppMode.DEBUG)
+        await _fakeAuthenticationService.updatePassword(newPassword);
+    else
+      await _firebaseAuthService.updatePassword(newPassword);
+    return true;
+  }
 }

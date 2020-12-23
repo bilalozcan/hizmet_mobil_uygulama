@@ -134,4 +134,17 @@ class UserModel with ChangeNotifier implements AuthBase {
     }
 
   }
+
+  @override
+  Future<bool> updatePassword(String newPassword) async{
+    // TODO: implement updatePassword
+    try {
+      state=ViewState.Busy;
+     await  _userRepository.updatePassword(newPassword);
+      return true;
+    }
+    finally{
+      state=ViewState.Idle;
+    }
+  }
 }

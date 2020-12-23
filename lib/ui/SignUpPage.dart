@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hizmet_mobil_uygulama/ui/LoginPage.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
+import 'package:hizmet_mobil_uygulama/validators.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 
@@ -20,8 +21,8 @@ class _SignUpState extends State<SignUp> {
   TextEditingController _name = TextEditingController();
   TextEditingController _surname = TextEditingController();
   TextEditingController _email = TextEditingController();
-  TextEditingController _password = TextEditingController();
-  TextEditingController _username=TextEditingController();
+
+  TextEditingController _username=TextEditingController(); TextEditingController _password = TextEditingController();
   String _gender;
   bool _accept;
   bool _obscureText;
@@ -173,7 +174,7 @@ class _SignUpState extends State<SignUp> {
                     errorBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.red)),
                   ),
-                  validator: _passwordValidator,
+                  validator: passwordValidator,
 
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
@@ -351,28 +352,19 @@ class _SignUpState extends State<SignUp> {
     return null;
   }
 
-  String _passwordValidator(String password) {
-    if (password.length < 6)
-      return "Şifrenizin 6 karakterden daha büyük olması gerekmektedir.";
-    if (!password.contains(RegExp("[0-9]")) ||
-        !password.contains(RegExp("[a-z]")) ||
-        !password.contains(RegExp("[A-Z]")))
-      return "Şifreniz en az bir sayı,bir büyük harf ve bir küçük harf içermelidir";
-    return null;
-  }
 
   String _repeatPasswordValidator(String repeatPassword) {
-    if (repeatPassword != this._password.text) {
-      return "Şifreler birbiriyle eşleşmiyor";
-    }
-    return null;
+    return repeatPasswordValidator(repeatPassword,this._password.text);
   }
 
+  String _usernameValidator(String value) {
+    return null;
+  }
   Widget _showPassword() {
     return IconButton(
       icon: Icon(
-        _obscureText==true?Icons.visibility_outlined:Icons.visibility_off_outlined,
-        color: Colors.black
+          _obscureText==true?Icons.visibility_outlined:Icons.visibility_off_outlined,
+          color: Colors.black
       ),
       onPressed: () {
         setState(() {
@@ -381,8 +373,5 @@ class _SignUpState extends State<SignUp> {
       },
     );
   }
-
-  String _usernameValidator(String value) {
-    return null;
-  }
 }
+

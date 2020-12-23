@@ -95,5 +95,9 @@ class FirebaseAuthService implements AuthBase {
     return _userFromFirebase(result.user);
   }
 
-
+  @override
+  Future<bool> updatePassword(String newPassword) async{
+    await _firebaseAuth.currentUser.updatePassword(newPassword);
+    return true;
+  }
 }
