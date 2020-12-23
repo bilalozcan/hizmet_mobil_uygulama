@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/models/CategoryIcon.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
+import 'package:hizmet_mobil_uygulama/ui/HizmetDetailPage.dart';
 import 'package:hizmet_mobil_uygulama/ui/HizmetVerPageNew.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
+import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'ProfilePage.dart';
@@ -44,6 +46,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     HizmetModel _hizmetModel = Provider.of<HizmetModel>(context);
+    UserModel _userModel = Provider.of<UserModel>(context);
     return WillPopScope(
       onWillPop: () async {
         exit(0);
@@ -177,6 +180,10 @@ class _HomePageState extends State<HomePage> {
                           child: ListTile(
                             title: Text(hizmetModel.hizmetler[index].title),
                             subtitle: Text(hizmetModel.hizmetler[index].detail),
+                            leading: Icon(Icons.android),
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>HizmetDetailPage(hizmetModel.hizmetler[index])));
+                            },
                           ),
                         );
                       },

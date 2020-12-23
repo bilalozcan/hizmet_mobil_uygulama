@@ -23,6 +23,8 @@ class UserModel with ChangeNotifier implements AuthBase {
 
   get sifreHataMesaji => null;
 
+  User_ get getDifferentUser => _differentUser;
+
   get emailHataMesaji => null;
 
   set state(ViewState value) {
