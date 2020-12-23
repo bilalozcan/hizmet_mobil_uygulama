@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_star_rating/flutter_star_rating.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hizmet_mobil_uygulama/ui/Settings.dart';
 import 'package:hizmet_mobil_uygulama/utils/DialogMessage.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
@@ -50,11 +51,8 @@ class _ProfilePageState extends State<ProfilePage> {
             actions: [
               IconButton(
                 icon: Icon(Icons.settings),
-                onPressed: () async {
-                  await showDialog(context:context,builder:(BuildContext context)
-                  {
-                    return  dialogMessageForExit();
-                  });
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Settings()));
                 },
               )
             ],
