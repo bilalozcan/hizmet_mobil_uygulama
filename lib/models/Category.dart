@@ -35,7 +35,7 @@ class SubCategory {
 
   List<String> getData(String key) {
     List<String> dataList = [];
-    debugPrint(subCategories[key].runtimeType.toString());
+    //debugPrint(subCategories[key].runtimeType.toString());
     for(var i in subCategories[key]){
       dataList.add(i);
     }

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/models/CategoryIcon.dart';
+import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/ui/HizmetVerPageNew.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/hizmet_model.dart';
 import 'package:provider/provider.dart';
@@ -29,8 +30,8 @@ class _HomePageState extends State<HomePage> {
   CategoryIcon categoryIcon;
   String selectSubCategory;
   String selectHizmet;
-
   List<String> _hizmetList;
+  List<Hizmet> _tempHizmetler;
 
   @override
   void initState() {
@@ -42,6 +43,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    HizmetModel _hizmetModel = Provider.of<HizmetModel>(context);
     return WillPopScope(
       onWillPop: () async {
         exit(0);
@@ -120,6 +122,7 @@ class _HomePageState extends State<HomePage> {
                                     selectSubCategory == null) {
                                   selectCategory = null;
                                   selectCategoryIndex = null;
+                                  _hizmetModel.hizmetler = null;
                                 }
                               });
                             },
@@ -132,6 +135,7 @@ class _HomePageState extends State<HomePage> {
                                     selectHizmet == null) {
                                   selectSubCategory = null;
                                   selectSubCategoryIndex = null;
+                                  _hizmetModel.hizmetler = _tempHizmetler;
                                 }
                               });
                             },
@@ -143,6 +147,7 @@ class _HomePageState extends State<HomePage> {
                                 if (selectHizmet != null) {
                                   selectHizmet = null;
                                   selectHizmetIndex = null;
+                                  _hizmetModel.hizmetler = _tempHizmetler;
                                 }
                               });
                             },
@@ -227,8 +232,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   hizmetlerInit(String category, String subCategory) {
-    _hizmetList =
-        _category.getSubCategory(selectCategory).getData(selectSubCategory);
+    _hizmetList = _category.getSubCategory(category).getData(subCategory);
+    debugPrint(_hizmetList.toString());
+    return _hizmetList;
+  }
+
+  getAllHizmet(String category) {
+    List<List<String>> allHizmet = [];
+    var yeniHizmetList = _category.getSubCategory(category).subCategoryList;
+    for (int i = 0; i < yeniHizmetList.length; ++i) {
+      var newHizmet =
+          _category.getSubCategory(category).getData(yeniHizmetList[i]);
+      allHizmet.add(newHizmet);
+    }
+    return allHizmet;
   }
 
   Widget categoryList(List<String> categoryList, double size,
@@ -244,31 +261,37 @@ class _HomePageState extends State<HomePage> {
                 return Column(
                   children: [
                     GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           if (selectCategory == null) {
-                            setState(() {
-                              selectCategory = categoryList[index];
-                              selectCategoryIndex = index;
-                              subCategoryListInit(selectCategory);
-                              _subCategoryView;
-                            });
+                            selectCategory = categoryList[index];
+                            selectCategoryIndex = index;
+                            subCategoryListInit(selectCategory);
+                            _subCategoryView;
+                           await _hizmetModel.readFilterHizmet(
+                                category: selectCategory,
+                                subCategory: null,
+                                hizmet: null,
+                                categories: _subcategoryList,
+                                subCategories: getAllHizmet(selectCategory));
                           } else if (selectSubCategory == null) {
-                            setState(() {
-                              selectSubCategory = categoryList[index];
-                              selectSubCategoryIndex = index;
-                              hizmetlerInit(selectCategory, selectSubCategory);
-                              _subCategoryView;
-                            });
+                            selectSubCategory = categoryList[index];
+                            selectSubCategoryIndex = index;
+                            hizmetlerInit(selectCategory, selectSubCategory);
+                            _tempHizmetler=_hizmetModel.hizmetler;
+                             await _hizmetModel.readFilterHizmet(
+                                category: selectCategory,
+                                subCategory: selectSubCategory,
+                                hizmet: null,
+                                categories: _hizmetList);
                           } else if (selectHizmet == null) {
-                            setState(() {
-                              selectHizmet = categoryList[index];
-                              selectHizmetIndex = index;
-                              _subCategoryView;
-                              _hizmetModel.readFilterHizmet(
-                                  category: selectCategory,
-                                  subCategory: selectSubCategory,
-                                  hizmet: selectHizmet);
-                            });
+                            selectHizmet = categoryList[index];
+                            selectHizmetIndex = index;
+                            _subCategoryView;
+                            _tempHizmetler=_hizmetModel.hizmetler;
+                             await _hizmetModel.readFilterHizmet(
+                                category: selectCategory,
+                                subCategory: selectSubCategory,
+                                hizmet: selectHizmet);
                           }
                         },
                         child: Container(
