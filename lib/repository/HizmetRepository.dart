@@ -41,12 +41,12 @@ class HizmetRepository implements HizmetBase {
 
   @override
   Future<List<Hizmet>> readFilterHizmet(
-      {String category, String subCategory, String hizmet}) async {
+      {String category, String subCategory, String hizmet,List<String> categories,List<List<String>> subCategories}) async {
     if (appMode == AppMode.DEBUG) {
       return null;
     } else {
       List<Hizmet> hizmetList = await _firestoreDBService.readFilterHizmet(
-          category: category, subCategory: subCategory, hizmet: hizmet);
+          category: category, subCategory: subCategory, hizmet: hizmet,categories: categories,subCategories: subCategories);
       return hizmetList;
     }
   }

@@ -61,11 +61,11 @@ class HizmetModel with ChangeNotifier implements HizmetBase {
 
   @override
   Future<List<Hizmet>> readFilterHizmet(
-      {String category, String subCategory, String hizmet}) async {
+      {String category, String subCategory, String hizmet,List<String> categories,List<List<String>> subCategories}) async {
     try {
       state = ViewState.Busy;
       hizmetler = await _hizmetRepository.readFilterHizmet(
-          category: category, subCategory: subCategory, hizmet: hizmet);
+          category: category, subCategory: subCategory, hizmet: hizmet,categories: categories,subCategories: subCategories);
       if (hizmetler != null) {
         return hizmetler;
       } else {
