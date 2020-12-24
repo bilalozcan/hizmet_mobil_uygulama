@@ -44,7 +44,7 @@ class CategoryIcon{
     if(durum ==1){
       return "assets/Category/Cat${index+1}.png";
     }
-    if(durum == 2){
+    if(durum == 2&&selectCategory!=null){
       return "assets/Category/Cat${selectCategory+1}${index+1}.png";
     }
     if(durum == 3){

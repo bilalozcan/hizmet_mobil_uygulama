@@ -142,14 +142,14 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                               categoryIcon.GetIconHizmetVer(
                                               index,
                                               durum,
-                                              selectCategoryIndex!=null?selectCategoryIndex:null,
-                                              selectSubCategoryIndex!=null?selectSubCategoryIndex:null,
-                                              selectHizmetIndex!=null?selectHizmetIndex:null) !=
+                                              selectCategoryIndex,
+                                              selectSubCategoryIndex,
+                                              selectHizmetIndex) !=
                                           null
                                   ? categoryIcon.GetIconHizmetVer(
-                                      index, durum, selectCategoryIndex!=null?selectCategoryIndex:null,
-                                  selectSubCategoryIndex!=null?selectSubCategoryIndex:null,
-                                  selectHizmetIndex!=null?selectHizmetIndex:null)
+                                      index, durum, selectCategoryIndex,
+                                  selectSubCategoryIndex,
+                                  selectHizmetIndex)
                                   : "assets/Category/Cat111.png",
                             ),
                           ),
@@ -352,7 +352,7 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
             },
             builder: (state) {
               return _subcategoryList != null
-                  ? categoryList(_subcategoryList, 2,
+                  ? categoryList(_subcategoryList,2,
                       onPressedFunction: selectSubCategory != null
                           ? hizmetlerInit(selectCategory, selectSubCategory)
                           : null,

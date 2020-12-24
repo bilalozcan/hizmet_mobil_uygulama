@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
 import 'package:hizmet_mobil_uygulama/models/CategoryIcon.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
@@ -161,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                         GestureDetector(
-                          child: HideContainer(selectSubCategory, 40, 2),
+                          child: HideContainer(selectSubCategory, 45, 2),
                           onTap: () {
                             setState(() {
                               if (selectSubCategory != null &&
@@ -174,7 +175,7 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                         GestureDetector(
-                          child: HideContainer(selectHizmet, 30, 3),
+                          child: HideContainer(selectHizmet, 40, 3),
                           onTap: () {
                             setState(() {
                               if (selectHizmet != null) {
@@ -318,7 +319,7 @@ class _HomePageState extends State<HomePage> {
                           margin: EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              fit: BoxFit.contain,
+                              fit: BoxFit.scaleDown,
                               image: AssetImage(categoryIcon.GetIcon(
                                           index,
                                           selectCategoryIndex,
@@ -332,7 +333,8 @@ class _HomePageState extends State<HomePage> {
                                       selectHizmetIndex)
                                   : "assets/Category/Cat111.png"),
                             ),
-                            color: Colors.blue,
+                           // border: Border.all(color: Colors.deepOrange, width: 2),
+                            color: Colors.blue.shade200,
                             borderRadius: new BorderRadius.all(
                                 new Radius.circular(
                                     20.0)), //kenarları yuvarlaklaştırır
@@ -341,9 +343,9 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       child: Text(
                         categoryList[index],
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.black,
+                        style: GoogleFonts.yantramanav(
+                          fontSize: 11,
+                          color: Colors.black45,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -366,30 +368,31 @@ class _HomePageState extends State<HomePage> {
       child: Container(
         padding: EdgeInsets.only(top: 9, left: 3, right: 3),
         child: Column(children: [
+          Center(
+            child: Icon(Icons.close,size: size/2.5,color: Colors.red,),
+          ),
           Container(
             height: size,
             width: size,
-            alignment: Alignment.topLeft,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.red, width: 3),
+              //border: Border.all(color: Colors.deepOrange.shade200, width: 3,style: BorderStyle.solid),
+              color: Colors.blue.shade400,
               image: DecorationImage(
                 fit: BoxFit.contain,
                 image: AssetImage(Durum(durum) != null
                     ? Durum(durum)
                     : "assets/Category/Cat111.png"),
               ),
-              color: Colors.blue,
               borderRadius: new BorderRadius.all(
-                  new Radius.circular(20.0)), //kenarları yuvarlaklaştırır
+                  new Radius.circular(size/3)), //kenarları yuvarlaklaştırır
             ),
           ),
           Container(
             child: Text(
               name != null ? name : "Kategori",
-              style: TextStyle(
-                fontSize: size / 3,
-                fontWeight: FontWeight.normal,
-                color: Colors.black,
+              style: GoogleFonts.yantramanav(
+                fontSize: size/3.5,
+                color: Colors.black45,
               ),
               textAlign: TextAlign.center,
             ),
