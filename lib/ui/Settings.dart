@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hizmet_mobil_uygulama/ui/resetPassword.dart';
 import 'package:hizmet_mobil_uygulama/utils/DialogMessage.dart';
+import 'package:hizmet_mobil_uygulama/viewmodel/comments_model.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:provider/provider.dart';
 
@@ -16,11 +17,15 @@ class Settings extends StatelessWidget {
         child: Column(
           children: [
             InkWell(
-              onTap: ()  {
+              onTap: () {
+                  final _userModel=Provider.of<UserModel>(context,listen: false);
+                  final _commentsModel=Provider.of<CommentsModel>(context,listen: false);
+                  _commentsModel.createComment(senderID:_userModel.user.userID,content: "Deneme yazısı",degree: 5,receiverID:_userModel.user.userID);
               },
               child: ListTile(
                 leading: Icon(Icons.notifications_outlined,size: 36,color: Colors.orangeAccent,),
                 title: Text("Bildirimler"),
+
               ),
             ),
             InkWell(

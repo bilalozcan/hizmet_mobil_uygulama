@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hizmet_mobil_uygulama/models/Category.dart';
+import 'package:hizmet_mobil_uygulama/models/Comments.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 import 'package:hizmet_mobil_uygulama/services/DatabaseBase.dart';
@@ -79,61 +80,97 @@ class FirestoreDBService implements DatabaseBase {
 
   @override
   Future<List<Hizmet>> readFilterHizmet(
-      {String category, String subCategory, String hizmet,List<String> categories,List<List<String>> subCategories}) async {
+      {String category,
+      String subCategory,
+      String hizmet,
+      List<String> categories,
+      List<List<String>> subCategories}) async {
     List<Hizmet> hizmetler = [];
     QuerySnapshot querySnapshot;
     Hizmet _tempHizmet;
-    if(hizmet!=null && (category!=null && subCategory!=null)) {
-        debugPrint("ilk if calisti");
-         querySnapshot = await _firebaseDB
-            .collection('hizmetler')
-            .doc(category)
-            .collection(subCategory)
-            .doc(hizmet)
-            .collection(hizmet)
-            .get();
-        for (DocumentSnapshot hizmet in querySnapshot.docs) {
-          _tempHizmet = Hizmet.fromMap(hizmet.data());
-          hizmetler.add(_tempHizmet);
+    if (hizmet != null && (category != null && subCategory != null)) {
+      debugPrint("ilk if calisti");
+      querySnapshot = await _firebaseDB
+          .collection('hizmetler')
+          .doc(category)
+          .collection(subCategory)
+          .doc(hizmet)
+          .collection(hizmet)
+          .get();
+      for (DocumentSnapshot hizmet in querySnapshot.docs) {
+        _tempHizmet = Hizmet.fromMap(hizmet.data());
+        hizmetler.add(_tempHizmet);
+      }
+    } else if (hizmet == null && (category != null && subCategory != null)) {
+      debugPrint("ikinci if calisti");
+      if (categories != null) {
+        for (int i = 0; i < categories.length; ++i) {
+          querySnapshot = await _firebaseDB
+              .collection("hizmetler")
+              .doc(category)
+              .collection(subCategory)
+              .doc(categories[i])
+              .collection(categories[i])
+              .get();
+          for (DocumentSnapshot hizmet in querySnapshot.docs) {
+            _tempHizmet = Hizmet.fromMap(hizmet.data());
+            hizmetler.add(_tempHizmet);
+          }
         }
-    }
-      else if(hizmet==null && (category!=null && subCategory!=null))
-        {
-          debugPrint("ikinci if calisti");
-          if(categories!=null) {
-            for (int i = 0; i < categories.length; ++i) {
-               querySnapshot = await _firebaseDB.collection("hizmetler").doc(
-                  category).collection(subCategory)
-                  .doc(categories[i])
-                  .collection(categories[i])
-                  .get();
-              for (DocumentSnapshot hizmet in querySnapshot.docs) {
-                _tempHizmet = Hizmet.fromMap(hizmet.data());
-                hizmetler.add(_tempHizmet);
-              }
+      }
+    } else if (hizmet == null && (category != null && subCategory == null)) {
+      DocumentReference _documentReference =
+          await _firebaseDB.collection("hizmetler").doc(category);
+      CollectionReference _collectionReference;
+      if (categories != null && subCategories != null) {
+        for (int i = 0; i < categories.length; ++i) {
+          _collectionReference = _documentReference.collection(categories[i]);
+          for (int j = 0; j < subCategories[i].length; ++j) {
+            querySnapshot = await _collectionReference
+                .doc(subCategories[i][j])
+                .collection(subCategories[i][j])
+                .get();
+            for (DocumentSnapshot hizmet in querySnapshot.docs) {
+              _tempHizmet = Hizmet.fromMap(hizmet.data());
+              hizmetler.add(_tempHizmet);
             }
           }
         }
-      else if(hizmet==null && (category!=null && subCategory==null))
-        {
-          DocumentReference _documentReference=await _firebaseDB.collection("hizmetler").doc(category);
-          CollectionReference _collectionReference;
-          if(categories!=null && subCategories!=null) {
-            for(int i=0;i<categories.length;++i)
-              {
-                _collectionReference=_documentReference.collection(categories[i]);
-                for(int j=0;j<subCategories[i].length;++j)
-                  {
-                    querySnapshot=await _collectionReference.doc(subCategories[i][j]).collection(subCategories[i][j]).get();
-                    for (DocumentSnapshot hizmet in querySnapshot.docs) {
-                      _tempHizmet = Hizmet.fromMap(hizmet.data());
-                      hizmetler.add(_tempHizmet);
-                    }
-                  }
-              }
-          }
-        }
+      }
+    }
     return hizmetler;
+  }
+
+  @override
+  Future<bool> createComment(Comments comment) async {
+    DocumentReference documentReference = _firebaseDB
+        .collection("comments")
+        .doc(comment.receiverID)
+        .collection("comments")
+        .doc();
+    DocumentSnapshot documentSnapshot = await documentReference.get();
+    if (documentSnapshot.data() == null) {
+      await documentReference.set(comment.toMap());
+      return true;
+    }
+    return true;
+  }
+
+  @override
+  Future<List<Comments>> readComments(String userID) async {
+    List<Comments> _comments=List<Comments>();
+    QuerySnapshot _querySnapshot = await _firebaseDB
+        .collection("comments")
+        .doc(userID)
+        .collection("comments")
+        .get();
+    for (DocumentSnapshot comment in _querySnapshot.docs) {
+      Comments _tempComment;
+      _tempComment = Comments.fromMap(comment.data());
+      _comments.add(_tempComment);
+    }
+    debugPrint("comments length"+_comments.length.toString());
+    return _comments;
   }
 
 /*
