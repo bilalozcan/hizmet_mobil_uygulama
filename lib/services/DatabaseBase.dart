@@ -1,5 +1,6 @@
 
 
+import 'package:hizmet_mobil_uygulama/models/Comments.dart';
 import 'package:hizmet_mobil_uygulama/models/Hizmet.dart';
 import 'package:hizmet_mobil_uygulama/models/User_.dart';
 
@@ -9,7 +10,9 @@ abstract class DatabaseBase {
   //Future<bool> updateUserName(String userID, String yeniUserName);
   Future<bool> updateProfilePhoto(String userID, String profilePhotoUrl);
   Future<bool> createHizmet(Hizmet hizmet);
+  Future<bool> createComment(Comments comment);
   Future<Hizmet> readHizmet(String category, String subCategory,String hizmet);
+  Future<List<Comments>> readComments(String userID);
   Future<List<Hizmet>> readFilterHizmet({String category, String subCategory,String hizmet,List<String> categories,List<List<String>> subCategories});
   /*Future<List<User_>> getUserwithPagination(
       User_ enSonGetirilenUser, int getirilecekElemanSayisi);

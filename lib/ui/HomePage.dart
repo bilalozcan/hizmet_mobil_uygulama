@@ -33,7 +33,8 @@ class _HomePageState extends State<HomePage> {
   String selectSubCategory;
   String selectHizmet;
   List<String> _hizmetList;
-  List<Hizmet> _tempHizmetler;
+  List<Hizmet> _temps0;
+  List<Hizmet> _temps1;
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage> {
     _currentNavigationBarIndex = 0;
     _subCategoryView = false;
     categoryIcon = CategoryIcon(_category);
+    //_temps=List<List<Hizmet>>();
   }
 
   @override
@@ -65,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                     child: GestureDetector(
                       child: CircleAvatar(
                           backgroundImage:
-                              AssetImage("assets/carouselPhotos/photo1.jpg")),
+                              NetworkImage(_userModel.user.profileURL)),
                       onTap: () {
                         Navigator.push(
                             context,
@@ -105,7 +107,6 @@ class _HomePageState extends State<HomePage> {
         body: widgetCatalog(_hizmetModel),
         bottomNavigationBar: ConvexAppBar(
           onTap: (position) {
-            debugPrint("position:" + position.toString());
             setState(() {
               _currentNavigationBarIndex = position;
             });
@@ -168,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                                   selectHizmet == null) {
                                 selectSubCategory = null;
                                 selectSubCategoryIndex = null;
-                                hizmetModel.hizmetler = _tempHizmetler;
+                                hizmetModel.hizmetler = _temps0;
                               }
                             });
                           },
@@ -180,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                               if (selectHizmet != null) {
                                 selectHizmet = null;
                                 selectHizmetIndex = null;
-                                hizmetModel.hizmetler = _tempHizmetler;
+                                hizmetModel.hizmetler = _temps1;
                               }
                             });
                           },
@@ -295,7 +296,9 @@ class _HomePageState extends State<HomePage> {
                             selectSubCategory = categoryList[index];
                             selectSubCategoryIndex = index;
                             hizmetlerInit(selectCategory, selectSubCategory);
-                            _tempHizmetler=_hizmetModel.hizmetler;
+                            //_tempHizmetler=_hizmetModel.hizmetler;
+                            //debugPrint("tempHizmetler"+_tempHizmetler.toString());
+                            _temps0=_hizmetModel.hizmetler;
                              await _hizmetModel.readFilterHizmet(
                                 category: selectCategory,
                                 subCategory: selectSubCategory,
@@ -305,7 +308,9 @@ class _HomePageState extends State<HomePage> {
                             selectHizmet = categoryList[index];
                             selectHizmetIndex = index;
                             _subCategoryView;
-                            _tempHizmetler=_hizmetModel.hizmetler;
+                            //_tempHizmetler=_hizmetModel.hizmetler;
+                            _temps1=_hizmetModel.hizmetler;
+                           // debugPrint("tempHizmetler"+_tempHizmetler.toString());
                              await _hizmetModel.readFilterHizmet(
                                 category: selectCategory,
                                 subCategory: selectSubCategory,

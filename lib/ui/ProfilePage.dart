@@ -5,9 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_star_rating/flutter_star_rating.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hizmet_mobil_uygulama/models/Comments.dart';
 import 'package:hizmet_mobil_uygulama/ui/Settings.dart';
 import 'package:hizmet_mobil_uygulama/utils/DialogMessage.dart';
 import 'package:hizmet_mobil_uygulama/utils/ToastMessage.dart';
+import 'package:hizmet_mobil_uygulama/viewmodel/comments_model.dart';
 import 'package:hizmet_mobil_uygulama/viewmodel/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -138,11 +140,11 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          /*SliverList(
+          SliverList(
             delegate: SliverChildListDelegate(
-              Pages(),
+              [readComments()],
             ),
-          )*/
+          ),
         ],
       ),
     );
@@ -242,6 +244,41 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     ];
   }*/
+  
+  readComments()
+  {
+    final commentsModel=Provider.of<CommentsModel>(context,listen:false);
+    final userModel=Provider.of<UserModel>(context,listen:false);
+    var future=commentsModel.readComments(userModel.user.userID);
+    return FutureBuilder(builder: (context,snapshot){
+      if(snapshot.hasData)
+          return Container(
+            height:500,
+            width:100,
+            child: ListView.builder(itemBuilder: (context,index)
+              {
+                return Card(child:ListTile(title: Text(snapshot.data[index].content),subtitle: StarRating( rating:double.parse(snapshot.data[index].degree.toString()) ,
+              spaceBetween: 5.0,
+              starConfig: StarConfig(
+              fillColor: starColor(snapshot.data[index].degree),
+              size: 15,),),),);
+              },itemCount:snapshot.data.length),
+          );
+
+      else
+        return CircularProgressIndicator(backgroundColor:Colors.red);
+    },future:future);
+  }
+
+  starColor(int rating)
+  {
+    if(rating<=2)
+      return Colors.deepOrange;
+    else if(rating<=4)
+      return Colors.orangeAccent;
+      return Colors.yellow;
+
+  }
 
   void _takeAPhotoFromCamera(BuildContext context) async {
     PickedFile _newProfilePhoto =
