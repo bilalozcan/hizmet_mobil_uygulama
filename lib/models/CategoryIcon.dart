@@ -8,7 +8,8 @@ class CategoryIcon{
     if(categoryIndex!=null){
       if(subCategoryIndex!=null){
         if(hizmetIndex!=null){
-          return "assets/Category/Cat${categoryIndex+1}${subCategoryIndex+1}${hizmetIndex+1}.png";
+          return "assets/Category/Cat111.png";
+          //return "assets/Category/Cat${categoryIndex+1}${subCategoryIndex+1}${hizmetIndex+1}.png";
         }
         else{
           return "assets/Category/Cat${categoryIndex+1}${subCategoryIndex+1}.png";
@@ -39,4 +40,16 @@ class CategoryIcon{
     }
 
 }
+  String GetIconHizmetVer(int index,int durum,int selectCategory,int selectSubCategory,int selectHizmet){
+    if(durum ==1){
+      return "assets/Category/Cat${index+1}.png";
+    }
+    if(durum == 2){
+      return "assets/Category/Cat${selectCategory+1}${index+1}.png";
+    }
+    if(durum == 3){
+      return "assets/Category/Cat111.png";
+    }
+
+  }
 }
