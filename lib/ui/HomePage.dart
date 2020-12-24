@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -112,6 +113,9 @@ class _HomePageState extends State<HomePage> {
               _currentNavigationBarIndex = position;
             });
             if (_currentNavigationBarIndex == 2) {
+              setState(() {
+              _currentNavigationBarIndex = 0;
+              });
               return Navigator.push(context,
                   MaterialPageRoute(builder: (context) => HizmetVerPageNew()));
             }
@@ -131,9 +135,11 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  Widget widgetCatalog(hizmetModel){
-    debugPrint("_currentNavigationBarIndex:" + _currentNavigationBarIndex.toString());
-    if(_currentNavigationBarIndex == 0)
+
+  Widget widgetCatalog(hizmetModel) {
+    debugPrint(
+        "_currentNavigationBarIndex:" + _currentNavigationBarIndex.toString());
+    if (_currentNavigationBarIndex == 0)
       return Column(
         children: [
           FutureBuilder(
@@ -188,8 +194,7 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                         Expanded(
-                          child:
-                          Selected() != null ? Selected() : Container(),
+                          child: Selected() != null ? Selected() : Container(),
                         )
                       ],
                     ),
@@ -206,9 +211,30 @@ class _HomePageState extends State<HomePage> {
             builder: (context, hizmetModel, child) {
               if (hizmetModel.hizmetler != null) {
                 return Expanded(
-                  child: ListView.builder(
+                    child: CustomScrollView(
+                  semanticChildCount: 6,
+                  slivers: <Widget>[
+                    SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2),
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          return GestureDetector(
+                            child: HizmetContainer(index, hizmetModel),
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>HizmetDetailPage(hizmetModel.hizmetler[index])));
+                            },
+                          );
+                        },
+                        childCount: hizmetModel.hizmetler.length,
+                      ),
+                    ),
+                  ],
+                )
+                    /*ListView.builder(
                     itemBuilder: (context, index) {
-                      return Card(
+                      return HizmetContainer();
+                      Card(
                         child: ListTile(
                           title: Text(hizmetModel.hizmetler[index].title),
                           subtitle: Text(hizmetModel.hizmetler[index].detail),
@@ -220,8 +246,8 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                     itemCount: hizmetModel.hizmetler.length,
-                  ),
-                );
+                  ),*/
+                    );
               } else {
                 return Center(
                   child: Text("Hizmet Bulunamadı"),
@@ -231,13 +257,88 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       );
-    else if(_currentNavigationBarIndex == 1)
-      return Container(child: Center(child: Text("Hizmetlerim"),),);
-    else if(_currentNavigationBarIndex == 3)
-      return Container(child: Center(child: Text("Bildirimler"),),);
-    else if(_currentNavigationBarIndex == 4)
-      return Container(child: Center(child: Text("Sohbet"),),);
+    else if (_currentNavigationBarIndex == 1)
+      return Container(
+        child: Center(
+          child: Text("Hizmetlerim"),
+        ),
+      );
+    else if (_currentNavigationBarIndex == 3)
+      return Container(
+        child: Center(
+          child: Text("Bildirimler"),
+        ),
+      );
+    else if (_currentNavigationBarIndex == 4)
+      return Container(
+        child: Center(
+          child: Text("Sohbet"),
+        ),
+      );
   }
+
+  HizmetContainer(int index, var hizmetModel) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        height: 150,
+        alignment: Alignment.topLeft,
+        decoration: BoxDecoration(
+          border: Border.all(width: 3,color: Colors.black12),
+          borderRadius: new BorderRadius.all(
+              new Radius.circular(15.0)), //kenarları yuvarlaklaştırır
+          color: Colors.primaries[Random().nextInt(Colors.primaries.length)].shade100,
+          //color: Colors.white
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FittedBox(
+                fit: BoxFit.contain,
+                  child: Text(
+                hizmetModel.hizmetler[index].title,
+                style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black),
+              )),
+            ),
+
+            //SizedBox(height: 105,),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left:5.0),
+                    child: Text("${hizmetModel.hizmetler[index].payment} TL"),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right:5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(Icons.remove_red_eye_outlined),
+                        Padding(
+                          padding: const EdgeInsets.only(left:5.0),
+                          child: Text("${hizmetModel.hizmetler[index].review}"),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   connectJson() async {
     String fromJson =
         await DefaultAssetBundle.of(context).loadString("assets/Category.json");
@@ -287,7 +388,7 @@ class _HomePageState extends State<HomePage> {
                             selectCategoryIndex = index;
                             subCategoryListInit(selectCategory);
                             _subCategoryView;
-                           await _hizmetModel.readFilterHizmet(
+                            await _hizmetModel.readFilterHizmet(
                                 category: selectCategory,
                                 subCategory: null,
                                 hizmet: null,
@@ -299,8 +400,8 @@ class _HomePageState extends State<HomePage> {
                             hizmetlerInit(selectCategory, selectSubCategory);
                             //_tempHizmetler=_hizmetModel.hizmetler;
                             //debugPrint("tempHizmetler"+_tempHizmetler.toString());
-                            _temps0=_hizmetModel.hizmetler;
-                             await _hizmetModel.readFilterHizmet(
+                            _temps0 = _hizmetModel.hizmetler;
+                            await _hizmetModel.readFilterHizmet(
                                 category: selectCategory,
                                 subCategory: selectSubCategory,
                                 hizmet: null,
@@ -310,9 +411,9 @@ class _HomePageState extends State<HomePage> {
                             selectHizmetIndex = index;
                             _subCategoryView;
                             //_tempHizmetler=_hizmetModel.hizmetler;
-                            _temps1=_hizmetModel.hizmetler;
-                           // debugPrint("tempHizmetler"+_tempHizmetler.toString());
-                             await _hizmetModel.readFilterHizmet(
+                            _temps1 = _hizmetModel.hizmetler;
+                            // debugPrint("tempHizmetler"+_tempHizmetler.toString());
+                            await _hizmetModel.readFilterHizmet(
                                 category: selectCategory,
                                 subCategory: selectSubCategory,
                                 hizmet: selectHizmet);
@@ -338,7 +439,7 @@ class _HomePageState extends State<HomePage> {
                                       selectHizmetIndex)
                                   : "assets/Category/Cat111.png"),
                             ),
-                           // border: Border.all(color: Colors.deepOrange, width: 2),
+                            // border: Border.all(color: Colors.deepOrange, width: 2),
                             color: Colors.blue.shade200,
                             borderRadius: new BorderRadius.all(
                                 new Radius.circular(
@@ -374,7 +475,11 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsets.only(top: 9, left: 3, right: 3),
         child: Column(children: [
           Center(
-            child: Icon(Icons.close,size: size/2.5,color: Colors.red,),
+            child: Icon(
+              Icons.close,
+              size: size / 2.5,
+              color: Colors.red,
+            ),
           ),
           Container(
             height: size,
@@ -389,14 +494,14 @@ class _HomePageState extends State<HomePage> {
                     : "assets/Category/Cat111.png"),
               ),
               borderRadius: new BorderRadius.all(
-                  new Radius.circular(size/3)), //kenarları yuvarlaklaştırır
+                  new Radius.circular(size / 3)), //kenarları yuvarlaklaştırır
             ),
           ),
           Container(
             child: Text(
               name != null ? name : "Kategori",
               style: GoogleFonts.yantramanav(
-                fontSize: size/3.5,
+                fontSize: size / 3.5,
                 color: Colors.black45,
               ),
               textAlign: TextAlign.center,
