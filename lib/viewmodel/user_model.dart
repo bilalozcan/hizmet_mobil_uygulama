@@ -149,4 +149,14 @@ class UserModel with ChangeNotifier implements AuthBase {
       state=ViewState.Idle;
     }
   }
+  updateUser(User_ user)
+  async {
+    try{
+      state=ViewState.Busy;
+      return await _userRepository.updateUser(user);
+    }
+    finally{
+      state=ViewState.Idle;
+    }
+  }
 }

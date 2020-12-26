@@ -54,4 +54,10 @@ class FakeAuthService implements AuthBase {
     // TODO: implement updatePassword
     return null;
   }
+
+  @override
+  updateUser(User_ user) {
+    // TODO: implement updateUser
+    throw UnimplementedError();
+  }
 }

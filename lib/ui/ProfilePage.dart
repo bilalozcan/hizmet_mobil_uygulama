@@ -29,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _userModel=Provider.of<UserModel>(context,listen:false);
+    _userModel = Provider.of<UserModel>(context, listen: false);
     name = _userModel.user.name;
     surname = _userModel.user.surname;
     email = _userModel.user.email;
@@ -54,7 +54,8 @@ class _ProfilePageState extends State<ProfilePage> {
               IconButton(
                 icon: Icon(Icons.settings),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Settings()));
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => Settings()));
                 },
               )
             ],
@@ -148,136 +149,58 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
-
   }
 
- /* Widget kisiBilgisiContainer(
-      String name, String surname, double derece, String profilePhoto) {
+  readComments() {
+    final commentsModel = Provider.of<CommentsModel>(context, listen: false);
+    final userModel = Provider.of<UserModel>(context, listen: false);
+    var future = commentsModel.readComments(userModel.user.userID);
     return FutureBuilder(
-      builder: (context, snapshot) {
-        if (name != null) {
-          return Container(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  height: 25,
-                  width: 25,
-                  child: CircleAvatar(
-                    radius: 75,
-                    backgroundColor: Colors.white,
-                    backgroundImage: _profilFoto == null
-                    ? NetworkImage(_profilePhoto)
-                    : FileImage(File(_profilFoto.path)),
-                  ),
-                ),
-                SizedBox(
-                  width: 25,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      name + " " + surname,
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    Center(
-                      child: StarRating(
-                        rating: derece,
-                        spaceBetween: 5.0,
-                        starConfig: StarConfig(
-                          fillColor: Colors.deepOrange,
-                          size: 10,
-                          // other props
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        } else
-          return CircularProgressIndicator(
-            backgroundColor: Colors.black,
-          );
-      },
-    );
+        builder: (context, snapshot) {
+          if (snapshot.hasData)
+            return Container(
+              height: 500,
+              width: 150,
+              child: ListView.builder(
+                  itemBuilder: (context, index) {
+                      double a=snapshot.data[index].degree/(index+1);
+                      userModel.user.degree=a.round();
+                    return FutureBuilder(
+                      future:userModel.differentUser(snapshot.data[index].senderID),
+                      builder: (context,snapshot1)
+                      {
+                        if(snapshot1.hasData)
+                          return Card(
+                            child: ListTile(
+                              title:Text(snapshot1.data.name),
+                              subtitle: Text(snapshot.data[index].content),
+                              leading:Column(
+                                children: [
+                                  CircleAvatar(backgroundImage: NetworkImage(snapshot1.data.profileURL),),
+                                  SizedBox(height:6),
+                                  Container(width:70,child: StarRating(starConfig: StarConfig(size: 10.0,strokeWidth: 1),rating: double.parse(snapshot.data[index].degree.toString()),spaceBetween: 1,)),
+                                ],
+                              ),
+                            ),
+                          );
+                        else
+                          return Center(child: CircularProgressIndicator(backgroundColor: Colors.red,));
+                      },
+                    );
+                  },
+                  itemCount: snapshot.data.length),
+            );
+          else
+            return Center(child: CircularProgressIndicator(backgroundColor: Colors.red));
+        },
+        future: future);
   }
 
-  List<Widget> Pages() {
-    return [
-      kisiBilgisiContainer(name, surname, degree.toDouble(), _profilePhoto),
-      Text(
-        "İlanlar Sayfası",
-        style: TextStyle(fontSize: 25, color: Colors.black),
-      ),
-      kisiBilgisiContainer(name, surname, degree.toDouble(), _profilePhoto),
-      Text(
-        "İlanlar Sayfası",
-        style: TextStyle(fontSize: 25, color: Colors.black),
-      ),
-      SizedBox(
-        height: 300,
-      ),
-      SizedBox(
-        height: 300,
-      ),
-      kisiBilgisiContainer(name, surname, degree.toDouble(), _profilePhoto),
-      Text(
-        "İlanlar Sayfası",
-        style: TextStyle(fontSize: 25, color: Colors.black),
-      ),
-      SizedBox(
-        height: 300,
-      ),
-      Text(
-        "İlanlar Sayfası",
-        style: TextStyle(fontSize: 25, color: Colors.black),
-      ),
-      SizedBox(
-        height: 30,
-      ),
-      Text(
-        "İlanlar Sayfası",
-        style: TextStyle(fontSize: 25, color: Colors.black),
-      ),
-    ];
-  }*/
-  
-  readComments()
-  {
-    final commentsModel=Provider.of<CommentsModel>(context,listen:false);
-    final userModel=Provider.of<UserModel>(context,listen:false);
-    var future=commentsModel.readComments(userModel.user.userID);
-    return FutureBuilder(builder: (context,snapshot){
-      if(snapshot.hasData)
-          return Container(
-            height:500,
-            width:100,
-            child: ListView.builder(itemBuilder: (context,index)
-              {
-                return Card(child:ListTile(title: Text(snapshot.data[index].content),subtitle: StarRating( rating:double.parse(snapshot.data[index].degree.toString()) ,
-              spaceBetween: 5.0,
-              starConfig: StarConfig(
-              fillColor: starColor(snapshot.data[index].degree),
-              size: 15,),),),);
-              },itemCount:snapshot.data.length),
-          );
-
-      else
-        return CircularProgressIndicator(backgroundColor:Colors.red);
-    },future:future);
-  }
-
-  starColor(int rating)
-  {
-    if(rating<=2)
+  starColor(int rating) {
+    if (rating <= 2)
       return Colors.deepOrange;
-    else if(rating<=4)
-      return Colors.orangeAccent;
-      return Colors.yellow;
-
+    else if (rating <= 4) return Colors.orangeAccent;
+    return Colors.yellow;
   }
 
   void _takeAPhotoFromCamera(BuildContext context) async {
@@ -304,7 +227,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _updateProfilePhoto(BuildContext context) async {
     final _userModel = Provider.of<UserModel>(context, listen: false);
-    if (_profilePhoto  != null) {
+    if (_profilePhoto != null) {
       String url = await _userModel.uploadFile(
           _userModel.user.userID, "profilePhoto", File(_profilePhoto.path));
 
