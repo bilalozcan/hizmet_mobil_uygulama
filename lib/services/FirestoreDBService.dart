@@ -16,7 +16,7 @@ class FirestoreDBService implements DatabaseBase {
         await _firebaseDB.doc("users/${user.userID}").get();
 
     if (_readUser.data() == null) {
-      await _firebaseDB.collection("users").doc(user.userID).set(user.toMap());
+      await _firebaseDB.collection("users").doc(user.userID).set(user.toMap(),SetOptions(merge: true));
       return true;
     } else {
       return true;

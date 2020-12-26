@@ -121,4 +121,12 @@ class UserRepository implements AuthBase {
       await _firebaseAuthService.updatePassword(newPassword);
     return true;
   }
+  @override
+  updateUser(User_ user)
+  async {
+    if(appMode==AppMode.DEBUG)
+        return _fakeAuthenticationService.updateUser(user);
+    else
+      return await _firestoreDBService.saveUser(user);
+  }
 }
