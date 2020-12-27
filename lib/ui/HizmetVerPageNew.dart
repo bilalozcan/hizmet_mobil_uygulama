@@ -414,6 +414,9 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
                           }),
                       SizedBox(height: 5),
                       TextFormField(
+                        minLines: 2,
+                        maxLines: 5,
+                        maxLength: 500,
                         controller: _aciklama,
                         decoration: InputDecoration(
                             labelText: "Açıklama",
@@ -460,11 +463,11 @@ class _HizmetVerPageNewState extends State<HizmetVerPageNew> {
             hizmet: selectHizmet,
             publisher: _userModel.user.userID,
             detail: _aciklama.text,
-            address: "Zeytniburnu",
+            address: "Zeytinburnu",
             payment: double.parse(_fiyat.text));
+        showToast(context, "Hizmet Verme işlemi başarıyla tamamlanmıştır. Hizmetlerim bölümünden vermiş olduğunuz hizmet ve hizmetler hakkında bilgi alabilirsiniz", Colors.green);
+
         Navigator.pop(context);
-        debugPrint("categoryName: " + selectCategory);
-        debugPrint("subCategoryName: " + selectSubCategory);
       }
     } else
       showToast(context, "Lütfen Bir Kategori Seçiniz.", Colors.red);
