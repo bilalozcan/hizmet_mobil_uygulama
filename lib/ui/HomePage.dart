@@ -147,6 +147,14 @@ class _HomePageState extends State<HomePage> {
             builder: (context, snapshot) {
               Widget filterContainer;
               if (snapshot.hasData) {
+                if(hizmetModel.hizmetler==null && selectCategory!=null)
+                  {
+                    filterContainer= Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(child: CircularProgressIndicator(backgroundColor: Colors.red,)),
+                    );
+                    return filterContainer;
+                  }
                 filterContainer = Container(
                   child: Container(
                     alignment: Alignment.topCenter,
@@ -248,11 +256,16 @@ class _HomePageState extends State<HomePage> {
                     itemCount: hizmetModel.hizmetler.length,
                   ),*/
                     );
-              } else {
-                return Center(
-                  child: Text("Hizmet Bulunamadı"),
-                );
+              } else if(selectCategory==null){
+                return Container();
               }
+              else
+                return Container(
+                  height:MediaQuery.of(context).size.height/2,
+                  child: Center(
+                      child: CircularProgressIndicator(backgroundColor: Colors.red,)
+                  ),
+                );
             },
           ),
         ],
@@ -387,6 +400,7 @@ class _HomePageState extends State<HomePage> {
                             selectCategory = categoryList[index];
                             selectCategoryIndex = index;
                             subCategoryListInit(selectCategory);
+                            _hizmetModel.hizmetler=null;
                             _subCategoryView;
                             await _hizmetModel.readFilterHizmet(
                                 category: selectCategory,
@@ -401,6 +415,7 @@ class _HomePageState extends State<HomePage> {
                             //_tempHizmetler=_hizmetModel.hizmetler;
                             //debugPrint("tempHizmetler"+_tempHizmetler.toString());
                             _temps0 = _hizmetModel.hizmetler;
+                            _hizmetModel.hizmetler=null;
                             await _hizmetModel.readFilterHizmet(
                                 category: selectCategory,
                                 subCategory: selectSubCategory,
@@ -413,6 +428,7 @@ class _HomePageState extends State<HomePage> {
                             //_tempHizmetler=_hizmetModel.hizmetler;
                             _temps1 = _hizmetModel.hizmetler;
                             // debugPrint("tempHizmetler"+_tempHizmetler.toString());
+                            _hizmetModel.hizmetler=null;
                             await _hizmetModel.readFilterHizmet(
                                 category: selectCategory,
                                 subCategory: selectSubCategory,
